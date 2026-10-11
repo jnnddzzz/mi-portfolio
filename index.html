@@ -4,87 +4,129 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jano Arribas Díaz · Marketing & Publicidad</title>
-  <meta name="description" content="Portfolio de Jano Arribas Díaz, estudiante de Marketing y Publicidad: diseño, redes sociales, campañas y vídeo." />
+  <meta name="description" content="Portfolio de Jano Arribas Díaz, estudiante de Marketing y Publicidad: landing pages, diseño, redes sociales, campañas y vídeo." />
   <meta name="theme-color" content="#0b0b0c" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%230b0b0c'/><circle cx='50' cy='50' r='16' fill='%23d4ff3a'/></svg>" />
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
+  <!-- Intro -->
+  <div class="loader" aria-hidden="true">
+    <span class="loader-name">Jano Arribas Díaz</span>
+    <span class="loader-count">0</span>
+  </div>
+
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <canvas class="confetti" aria-hidden="true"></canvas>
   <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
   <div class="spotlight" aria-hidden="true"></div>
-  <div class="preview" aria-hidden="true"></div>
 
   <header class="nav">
     <a href="#inicio" class="logo" data-hover>JA<i>●</i></a>
     <nav class="nav-links">
       <a href="#sobre-mi" data-hover>Sobre mí</a>
       <a href="#trabajos" data-hover>Trabajos</a>
+      <a href="#redes" data-hover>Redes</a>
       <a href="#habilidades" data-hover>Habilidades</a>
       <a href="#contacto" data-hover>Contacto</a>
     </nav>
     <span class="status"><i></i>Disponible para prácticas</span>
   </header>
 
+  <!-- Marcador de exploración -->
+  <button class="hud" aria-label="Logros desbloqueados" data-hover>
+    <span class="hud-ring"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" /><circle class="hud-fill" cx="18" cy="18" r="15.5" /></svg><b class="hud-n">0</b></span>
+    <span class="hud-text"><small>Portfolio explorado</small><b class="hud-pct">0%</b></span>
+  </button>
+  <div class="hud-panel" hidden>
+    <h4>Logros</h4>
+    <ul class="hud-list"></ul>
+  </div>
+
+  <div class="toasts" aria-live="polite"></div>
+
   <main>
     <!-- HERO -->
     <section id="inicio" class="hero">
       <div class="hero-text">
-        <p class="eyebrow reveal" data-perfil="estudios"></p>
+        <p class="eyebrow" data-perfil="estudios"></p>
         <h1 class="hero-name" data-split></h1>
-        <p class="hero-claim reveal">Ideas que se <em>ven</em>, se <em>comparten</em> y <em>venden</em>.</p>
-        <a href="#trabajos" class="scroll-hint reveal" data-hover>
-          <span>Ver trabajos</span><b>↓</b>
-        </a>
+        <p class="hero-claim">Ideas que se <span class="rotator"><em class="rot-word">ven</em></span></p>
+        <div class="hero-cta">
+          <a href="#trabajos" class="btn" data-magnetic data-hover>Ver trabajos <b>↓</b></a>
+          <a href="#contacto" class="btn btn-ghost" data-magnetic data-hover>Hablemos</a>
+        </div>
       </div>
-      <figure class="photo reveal" data-tilt>
-        <img alt="Foto de presentación" />
+      <figure class="photo" data-tilt>
+        <img alt="Foto de presentación de Jano" />
         <div class="photo-ph"><span>JA</span><small>Tu foto aquí</small></div>
+        <div class="glare"></div>
         <figcaption><span data-perfil="ubicacion"></span> · <span data-perfil="titulo"></span></figcaption>
       </figure>
     </section>
 
+    <!-- Cinta que reacciona a la velocidad del scroll -->
+    <div class="marquee" aria-hidden="true"><div class="marquee-track"></div></div>
+
     <!-- SOBRE MÍ -->
-    <section id="sobre-mi" class="section">
-      <div class="section-label"><span>01</span>Sobre mí</div>
+    <section id="sobre-mi" class="section" data-logro="sobre">
+      <div class="section-label"><span>Sobre mí</span></div>
       <p class="statement" data-words></p>
       <div class="facts">
-        <div class="fact reveal"><b data-count="trabajos">0</b><span>Trabajos</span></div>
+        <div class="fact reveal"><b data-count="trabajos">0</b><span>Trabajos publicados</span></div>
         <div class="fact reveal"><b>2º</b><span>Curso de grado superior</span></div>
         <div class="fact reveal"><b data-count="herramientas">0</b><span>Herramientas</span></div>
       </div>
     </section>
 
     <!-- TRABAJOS -->
-    <section id="trabajos" class="section">
-      <div class="section-label"><span>02</span>Trabajos</div>
+    <section id="trabajos" class="section" data-logro="trabajos">
+      <div class="section-label"><span>Trabajos</span></div>
       <div class="works-head">
-        <h2 class="reveal">Trabajos <em>seleccionados</em></h2>
+        <h2 class="reveal" data-scramble>Trabajos <em>seleccionados</em></h2>
         <div class="filters reveal" role="tablist" aria-label="Filtrar trabajos"></div>
       </div>
-      <ul class="works"></ul>
+      <div class="works"></div>
+    </section>
+
+    <!-- REDES -->
+    <section id="redes" class="section" data-logro="redes">
+      <div class="section-label"><span>Redes sociales</span></div>
+      <div class="social-head">
+        <h2 class="reveal">Lo que <em>publico</em></h2>
+        <p class="reveal hint">Doble clic (o doble toque) en un post para darle like</p>
+      </div>
+      <div class="social-wrap">
+        <div class="posts"></div>
+        <aside class="tiktok-box reveal">
+          <div class="tiktok-head"><b>En directo desde TikTok</b><a class="tiktok-link" target="_blank" rel="noopener" data-hover></a></div>
+          <div class="tiktok-embed-slot"></div>
+        </aside>
+      </div>
+      <div class="social-links"></div>
     </section>
 
     <!-- HABILIDADES -->
-    <section id="habilidades" class="section">
-      <div class="section-label"><span>03</span>Habilidades</div>
+    <section id="habilidades" class="section" data-logro="skills">
+      <div class="section-label"><span>Habilidades</span></div>
       <div class="skills-wrap">
         <ul class="tools"></ul>
         <div class="soft reveal">
-          <h3>También se me da bien</h3>
+          <h3>También se me da bien <small>(pulsa para lanzarlas)</small></h3>
           <div class="chips"></div>
         </div>
       </div>
     </section>
 
-    <!-- REDES + CONTACTO -->
-    <section id="contacto" class="section contact">
-      <div class="section-label"><span>04</span>Contacto</div>
-      <h2 class="contact-title reveal">¿Hablamos?</h2>
-      <button class="mail reveal" data-hover="Copiar"><span data-perfil="email"></span><b>↗</b></button>
-      <ul class="socials"></ul>
+    <!-- CONTACTO -->
+    <section id="contacto" class="section contact" data-logro="contacto">
+      <div class="section-label"><span>Contacto</span></div>
+      <h2 class="contact-title" data-proximity>¿Hablamos?</h2>
+      <button class="mail" data-hover="Copiar" data-magnetic><span data-perfil="email"></span><b>↗</b></button>
     </section>
   </main>
 
@@ -92,8 +134,6 @@
     <span>© <span id="year"></span> <span data-perfil="nombre"></span></span>
     <a href="#inicio" data-hover>Volver arriba ↑</a>
   </footer>
-
-  <div class="toast" role="status" aria-live="polite"></div>
 
   <dialog class="modal" aria-labelledby="modal-title">
     <button class="modal-close" aria-label="Cerrar" data-hover>✕</button>
@@ -103,7 +143,7 @@
       <h3 id="modal-title"></h3>
       <p class="modal-desc"></p>
       <div class="modal-tools"></div>
-      <a class="modal-link" target="_blank" rel="noopener" data-hover>Ver trabajo completo ↗</a>
+      <a class="btn modal-link" target="_blank" rel="noopener" data-hover>Ver proyecto en vivo ↗</a>
     </div>
   </dialog>
 

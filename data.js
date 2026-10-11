@@ -6,25 +6,45 @@ const PERFIL = {
   nombre: "Jano Arribas Díaz",
   titulo: "Marketing & Publicidad",
   estudios: "2º Técnico Superior en Marketing y Publicidad",
-  bio: "Estudiante de 2º de Marketing y Publicidad. Me apasiona crear ideas que se vean, se compartan y vendan: diseño para redes, contenido en vídeo y campañas de publicidad digital.",
+  bio: "Estudiante de 2º de Marketing y Publicidad. Me apasiona crear ideas que se vean, se compartan y vendan: diseño para redes, contenido en vídeo, landing pages y campañas de publicidad digital.",
   email: "tuemail@ejemplo.com", // <- cambia por tu email
   ubicacion: "España",
   // Tu foto de presentación: súbela como assets/foto.jpg (o cambia la ruta)
   foto: "assets/foto.jpg",
+  // Palabras que van rotando en la portada: "Ideas que se ___"
+  palabras: ["ven", "comparten", "recuerdan", "venden"],
 };
 
-// Pon aquí tus usuarios reales (sin la @) o deja la URL completa
+// Si dejas la url vacía (""), esa red no aparece
 const REDES = [
-  { nombre: "Instagram", usuario: "@tuusuario", url: "https://instagram.com/tuusuario", },
-  { nombre: "TikTok",    usuario: "@tuusuario", url: "https://tiktok.com/@tuusuario",   },
-  { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "https://linkedin.com/in/tuusuario", },
+  { nombre: "Instagram", usuario: "@jjn.dzz", url: "https://www.instagram.com/jjn.dzz/" },
+  { nombre: "TikTok",    usuario: "@jjn.dzz", url: "https://www.tiktok.com/@jjn.dzz" },
+  { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "" },
+];
+
+// Usuario de TikTok para mostrar tu perfil en directo en la sección de redes
+const TIKTOK_USUARIO = "jjn.dzz";
+
+/* ---------- POSTS DESTACADOS DE REDES ----------
+   Sube capturas o fotos de tus mejores publicaciones a assets/redes/
+   y pon aquí la ruta + el enlace al post. Si "imagen" está vacía
+   se muestra un hueco de color.
+*/
+const POSTS = [
+  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
+  { imagen: "", enlace: "https://www.tiktok.com/@jjn.dzz",   red: "TikTok",    texto: "Vídeo destacado" },
+  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
+  { imagen: "", enlace: "https://www.tiktok.com/@jjn.dzz",   red: "TikTok",    texto: "Vídeo destacado" },
+  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
+  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
 ];
 
 const HABILIDADES = [
-  { nombre: "Canva",      nivel: 90, tipo: "Diseño" },
-  { nombre: "CapCut",     nivel: 85, tipo: "Vídeo" },
-  { nombre: "Meta Ads",   nivel: 70, tipo: "Publicidad" },
-  { nombre: "Google Ads", nivel: 65, tipo: "Publicidad" },
+  { nombre: "Canva",       nivel: 90, tipo: "Diseño" },
+  { nombre: "CapCut",      nivel: 85, tipo: "Vídeo" },
+  { nombre: "Meta Ads",    nivel: 70, tipo: "Publicidad" },
+  { nombre: "Google Ads",  nivel: 65, tipo: "Publicidad" },
+  { nombre: "Apps Script", nivel: 55, tipo: "Web" },
 ];
 
 const SOFT_SKILLS = [
@@ -34,64 +54,21 @@ const SOFT_SKILLS = [
 
 /* ---------- TRABAJOS ----------
    Para añadir un trabajo copia un bloque { ... } y rellénalo.
-   - categoria: "Diseño" | "Redes sociales" | "Campañas" | "Vídeo" (o crea la tuya)
-   - imagen: sube la foto a assets/trabajos/ y pon la ruta. Si la dejas vacía
-             se muestra una portada de color automática.
-   - enlace: opcional (PDF, Canva, Drive, post de Instagram...)
+   - categoria: "Web" | "Diseño" | "Redes sociales" | "Campañas" | "Vídeo" (o la tuya)
+   - imagen: sube la captura a assets/trabajos/ y pon la ruta. Si la dejas
+             vacía se genera una portada automática.
+   - enlace: opcional (la web, PDF, Canva, Drive, post...)
+   - colores: opcional, colores de la portada automática [fondo, texto]
 */
 const TRABAJOS = [
   {
-    titulo: "Campaña de lanzamiento",
-    categoria: "Campañas",
+    titulo: "Landing page IKEA",
+    categoria: "Web",
     curso: "2º curso",
     imagen: "",
-    descripcion: "Briefing, concepto creativo y piezas para el lanzamiento de un producto ficticio en redes sociales.",
-    herramientas: ["Canva", "Meta Ads"],
-    enlace: "",
-  },
-  {
-    titulo: "Identidad visual para marca local",
-    categoria: "Diseño",
-    curso: "1º curso",
-    imagen: "",
-    descripcion: "Propuesta de logotipo, paleta de color y aplicaciones para un pequeño comercio.",
-    herramientas: ["Canva"],
-    enlace: "",
-  },
-  {
-    titulo: "Calendario de contenidos Instagram",
-    categoria: "Redes sociales",
-    curso: "2º curso",
-    imagen: "",
-    descripcion: "Planificación mensual de publicaciones, copies y diseño de plantillas para feed y stories.",
-    herramientas: ["Canva", "Instagram"],
-    enlace: "",
-  },
-  {
-    titulo: "Spot para TikTok",
-    categoria: "Vídeo",
-    curso: "2º curso",
-    imagen: "",
-    descripcion: "Guion, grabación y edición de un vídeo corto publicitario adaptado a formato vertical.",
-    herramientas: ["CapCut"],
-    enlace: "",
-  },
-  {
-    titulo: "Cartelería para evento",
-    categoria: "Diseño",
-    curso: "1º curso",
-    imagen: "",
-    descripcion: "Serie de carteles y piezas digitales para la difusión de un evento del centro.",
-    herramientas: ["Canva"],
-    enlace: "",
-  },
-  {
-    titulo: "Campaña Google Ads",
-    categoria: "Campañas",
-    curso: "2º curso",
-    imagen: "",
-    descripcion: "Estructura de campaña de búsqueda, palabras clave, anuncios y propuesta de presupuesto.",
-    herramientas: ["Google Ads"],
-    enlace: "",
+    colores: ["#0058a3", "#ffdb00"],
+    descripcion: "Landing page para IKEA creada con Google Apps Script: estructura de la página, textos persuasivos, llamadas a la acción y diseño adaptado a la identidad de la marca.",
+    herramientas: ["Google Apps Script", "HTML", "CSS", "Copywriting"],
+    enlace: "https://script.google.com/a/macros/lassalinassf.es/s/AKfycbxoHOhpAaZDSxKR1KfTBNJbcLHLeM5A5ENgvMVPtDiW3_ZuyAW1uNkmiaCib9T1FpLe/exec",
   },
 ];
