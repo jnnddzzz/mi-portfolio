@@ -7,7 +7,8 @@ const PERFIL = {
   titulo: "Marketing & Publicidad",
   estudios: "2º Técnico Superior en Marketing y Publicidad",
   bio: "Estudiante de 2º de Marketing y Publicidad. Me apasiona crear ideas que se vean, se compartan y vendan: diseño para redes, contenido en vídeo, landing pages y campañas de publicidad digital.",
-  email: "tuemail@ejemplo.com", // <- cambia por tu email
+  email: "jano102207@gmail.com",
+  telefono: "659506979", // sin espacios; se usa para llamar y para WhatsApp
   ubicacion: "España",
   // Tu foto de presentación: súbela como assets/foto.jpg (o cambia la ruta)
   foto: "assets/foto.jpg",
@@ -44,6 +45,7 @@ const HABILIDADES = [
   { nombre: "CapCut",      nivel: 85, tipo: "Vídeo" },
   { nombre: "Meta Ads",    nivel: 70, tipo: "Publicidad" },
   { nombre: "Google Ads",  nivel: 65, tipo: "Publicidad" },
+  { nombre: "MailerLite",  nivel: 70, tipo: "Email marketing" },
   { nombre: "Apps Script", nivel: 55, tipo: "Web" },
 ];
 
@@ -58,9 +60,21 @@ const SOFT_SKILLS = [
    - imagen: sube la captura a assets/trabajos/ y pon la ruta. Si la dejas
              vacía se genera una portada automática.
    - enlace: opcional (la web, PDF, Canva, Drive, post...)
+   - imagenGrande: opcional, imagen más completa para la vista ampliada
    - colores: opcional, colores de la portada automática [fondo, texto]
+   El primero de la lista lleva la etiqueta "NUEVO".
 */
 const TRABAJOS = [
+  {
+    titulo: "Email de Halloween · El Corte Inglés",
+    categoria: "Email marketing",
+    curso: "2º curso",
+    imagen: "assets/trabajos/halloween-el-corte-ingles.jpg",
+    imagenGrande: "assets/trabajos/halloween-el-corte-ingles-completo.jpg",
+    descripcion: "Campaña de email marketing \"Noche de terror en tu casa\" diseñada en MailerLite para la colección de Halloween de El Corte Inglés: asunto con emoji para mejorar la apertura, estética oscura con naranja de marca y fichas de producto con llamada a la compra.",
+    herramientas: ["MailerLite", "Email marketing", "Copywriting", "Diseño"],
+    enlace: "",
+  },
   {
     titulo: "Landing page IKEA",
     categoria: "Web",

@@ -65,7 +65,7 @@ const LOGROS = [
   { id: "like",     ico: "❤️", nombre: "Primer like",          txt: "Has dado like a un post" },
   { id: "skills",   ico: "🧰", nombre: "Caja de herramientas", txt: "Conoces mis habilidades" },
   { id: "contacto", ico: "🏁", nombre: "Hasta el final",       txt: "Has llegado a contacto" },
-  { id: "email",    ico: "✉️", nombre: "Conectados",           txt: "Has copiado mi email" },
+  { id: "email",    ico: "✉️", nombre: "Conectados",           txt: "Has guardado mi contacto" },
 ];
 const unlocked = new Set();
 const hud = $(".hud");
@@ -209,7 +209,7 @@ works.addEventListener("click", e => {
   const card = e.target.closest(".card[data-i]");
   if (!card) return;
   const t = TRABAJOS[card.dataset.i];
-  $(".modal-cover", modal).innerHTML = coverHTML(t);
+  $(".modal-cover", modal).innerHTML = coverHTML(t.imagenGrande ? { ...t, imagen: t.imagenGrande } : t);
   $(".modal-cat", modal).textContent = `${t.categoria}${t.curso ? " · " + t.curso : ""}`;
   $("#modal-title").textContent = t.titulo;
   $(".modal-desc", modal).textContent = t.descripcion;
@@ -323,19 +323,27 @@ const ctTitle = $("[data-proximity]");
 ctTitle.innerHTML = [...ctTitle.textContent].map(c => `<span>${esc(c)}</span>`).join("");
 const ctLetters = $$("span", ctTitle);
 
-$(".mail").addEventListener("click", async e => {
-  const btn = e.currentTarget;
+const tel = String(PERFIL.telefono || "").replace(/\D/g, "");
+$(".tel-text").textContent = tel.replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4");
+const wa = $(".wa");
+if (tel) wa.href = `https://wa.me/34${tel}`; else wa.remove();
+if (!tel) $('[data-copy="telefono"]').remove();
+
+$$("[data-copy]").forEach(btn => btn.addEventListener("click", async () => {
+  const value = btn.dataset.copy === "telefono" ? tel : PERFIL.email;
+  const label = btn.dataset.copy === "telefono" ? "Teléfono" : "Email";
   try {
-    await navigator.clipboard.writeText(PERFIL.email);
-    toast("✉️", "Copiado", PERFIL.email);
+    await navigator.clipboard.writeText(value);
+    toast(btn.dataset.copy === "telefono" ? "📞" : "✉️", `${label} copiado`, $("span", btn).textContent);
   } catch {
     const r = document.createRange(); r.selectNodeContents($("span", btn));
     getSelection().removeAllRanges(); getSelection().addRange(r);
-    toast("✉️", "Selecciónalo y cópialo", PERFIL.email);
+    toast("✉️", "Selecciónalo y cópialo", $("span", btn).textContent);
   }
   burstAt(btn, 70, 14);
   unlock("email");
-});
+}));
+wa.addEventListener("click", () => unlock("email"));
 
 /* =========================================================
    Contadores y aparición
