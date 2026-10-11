@@ -32,12 +32,12 @@ const TIKTOK_USUARIO = "jjn.dzz";
    se muestra un hueco de color.
 */
 const POSTS = [
-  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
-  { imagen: "", enlace: "https://www.tiktok.com/@jjn.dzz",   red: "TikTok",    texto: "Vídeo destacado" },
-  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
-  { imagen: "", enlace: "https://www.tiktok.com/@jjn.dzz",   red: "TikTok",    texto: "Vídeo destacado" },
-  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
-  { imagen: "", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Post destacado" },
+  { imagen: "assets/redes/post-1.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Outfit amarillo" },
+  { imagen: "assets/redes/post-2.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Rojo en la piscina" },
+  { imagen: "assets/redes/post-3.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Look beige" },
+  { imagen: "assets/redes/post-4.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Rosa y crochet" },
+  { imagen: "assets/redes/post-5.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Diesel" },
+  { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Chándal morado" },
 ];
 
 const HABILIDADES = [
