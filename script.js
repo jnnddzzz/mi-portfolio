@@ -126,7 +126,7 @@ if (!reduced && words.length > 1) setInterval(() => {
 }, 2200);
 
 // Intro con contador
-function startHero() { name.classList.add("in"); }
+function startHero() { name.classList.add("in"); $(".photo").classList.add("in"); }
 (function intro() {
   const loader = $(".loader");
   let seen = false;
@@ -145,6 +145,11 @@ function startHero() { name.classList.add("in"); }
     setTimeout(() => loader.remove(), 1100);
   })(t0);
 })();
+
+// Texto gigante en movimiento detrás de la foto
+const bgWords = ["Marketing", "Publicidad", "Content", "Creator"];
+const bgChunk = bgWords.map(w => `<span>${esc(w)}</span>`).join("");
+$(".hero-bg-track").innerHTML = bgChunk + bgChunk;
 
 // Bio palabra a palabra
 const statement = $("[data-words]");
@@ -388,6 +393,8 @@ new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { loadTikTok()
    Scroll: progreso, menú, bio, cinta
    ========================================================= */
 const bar = $(".progress i");
+const stage = $(".hero-stage");
+const heroBg = $(".hero-bg");
 const nav = $(".nav");
 const navLinks = $$(".nav-links a");
 const sections = navLinks.map(a => $(a.getAttribute("href")));
@@ -403,6 +410,12 @@ function onScroll() {
   nav.classList.toggle("hidden", dy > 4 && scrollY > 300);
   if (dy < -4) nav.classList.remove("hidden");
   lastY = scrollY;
+
+  if (scrollY < innerHeight * 1.2 && !reduced) {
+    const hp = scrollY / innerHeight;
+    stage.style.transform = `translateY(${scrollY * 0.18}px) scale(${1 - hp * 0.08})`;
+    heroBg.style.opacity = 1 - hp;
+  }
 
   const r = statement.getBoundingClientRect();
   const progress = (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35);
