@@ -52,21 +52,24 @@
   <main>
     <!-- HERO -->
     <section id="inicio" class="hero">
-      <div class="hero-text">
-        <p class="eyebrow" data-perfil="estudios"></p>
-        <h1 class="hero-name" data-split></h1>
-        <p class="hero-claim">Ideas que se <span class="rotator"><em class="rot-word">ven</em></span></p>
-        <div class="hero-cta">
-          <a href="#trabajos" class="btn" data-magnetic data-hover>Ver trabajos <b>↓</b></a>
-          <a href="#contacto" class="btn btn-ghost" data-magnetic data-hover>Hablemos</a>
-        </div>
+      <p class="eyebrow" data-perfil="estudios"></p>
+      <div class="hero-stage">
+        <span class="orbit o1">Marketing</span>
+        <span class="orbit o2">Publicidad</span>
+        <span class="orbit o3">Content creator</span>
+        <span class="orbit o4">Email marketing</span>
+        <figure class="photo" data-tilt>
+          <img alt="Jano Arribas Díaz" />
+          <div class="photo-ph"><span>JA</span><small>Tu foto aquí</small></div>
+          <div class="glare"></div>
+        </figure>
       </div>
-      <figure class="photo" data-tilt>
-        <img alt="Foto de presentación de Jano" />
-        <div class="photo-ph"><span>JA</span><small>Tu foto aquí</small></div>
-        <div class="glare"></div>
-        <figcaption><span data-perfil="ubicacion"></span> · <span data-perfil="titulo"></span></figcaption>
-      </figure>
+      <h1 class="hero-name" data-split></h1>
+      <p class="hero-claim">Ideas que se <span class="rotator"><em class="rot-word">ven</em></span></p>
+      <div class="hero-cta">
+        <a href="#trabajos" class="btn" data-magnetic data-hover>Ver trabajos <b>↓</b></a>
+        <a href="#contacto" class="btn btn-ghost" data-magnetic data-hover>Hablemos</a>
+      </div>
     </section>
 
     <!-- Cinta que reacciona a la velocidad del scroll -->
@@ -126,7 +129,17 @@
     <section id="contacto" class="section contact" data-logro="contacto">
       <div class="section-label"><span>Contacto</span></div>
       <h2 class="contact-title" data-proximity>¿Hablamos?</h2>
-      <button class="mail" data-hover="Copiar" data-magnetic><span data-perfil="email"></span><b>↗</b></button>
+      <div class="contact-list">
+        <button class="contact-item reveal" data-copy="email" data-hover="Copiar">
+          <small>Email</small><span data-perfil="email"></span><b>⧉</b>
+        </button>
+        <button class="contact-item reveal" data-copy="telefono" data-hover="Copiar">
+          <small>Teléfono</small><span class="tel-text"></span><b>⧉</b>
+        </button>
+        <a class="contact-item reveal wa" target="_blank" rel="noopener" data-hover="Abrir">
+          <small>WhatsApp</small><span>Escríbeme</span><b>↗</b>
+        </a>
+      </div>
     </section>
   </main>
 

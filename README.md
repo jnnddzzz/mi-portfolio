@@ -10,7 +10,7 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 3. **Trabajos**: tarjetas con filtros por categoría y vista ampliada
 4. **Redes**: posts destacados, perfil de TikTok en directo y enlaces a Instagram/TikTok
 5. **Habilidades**: herramientas y soft skills
-6. **Contacto**: email que se copia con un clic
+6. **Contacto**: email y teléfono que se copian con un clic, y botón de WhatsApp
 
 ## ✏️ Cómo actualizar tu contenido
 **Todo se edita en `data.js`**, no tienes que tocar nada más.
