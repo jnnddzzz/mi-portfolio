@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jano Arribas Díaz · Marketing & Publicidad</title>
+  <meta name="description" content="Portfolio de Jano Arribas Díaz, estudiante de Marketing y Publicidad: diseño, redes sociales, campañas y vídeo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23FF3D7F'/><text x='50' y='68' font-size='52' text-anchor='middle' font-family='Arial Black' fill='white'>JA</text></svg>" />
+</head>
+<body>
+  <!-- NAV -->
+  <header class="nav">
+    <a href="#inicio" class="logo">JA<span>.</span></a>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="nav-links">
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#trabajos">Trabajos</a>
+      <a href="#habilidades">Habilidades</a>
+      <a href="#redes">Redes</a>
+      <a href="#contacto" class="btn btn-small">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="hero-inner">
+        <p class="tag reveal">👋 Hola, soy <strong data-perfil="nombre"></strong></p>
+        <h1 class="hero-title reveal">
+          Ideas que <span class="hl hl-pink">se ven</span>,<br />
+          se <span class="hl hl-yellow">comparten</span><br />
+          y <span class="hl hl-blue">venden.</span>
+        </h1>
+        <p class="hero-sub reveal" data-perfil="estudios"></p>
+        <div class="hero-cta reveal">
+          <a href="#trabajos" class="btn">Ver mis trabajos →</a>
+          <a href="#contacto" class="btn btn-ghost">Hablemos</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Diseño ✦ Redes sociales ✦ Publicidad digital ✦ Branding ✦ Contenido ✦ Campañas ✦ Vídeo ✦ Copywriting ✦</span>
+        <span>Diseño ✦ Redes sociales ✦ Publicidad digital ✦ Branding ✦ Contenido ✦ Campañas ✦ Vídeo ✦ Copywriting ✦</span>
+      </div>
+    </div>
+
+    <!-- SOBRE MÍ -->
+    <section id="sobre-mi" class="section about">
+      <div class="section-head reveal">
+        <span class="kicker">01 — Sobre mí</span>
+        <h2>Creativo con<br />mentalidad de <em>marca</em>.</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-card reveal">
+          <div class="avatar" aria-hidden="true">JA</div>
+          <p class="about-bio" data-perfil="bio"></p>
+        </div>
+        <div class="stats reveal">
+          <div class="stat stat-pink"><b data-count="trabajos">0</b><span>Trabajos</span></div>
+          <div class="stat stat-yellow"><b>2º</b><span>Curso TS</span></div>
+          <div class="stat stat-blue"><b data-count="herramientas">0</b><span>Herramientas</span></div>
+          <div class="stat stat-green"><b>∞</b><span>Ideas</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRABAJOS -->
+    <section id="trabajos" class="section works">
+      <div class="section-head reveal">
+        <span class="kicker">02 — Trabajos</span>
+        <h2>Lo que he ido<br /><em>creando</em> en el grado.</h2>
+      </div>
+      <div class="filters reveal" role="tablist" aria-label="Filtrar trabajos"></div>
+      <div class="works-grid"></div>
+    </section>
+
+    <!-- HABILIDADES -->
+    <section id="habilidades" class="section skills">
+      <div class="section-head reveal">
+        <span class="kicker">03 — Habilidades</span>
+        <h2>Mi <em>caja</em> de herramientas.</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="tools reveal"></div>
+        <div class="soft reveal">
+          <h3>Soft skills</h3>
+          <div class="chips"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REDES -->
+    <section id="redes" class="section social">
+      <div class="section-head reveal">
+        <span class="kicker">04 — Redes sociales</span>
+        <h2>Sígueme y mira<br />lo que <em>publico</em>.</h2>
+      </div>
+      <div class="social-grid"></div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="section contact">
+      <div class="contact-box reveal">
+        <span class="kicker">05 — Contacto</span>
+        <h2>¿Tienes un proyecto,<br />unas prácticas o una idea?</h2>
+        <a class="contact-mail" data-perfil-mail></a>
+        <p class="contact-loc">📍 <span data-perfil="ubicacion"></span></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> <span data-perfil="nombre"></span> · Hecho con creatividad ✦</p>
+  </footer>
+
+  <!-- MODAL -->
+  <dialog class="modal" aria-labelledby="modal-title">
+    <button class="modal-close" aria-label="Cerrar">✕</button>
+    <div class="modal-cover"></div>
+    <div class="modal-body">
+      <span class="modal-cat"></span>
+      <h3 id="modal-title"></h3>
+      <p class="modal-desc"></p>
+      <div class="modal-tools"></div>
+      <a class="btn modal-link" target="_blank" rel="noopener">Ver trabajo completo →</a>
+    </div>
+  </dialog>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
