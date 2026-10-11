@@ -129,9 +129,7 @@ if (!reduced && words.length > 1) setInterval(() => {
 function startHero() { name.classList.add("in"); $(".photo").classList.add("in"); }
 (function intro() {
   const loader = $(".loader");
-  let seen = false;
-  try { seen = sessionStorage.getItem("intro") === "1"; sessionStorage.setItem("intro", "1"); } catch {}
-  if (reduced || seen) { loader.remove(); startHero(); return; }
+  if (reduced) { loader.remove(); startHero(); return; }
   document.body.classList.add("loading");
   const count = $(".loader-count");
   const t0 = performance.now();
@@ -185,19 +183,12 @@ cases.innerHTML = TRABAJOS.map((t, i) => `
       <div class="case-media-inner">${coverHTML(t)}</div>
     </button>
     <div class="case-info">
-      <span class="case-kicker">Trabajo realizado · ${esc(t.curso || "")}</span>
-      <h3>${esc(t.titulo)}${t.cliente ? `<small>para ${esc(t.cliente)}</small>` : ""}</h3>
-      <dl class="case-meta">
-        ${t.cliente ? `<div><dt>Cliente</dt><dd>${esc(t.cliente)}</dd></div>` : ""}
-        <div><dt>Tipo</dt><dd>${esc(t.categoria)}</dd></div>
-        <div><dt>Curso</dt><dd>${esc(t.curso || "")}</dd></div>
-      </dl>
+      <span class="case-kicker">Trabajo realizado</span>
+      <h3>${esc(t.titulo)}${t.cliente ? `<small>${esc(t.cliente)}</small>` : ""}</h3>
       <p class="case-desc">${esc(t.descripcion)}</p>
-      ${t.puntos?.length ? `<ul class="case-points">${t.puntos.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
-      <div class="case-tools">${(t.herramientas || []).map(h => `<span>${esc(h)}</span>`).join("")}</div>
       <div class="case-actions">
-        <button class="btn" data-open="${i}" data-magnetic data-hover>Ver proyecto <b>→</b></button>
-        ${t.enlace ? `<a class="btn btn-ghost" href="${esc(t.enlace)}" target="_blank" rel="noopener" data-magnetic data-hover>En vivo ↗</a>` : ""}
+        <button class="case-link" data-open="${i}" data-hover>Ver proyecto <b>→</b></button>
+        ${t.enlace ? `<a class="case-link" href="${esc(t.enlace)}" target="_blank" rel="noopener" data-hover>En vivo <b>↗</b></a>` : ""}
       </div>
     </div>
   </article>`).join("");
@@ -208,11 +199,9 @@ cases.addEventListener("click", e => {
   if (!opener) return;
   const t = TRABAJOS[opener.dataset.open];
   $(".modal-cover", modal).innerHTML = coverHTML(t.imagenGrande ? { ...t, imagen: t.imagenGrande } : t);
-  $(".modal-cat", modal).textContent = ["Trabajo realizado", t.cliente, t.categoria, t.curso].filter(Boolean).join(" · ");
+  $(".modal-cat", modal).textContent = ["Trabajo realizado", t.cliente].filter(Boolean).join(" · ");
   $("#modal-title").textContent = t.titulo;
   $(".modal-desc", modal).textContent = t.descripcion;
-  $(".modal-points", modal).innerHTML = (t.puntos || []).map(x => `<li>${esc(x)}</li>`).join("");
-  $(".modal-tools", modal).innerHTML = (t.herramientas || []).map(h => `<span>${esc(h)}</span>`).join("");
   const link = $(".modal-link", modal);
   link.hidden = !t.enlace;
   if (t.enlace) link.href = t.enlace;
@@ -459,7 +448,6 @@ addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 const clamp01 = v => Math.max(0, Math.min(1, v));
-const aboutMedia = $("[data-mask]");
 const caseEls = $$(".case");
 const caseIO = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); caseIO.unobserve(e.target); } }), { threshold: 0.2 });
 caseEls.forEach(c => caseIO.observe(c));
@@ -475,17 +463,6 @@ let lastIdx = -1;
     if (mPos > 0) mPos -= w;
     track.style.transform = `translateX(${mPos}px) skewX(${Math.max(-12, Math.min(12, -velocity * 0.4))}deg)`;
     const vh = innerHeight;
-    const skew = Math.max(-4, Math.min(4, velocity * 0.12));
-
-    // Sobre mí: la máscara circular crece y la imagen se desplaza
-    const ar = aboutMedia.getBoundingClientRect();
-    if (ar.top < vh && ar.bottom > 0) {
-      const p = clamp01((vh - ar.top) / (vh * 0.9));
-      aboutMedia.style.setProperty("--r", (18 + p * 60) + "%");
-      aboutMedia.style.setProperty("--sc", 1.2 - p * 0.2);
-      aboutMedia.style.setProperty("--py", ((ar.top + ar.height / 2 - vh / 2) * -0.08) + "px");
-      aboutMedia.style.setProperty("--cap", p > 0.85 ? 1 : 0);
-    }
 
     // Trabajos: la imagen se abre desde el centro, hace zoom out y tiene parallax
     caseEls.forEach(c => {
@@ -493,10 +470,8 @@ let lastIdx = -1;
       const r = m.getBoundingClientRect();
       if (r.top > vh || r.bottom < 0) return;
       const p = clamp01((vh - r.top) / (vh * 0.75));
-      m.style.setProperty("--ci", ((1 - p) * 14) + "%");
-      m.style.setProperty("--sc", 1.25 - p * 0.2);
-      m.style.setProperty("--py", ((r.top + r.height / 2 - vh / 2) * -0.1) + "px");
-      m.style.setProperty("--sk", skew * 0.5 + "deg");
+      m.style.setProperty("--ci", ((1 - p) * 8) + "%");
+      m.style.setProperty("--sc", 1.08 - p * 0.08);
     });
 
     // Redes: la galería avanza en horizontal mientras bajas
@@ -513,10 +488,7 @@ let lastIdx = -1;
         const r = it.getBoundingClientRect();
         const d = (r.left + r.width / 2 - cx) / innerWidth;
         if (Math.abs(d) < bestD) { bestD = Math.abs(d); best = i; }
-        it.style.setProperty("--rot", (d * 6 + skew) + "deg");
-        it.style.setProperty("--s", 1 - Math.min(Math.abs(d), 1) * 0.12);
-        it.style.setProperty("--ix", (d * -60) + "px");
-        it.style.setProperty("--dim", Math.min(Math.abs(d), 1) * 0.45);
+        it.style.setProperty("--s", 1 - Math.min(Math.abs(d), 1) * 0.06);
       });
       if (best !== lastIdx) { lastIdx = best; $(".g-now").textContent = String(best + 1).padStart(2, "0"); }
     }

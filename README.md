@@ -6,9 +6,9 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 
 ## Secciones
 1. **Inicio**: foto a pantalla completa, nombre que se separa al bajar y texto gigante en movimiento
-2. **Sobre mí**: bio que se ilumina al leer e imagen que se revela con una máscara circular
+2. **Sobre mí**: bio que se ilumina al leer
 3. **Qué hago**: servicios desplegables (`SERVICIOS` en `data.js`)
-4. **Trabajos realizados**: fichas de proyecto con cliente, tipo, curso, qué hice y herramientas; las imágenes se abren y hacen parallax al bajar
+4. **Trabajos realizados**: imagen, título, marca y descripción breve; la imagen se abre suavemente al bajar
 5. **Redes**: galería que avanza en horizontal al hacer scroll, perfil de TikTok en directo y enlaces
 6. **Habilidades**: herramientas y soft skills
 7. **Contacto**: email y teléfono que se copian con un clic, y botón de WhatsApp
