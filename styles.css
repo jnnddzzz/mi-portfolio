@@ -8,6 +8,7 @@
   --serif: "Instrument Serif", Georgia, serif;
   --sans: "Inter Tight", system-ui, sans-serif;
   --pad: clamp(1.2rem, 5vw, 4rem);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
