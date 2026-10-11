@@ -29,6 +29,7 @@
     <a href="#inicio" class="logo" data-hover>JA<i>●</i></a>
     <nav class="nav-links">
       <a href="#sobre-mi" data-hover>Sobre mí</a>
+      <a href="#servicios" data-hover>Qué hago</a>
       <a href="#trabajos" data-hover>Trabajos</a>
       <a href="#redes" data-hover>Redes</a>
       <a href="#habilidades" data-hover>Habilidades</a>
@@ -77,41 +78,62 @@
     <div class="marquee" aria-hidden="true"><div class="marquee-track"></div></div>
 
     <!-- SOBRE MÍ -->
-    <section id="sobre-mi" class="section" data-logro="sobre">
-      <div class="section-label"><span>Sobre mí</span></div>
-      <p class="statement" data-words></p>
-      <div class="facts">
-        <div class="fact reveal"><b data-count="trabajos">0</b><span>Trabajos publicados</span></div>
-        <div class="fact reveal"><b>2º</b><span>Curso de grado superior</span></div>
-        <div class="fact reveal"><b data-count="herramientas">0</b><span>Herramientas</span></div>
+    <section id="sobre-mi" class="section about" data-logro="sobre">
+      <div class="about-text">
+        <div class="section-label"><span>Sobre mí</span></div>
+        <p class="statement" data-words></p>
+        <div class="facts">
+          <div class="fact reveal"><b data-count="trabajos">0</b><span>Trabajos realizados</span></div>
+          <div class="fact reveal"><b>2º</b><span>Grado superior</span></div>
+          <div class="fact reveal"><b data-count="herramientas">0</b><span>Herramientas</span></div>
+        </div>
       </div>
+      <figure class="about-media" data-mask>
+        <img src="assets/redes/post-1.jpg" alt="Jano en una sesión de fotos" loading="lazy" />
+        <figcaption>Detrás del contenido</figcaption>
+      </figure>
+    </section>
+
+    <!-- QUÉ HAGO -->
+    <section id="servicios" class="section services">
+      <div class="section-label"><span>Qué hago</span></div>
+      <h2 class="reveal">Lo que puedo <em>aportar</em> a una marca</h2>
+      <ol class="service-list"></ol>
     </section>
 
     <!-- TRABAJOS -->
-    <section id="trabajos" class="section" data-logro="trabajos">
-      <div class="section-label"><span>Trabajos</span></div>
+    <section id="trabajos" class="section works-section" data-logro="trabajos">
+      <div class="section-label"><span>Trabajos realizados</span></div>
       <div class="works-head">
-        <h2 class="reveal" data-scramble>Trabajos <em>seleccionados</em></h2>
-        <div class="filters reveal" role="tablist" aria-label="Filtrar trabajos"></div>
+        <h2 class="reveal">Trabajos <em>realizados</em></h2>
+        <p class="works-intro reveal">Proyectos que he desarrollado durante el Grado Superior en Marketing y Publicidad, trabajando sobre marcas reales. Cada ficha resume el encargo, lo que hice y las herramientas que utilicé.</p>
       </div>
-      <div class="works"></div>
+      <div class="cases"></div>
+      <p class="works-more reveal">Portfolio en crecimiento · nuevos proyectos del curso próximamente</p>
     </section>
 
-    <!-- REDES -->
-    <section id="redes" class="section" data-logro="redes">
-      <div class="section-label"><span>Redes sociales</span></div>
-      <div class="social-head">
-        <h2 class="reveal">Lo que <em>publico</em></h2>
-        <p class="reveal hint">Doble clic (o doble toque) en un post para darle like</p>
+    <!-- REDES: galería horizontal fijada al hacer scroll -->
+    <section id="redes" class="gallery" data-logro="redes">
+      <div class="gallery-sticky">
+        <div class="gallery-head">
+          <div class="section-label"><span>Redes sociales</span></div>
+          <h2>Lo que <em>publico</em></h2>
+          <p class="hint">Doble clic o doble toque en una foto para darle like</p>
+          <div class="gallery-count"><b class="g-now">01</b> / <span class="g-total">06</span></div>
+        </div>
+        <div class="gallery-track"></div>
+        <div class="gallery-progress"><i></i></div>
       </div>
+    </section>
+
+    <section class="section social-extra">
       <div class="social-wrap">
-        <div class="posts"></div>
         <aside class="tiktok-box reveal">
           <div class="tiktok-head"><b>En directo desde TikTok</b><a class="tiktok-link" target="_blank" rel="noopener" data-hover></a></div>
           <div class="tiktok-embed-slot"></div>
         </aside>
+        <div class="social-links"></div>
       </div>
-      <div class="social-links"></div>
     </section>
 
     <!-- HABILIDADES -->
@@ -156,6 +178,7 @@
       <span class="modal-cat"></span>
       <h3 id="modal-title"></h3>
       <p class="modal-desc"></p>
+      <ul class="case-points modal-points"></ul>
       <div class="modal-tools"></div>
       <a class="btn modal-link" target="_blank" rel="noopener" data-hover>Ver proyecto en vivo ↗</a>
     </div>

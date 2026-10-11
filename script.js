@@ -54,7 +54,7 @@ function toast(ico, small, text) {
   t.className = "toast";
   t.innerHTML = `<span class="t-ico">${ico}</span><span><small>${esc(small)}</small><b>${esc(text)}</b></span>`;
   $(".toasts").append(t);
-  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 400); }, 3200);
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 400); }, 2400);
 }
 
 const LOGROS = [
@@ -178,46 +178,40 @@ function coverHTML(t) {
   return `<div class="ph-cover"><span>${esc(initials(t.titulo))}</span></div>`;
 }
 
-const categorias = [...new Set(TRABAJOS.map(t => t.categoria))];
-const filters = $(".filters");
-if (categorias.length > 1) {
-  filters.innerHTML = ["Todos", ...categorias].map((c, i) => {
-    const n = c === "Todos" ? TRABAJOS.length : TRABAJOS.filter(t => t.categoria === c).length;
-    return `<button class="filter${i ? "" : " active"}" data-cat="${esc(c)}" data-hover>${esc(c)}<sup>${n}</sup></button>`;
-  }).join("");
-} else filters.remove();
-
-const works = $(".works");
-works.innerHTML = TRABAJOS.map((t, i) => `
-  <button class="card reveal" data-i="${i}" data-cat="${esc(t.categoria)}" data-tilt data-hover="Abrir">
-    ${i === 0 ? '<span class="badge-new">NUEVO</span>' : ""}
-    <span class="card-go">→</span>
-    <div class="card-cover">${coverHTML(t)}<div class="glare"></div></div>
-    <div class="card-info">
-      <div class="card-meta"><span class="tag">${esc(t.categoria)}</span><span>${esc(t.curso || "")}</span></div>
-      <h3>${esc(t.titulo)}</h3>
-      <p>${esc(t.descripcion)}</p>
+const cases = $(".cases");
+cases.innerHTML = TRABAJOS.map((t, i) => `
+  <article class="case" data-i="${i}">
+    <button class="case-media" data-open="${i}" data-hover="Ver" aria-label="Ver ${esc(t.titulo)}">
+      <div class="case-media-inner">${coverHTML(t)}</div>
+    </button>
+    <div class="case-info">
+      <span class="case-kicker">Trabajo realizado · ${esc(t.curso || "")}</span>
+      <h3>${esc(t.titulo)}${t.cliente ? `<small>para ${esc(t.cliente)}</small>` : ""}</h3>
+      <dl class="case-meta">
+        ${t.cliente ? `<div><dt>Cliente</dt><dd>${esc(t.cliente)}</dd></div>` : ""}
+        <div><dt>Tipo</dt><dd>${esc(t.categoria)}</dd></div>
+        <div><dt>Curso</dt><dd>${esc(t.curso || "")}</dd></div>
+      </dl>
+      <p class="case-desc">${esc(t.descripcion)}</p>
+      ${t.puntos?.length ? `<ul class="case-points">${t.puntos.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+      <div class="case-tools">${(t.herramientas || []).map(h => `<span>${esc(h)}</span>`).join("")}</div>
+      <div class="case-actions">
+        <button class="btn" data-open="${i}" data-magnetic data-hover>Ver proyecto <b>→</b></button>
+        ${t.enlace ? `<a class="btn btn-ghost" href="${esc(t.enlace)}" target="_blank" rel="noopener" data-magnetic data-hover>En vivo ↗</a>` : ""}
+      </div>
     </div>
-  </button>`).join("") + `
-  <div class="card soon reveal"><span class="plus">✦</span><b>Más trabajos en camino</b><span>Estoy cocinando nuevos proyectos del grado.</span></div>`;
-
-filters.addEventListener("click", e => {
-  const btn = e.target.closest(".filter");
-  if (!btn) return;
-  $$(".filter").forEach(b => b.classList.toggle("active", b === btn));
-  const cat = btn.dataset.cat;
-  $$(".card[data-cat]").forEach(c => c.classList.toggle("hide", cat !== "Todos" && c.dataset.cat !== cat));
-});
+  </article>`).join("");
 
 const modal = $(".modal");
-works.addEventListener("click", e => {
-  const card = e.target.closest(".card[data-i]");
-  if (!card) return;
-  const t = TRABAJOS[card.dataset.i];
+cases.addEventListener("click", e => {
+  const opener = e.target.closest("[data-open]");
+  if (!opener) return;
+  const t = TRABAJOS[opener.dataset.open];
   $(".modal-cover", modal).innerHTML = coverHTML(t.imagenGrande ? { ...t, imagen: t.imagenGrande } : t);
-  $(".modal-cat", modal).textContent = `${t.categoria}${t.curso ? " · " + t.curso : ""}`;
+  $(".modal-cat", modal).textContent = ["Trabajo realizado", t.cliente, t.categoria, t.curso].filter(Boolean).join(" · ");
   $("#modal-title").textContent = t.titulo;
   $(".modal-desc", modal).textContent = t.descripcion;
+  $(".modal-points", modal).innerHTML = (t.puntos || []).map(x => `<li>${esc(x)}</li>`).join("");
   $(".modal-tools", modal).innerHTML = (t.herramientas || []).map(h => `<span>${esc(h)}</span>`).join("");
   const link = $(".modal-link", modal);
   link.hidden = !t.enlace;
@@ -225,20 +219,46 @@ works.addEventListener("click", e => {
   modal.showModal();
   unlock("proyecto");
 });
+
+// Qué hago
+const services = $(".service-list");
+services.innerHTML = SERVICIOS.map(sv => `
+  <li class="service reveal">
+    <div class="service-row"><h3>${esc(sv.titulo)}</h3><span class="service-plus" aria-hidden="true">+</span></div>
+    <div class="service-body"><div>
+      <p>${esc(sv.texto)}</p>
+      <div class="service-tags">${(sv.tags || []).map(x => `<span>${esc(x)}</span>`).join("")}</div>
+    </div></div>
+  </li>`).join("");
+services.addEventListener("click", e => {
+  const sv = e.target.closest(".service");
+  if (!sv) return;
+  $$(".service", services).forEach(x => x !== sv && x.classList.remove("open"));
+  sv.classList.toggle("open");
+});
 $(".modal-close").addEventListener("click", () => modal.close());
 modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
 
 /* =========================================================
    Redes
    ========================================================= */
-const posts = $(".posts");
-posts.innerHTML = POSTS.map((p, i) => `
-  <div class="post p${i % 3} reveal" data-likes="0">
-    ${p.imagen ? `<img src="${esc(p.imagen)}" alt="${esc(p.texto || "Publicación")}" loading="lazy" draggable="false" />`
-               : `<div class="post-ph"><b>${p.red === "TikTok" ? "♪" : "◎"}</b>${esc(p.texto || "")}</div>`}
-    <span class="post-net">${esc(p.red || "")}</span>
+const posts = $(".gallery-track");
+posts.innerHTML = POSTS.map(p => `
+  <div class="post" data-likes="0">
+    ${p.imagen ? `<img src="${esc(p.imagen)}" alt="${esc(p.texto || "Publicación")}" draggable="false" />` : `<div class="post-ph">◎</div>`}
     ${p.enlace ? `<a class="post-likes" href="${esc(p.enlace)}" target="_blank" rel="noopener" data-hover="Ver" aria-label="Ver publicación"><i>♥</i><span>0</span> · ↗</a>` : `<span class="post-likes"><i>♥</i><span>0</span></span>`}
+    ${p.texto ? `<span class="post-cap">${esc(p.texto)}</span>` : ""}
   </div>`).join("");
+$(".g-total").textContent = String(POSTS.length).padStart(2, "0");
+const gallery = $(".gallery");
+const gItems = $$(".post", posts);
+function sizeGallery() {
+  if (reduced) { gallery.classList.add("static"); return; }
+  gallery.style.height = (posts.scrollWidth - innerWidth + innerHeight) + "px";
+}
+sizeGallery();
+addEventListener("resize", sizeGallery);
+addEventListener("load", sizeGallery);
 
 function like(post, x, y) {
   const n = +post.dataset.likes + 1;
@@ -387,6 +407,8 @@ const sectionIO = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.25 });
 $$("[data-logro]").forEach(s => sectionIO.observe(s));
+// La galería es muy alta: su logro salta al entrar en la zona fijada
+new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { unlock("redes"); obs.disconnect(); } }, { threshold: 0.6 }).observe($(".gallery-sticky"));
 new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { loadTikTok(); obs.disconnect(); } }, { rootMargin: "600px" }).observe($("#redes"));
 
 /* =========================================================
@@ -415,6 +437,13 @@ function onScroll() {
     const hp = scrollY / innerHeight;
     stage.style.transform = `translateY(${scrollY * 0.18}px) scale(${1 - hp * 0.08})`;
     heroBg.style.opacity = 1 - hp;
+    // el nombre se separa hacia los lados al bajar
+    const ws = $$(".w", name);
+    ws.forEach((w, i) => {
+      const dir = ws.length === 1 ? 0 : (i / (ws.length - 1)) * 2 - 1;
+      w.style.transform = `translateX(${dir * hp * 18}vw)`;
+      w.style.opacity = 1 - hp * 0.9;
+    });
   }
 
   const r = statement.getBoundingClientRect();
@@ -429,7 +458,15 @@ function onScroll() {
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-(function marqueeLoop() {
+const clamp01 = v => Math.max(0, Math.min(1, v));
+const aboutMedia = $("[data-mask]");
+const caseEls = $$(".case");
+const caseIO = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); caseIO.unobserve(e.target); } }), { threshold: 0.2 });
+caseEls.forEach(c => caseIO.observe(c));
+let lastIdx = -1;
+
+// Bucle de animación: cinta, imágenes ligadas al scroll y galería
+(function loop() {
   if (!reduced) {
     velocity *= 0.92;
     mPos += mDir * (1 + Math.min(Math.abs(velocity), 40));
@@ -437,8 +474,54 @@ onScroll();
     if (mPos <= -w) mPos += w;
     if (mPos > 0) mPos -= w;
     track.style.transform = `translateX(${mPos}px) skewX(${Math.max(-12, Math.min(12, -velocity * 0.4))}deg)`;
+    const vh = innerHeight;
+    const skew = Math.max(-4, Math.min(4, velocity * 0.12));
+
+    // Sobre mí: la máscara circular crece y la imagen se desplaza
+    const ar = aboutMedia.getBoundingClientRect();
+    if (ar.top < vh && ar.bottom > 0) {
+      const p = clamp01((vh - ar.top) / (vh * 0.9));
+      aboutMedia.style.setProperty("--r", (18 + p * 60) + "%");
+      aboutMedia.style.setProperty("--sc", 1.2 - p * 0.2);
+      aboutMedia.style.setProperty("--py", ((ar.top + ar.height / 2 - vh / 2) * -0.08) + "px");
+      aboutMedia.style.setProperty("--cap", p > 0.85 ? 1 : 0);
+    }
+
+    // Trabajos: la imagen se abre desde el centro, hace zoom out y tiene parallax
+    caseEls.forEach(c => {
+      const m = c.firstElementChild;
+      const r = m.getBoundingClientRect();
+      if (r.top > vh || r.bottom < 0) return;
+      const p = clamp01((vh - r.top) / (vh * 0.75));
+      m.style.setProperty("--ci", ((1 - p) * 14) + "%");
+      m.style.setProperty("--sc", 1.25 - p * 0.2);
+      m.style.setProperty("--py", ((r.top + r.height / 2 - vh / 2) * -0.1) + "px");
+      m.style.setProperty("--sk", skew * 0.5 + "deg");
+    });
+
+    // Redes: la galería avanza en horizontal mientras bajas
+    if (!gallery.classList.contains("static")) {
+      const gr = gallery.getBoundingClientRect();
+      const dist = gallery.offsetHeight - vh;
+      const gp = clamp01(-gr.top / Math.max(1, dist));
+      const maxX = posts.scrollWidth - innerWidth;
+      posts.style.transform = `translateX(${-gp * maxX}px)`;
+      $(".gallery-progress i").style.transform = `scaleX(${gp})`;
+      const cx = innerWidth / 2;
+      let best = 0, bestD = Infinity;
+      gItems.forEach((it, i) => {
+        const r = it.getBoundingClientRect();
+        const d = (r.left + r.width / 2 - cx) / innerWidth;
+        if (Math.abs(d) < bestD) { bestD = Math.abs(d); best = i; }
+        it.style.setProperty("--rot", (d * 6 + skew) + "deg");
+        it.style.setProperty("--s", 1 - Math.min(Math.abs(d), 1) * 0.12);
+        it.style.setProperty("--ix", (d * -60) + "px");
+        it.style.setProperty("--dim", Math.min(Math.abs(d), 1) * 0.45);
+      });
+      if (best !== lastIdx) { lastIdx = best; $(".g-now").textContent = String(best + 1).padStart(2, "0"); }
+    }
   }
-  requestAnimationFrame(marqueeLoop);
+  requestAnimationFrame(loop);
 })();
 
 /* =========================================================
