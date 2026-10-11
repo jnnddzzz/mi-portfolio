@@ -3,62 +3,69 @@
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 const esc = (s = "") => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const COLORS = ["var(--pink)", "var(--yellow)", "var(--blue)", "var(--green)", "var(--orange)"];
+const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 // ---------- Perfil ----------
 $$("[data-perfil]").forEach(el => (el.textContent = PERFIL[el.dataset.perfil] ?? ""));
-const mail = $("[data-perfil-mail]");
-mail.textContent = PERFIL.email;
-mail.href = `mailto:${PERFIL.email}`;
 $("#year").textContent = new Date().getFullYear();
 
+// Nombre letra a letra
+const name = $("[data-split]");
+name.innerHTML = PERFIL.nombre.split(" ").map(word =>
+  `<span class="w">${[...word].map((c, i) => `<span class="ch" style="transition-delay:${i * 35}ms">${esc(c)}</span>`).join("")}</span>`
+).join(" ");
+requestAnimationFrame(() => setTimeout(() => name.classList.add("in"), 100));
+
+// Foto (si no existe, se muestra el hueco "Tu foto aquí")
+const photo = $(".photo img");
+photo.addEventListener("error", () => photo.classList.add("missing"));
+if (PERFIL.foto) photo.src = PERFIL.foto; else photo.classList.add("missing");
+
+// Bio con palabras que se iluminan al hacer scroll
+const statement = $("[data-words]");
+statement.innerHTML = PERFIL.bio.split(" ").map(w => `<span>${esc(w)}</span> `).join("");
+const words = $$("span", statement);
+
 // ---------- Trabajos ----------
-const categorias = [...new Set(TRABAJOS.map(t => t.categoria))];
-const catIndex = cat => categorias.indexOf(cat) % COLORS.length;
 const initials = t => t.split(" ").filter(w => w.length > 2).slice(0, 2).map(w => w[0].toUpperCase()).join("");
+const coverHTML = t => t.imagen
+  ? `<img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" />`
+  : `<div class="ph-cover"><span>${esc(initials(t.titulo))}</span></div>`;
 
-function cover(t) {
-  return t.imagen
-    ? `<img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" loading="lazy" />`
-    : `<span class="ph">${esc(initials(t.titulo))}</span>`;
-}
-
+const categorias = [...new Set(TRABAJOS.map(t => t.categoria))];
 const filters = $(".filters");
-filters.innerHTML = ["Todos", ...categorias]
-  .map((c, i) => `<button class="filter${i ? "" : " active"}" data-cat="${esc(c)}">${esc(c)}</button>`)
-  .join("");
+filters.innerHTML = ["Todos", ...categorias].map((c, i) => {
+  const n = c === "Todos" ? TRABAJOS.length : TRABAJOS.filter(t => t.categoria === c).length;
+  return `<button class="filter${i ? "" : " active"}" data-cat="${esc(c)}" data-hover>${esc(c)}<sup>${n}</sup></button>`;
+}).join("");
 
-const grid = $(".works-grid");
-grid.innerHTML = TRABAJOS.map((t, i) => `
-  <button class="work reveal" data-i="${i}" data-cat="${esc(t.categoria)}">
-    <div class="work-cover ${t.imagen ? "" : `c${catIndex(t.categoria)} pat`}">${cover(t)}</div>
-    <div class="work-info">
-      <div class="work-meta">
-        <span class="badge c${catIndex(t.categoria)}">${esc(t.categoria)}</span>
-        <span>${esc(t.curso || "")}</span>
-      </div>
-      <h3>${esc(t.titulo)}</h3>
-      <p>${esc(t.descripcion)}</p>
-    </div>
-  </button>`).join("");
+const list = $(".works");
+list.innerHTML = TRABAJOS.map((t, i) => `
+  <li class="reveal" data-cat="${esc(t.categoria)}">
+    <button class="work" data-i="${i}" data-hover="Ver">
+      <span class="work-n">${String(i + 1).padStart(2, "0")}</span>
+      <span class="work-t">${esc(t.titulo)}</span>
+      <span class="work-c">${esc(t.categoria)}</span>
+      <span class="work-y">${esc(t.curso || "")}</span>
+      <span class="work-a">→</span>
+    </button>
+  </li>`).join("");
 
 filters.addEventListener("click", e => {
   const btn = e.target.closest(".filter");
   if (!btn) return;
   $$(".filter").forEach(b => b.classList.toggle("active", b === btn));
   const cat = btn.dataset.cat;
-  $$(".work").forEach(w => w.classList.toggle("hide", cat !== "Todos" && w.dataset.cat !== cat));
+  $$("li", list).forEach(li => li.classList.toggle("hide", cat !== "Todos" && li.dataset.cat !== cat));
 });
 
-// ---------- Modal ----------
+// Modal
 const modal = $(".modal");
-grid.addEventListener("click", e => {
-  const card = e.target.closest(".work");
-  if (!card) return;
-  const t = TRABAJOS[card.dataset.i];
-  const mc = $(".modal-cover", modal);
-  mc.className = `modal-cover ${t.imagen ? "" : `c${catIndex(t.categoria)} pat`}`;
-  mc.innerHTML = cover(t);
+list.addEventListener("click", e => {
+  const row = e.target.closest(".work");
+  if (!row) return;
+  const t = TRABAJOS[row.dataset.i];
+  $(".modal-cover", modal).innerHTML = coverHTML(t);
   $(".modal-cat", modal).textContent = `${t.categoria}${t.curso ? " · " + t.curso : ""}`;
   $("#modal-title").textContent = t.titulo;
   $(".modal-desc", modal).textContent = t.descripcion;
@@ -66,56 +73,128 @@ grid.addEventListener("click", e => {
   const link = $(".modal-link", modal);
   link.hidden = !t.enlace;
   if (t.enlace) link.href = t.enlace;
+  preview.classList.remove("show");
   modal.showModal();
 });
 $(".modal-close").addEventListener("click", () => modal.close());
 modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
 
 // ---------- Habilidades ----------
-$(".tools").innerHTML = HABILIDADES.map((h, i) => `
-  <div class="tool">
-    <div class="tool-top"><b>${esc(h.nombre)}</b><span>${esc(h.tipo)}</span></div>
-    <div class="bar"><i style="background:${COLORS[i % COLORS.length]}" data-w="${Number(h.nivel) || 0}"></i></div>
-  </div>`).join("");
-$(".chips").innerHTML = SOFT_SKILLS
-  .map((s, i) => `<span class="chip" style="background:${COLORS[(i + 1) % COLORS.length]}">${esc(s)}</span>`)
-  .join("");
+$(".tools").innerHTML = HABILIDADES.map(h => `
+  <li class="tool reveal">
+    <div class="tool-top"><div><b>${esc(h.nombre)}</b><small>${esc(h.tipo)}</small></div><span data-to="${Number(h.nivel) || 0}">0%</span></div>
+    <div class="bar"><i data-w="${Number(h.nivel) || 0}"></i></div>
+  </li>`).join("");
+$(".chips").innerHTML = SOFT_SKILLS.map(s => `<span class="chip">${esc(s)}</span>`).join("");
 
-// ---------- Redes ----------
-const ICONS = {
-  Instagram: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
-  TikTok: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.8 5.8 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg>',
-  LinkedIn: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg>',
-};
-$(".social-grid").innerHTML = REDES.map(r => `
-  <a class="social-card reveal" href="${esc(r.url)}" target="_blank" rel="noopener" style="background:${r.color}">
-    <span class="arrow">↗</span>
-    ${ICONS[r.nombre] || ""}
-    <div><h3>${esc(r.nombre)}</h3><small>${esc(r.usuario)}</small></div>
-  </a>`).join("");
+// ---------- Contacto ----------
+$(".socials").innerHTML = REDES.map(r => `
+  <li><a href="${esc(r.url)}" target="_blank" rel="noopener" data-hover>
+    <span><b>${esc(r.nombre)}</b><small>${esc(r.usuario)}</small></span><i>↗</i>
+  </a></li>`).join("");
+
+const toast = $(".toast");
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(showToast.t);
+  showToast.t = setTimeout(() => toast.classList.remove("show"), 2000);
+}
+$(".mail").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(PERFIL.email);
+    showToast("¡Email copiado!");
+  } catch {
+    location.href = `mailto:${PERFIL.email}`;
+  }
+});
 
 // ---------- Contadores ----------
-$('[data-count="trabajos"]').textContent = TRABAJOS.length;
-$('[data-count="herramientas"]').textContent = HABILIDADES.length;
+function countUp(el, to, suffix = "") {
+  const start = performance.now();
+  const tick = now => {
+    const p = Math.min((now - start) / 1200, 1);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+$('[data-count="trabajos"]').dataset.to = TRABAJOS.length;
+$('[data-count="herramientas"]').dataset.to = HABILIDADES.length;
 
-// ---------- Animaciones al hacer scroll ----------
+// ---------- Aparición al hacer scroll ----------
 const io = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (!en.isIntersecting) return;
-    en.target.classList.add("in");
-    $$(".bar i", en.target).forEach(b => (b.style.width = b.dataset.w + "%"));
-    io.unobserve(en.target);
+    const el = en.target;
+    el.classList.add("in");
+    $$(".bar i", el).forEach(b => (b.style.width = b.dataset.w + "%"));
+    $$("[data-to]", el).forEach(s => countUp(s, +s.dataset.to, s.closest(".tool") ? "%" : ""));
+    if (el.matches("[data-to]")) countUp(el, +el.dataset.to);
+    io.unobserve(el);
   });
-}, { threshold: 0.12 });
-$$(".reveal").forEach(el => io.observe(el));
+}, { threshold: 0.15 });
+$$(".reveal, .fact b[data-count]").forEach(el => io.observe(el));
 
-// ---------- Nav ----------
-const nav = $(".nav");
-addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 20), { passive: true });
-const toggle = $(".nav-toggle");
-const links = $(".nav-links");
-toggle.addEventListener("click", () => {
-  const open = links.classList.toggle("open");
-  toggle.setAttribute("aria-expanded", open);
-});
-links.addEventListener("click", e => { if (e.target.closest("a")) links.classList.remove("open"); });
+// Palabras de la bio + sección activa en el menú
+const navLinks = $$(".nav-links a");
+const sections = navLinks.map(a => $(a.getAttribute("href")));
+function onScroll() {
+  const r = statement.getBoundingClientRect();
+  const progress = (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35);
+  const lit = Math.round(Math.max(0, Math.min(1, progress)) * words.length);
+  words.forEach((w, i) => w.classList.toggle("lit", i < lit));
+
+  let current = -1;
+  sections.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.4) current = i; });
+  navLinks.forEach((a, i) => a.classList.toggle("active", i === current));
+}
+addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+// ---------- Interacciones con ratón ----------
+const preview = $(".preview");
+if (finePointer) {
+  const cursor = $(".cursor");
+  const label = $(".cursor-label");
+  let mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my, px = mx, py = my;
+
+  addEventListener("mousemove", e => {
+    mx = e.clientX; my = e.clientY;
+    document.body.style.setProperty("--mx", mx + "px");
+    document.body.style.setProperty("--my", my + "px");
+  });
+  (function loop() {
+    cx += (mx - cx) * 0.25; cy += (my - cy) * 0.25;
+    px += (mx - px) * 0.12; py += (my - py) * 0.12;
+    cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+    preview.style.transform = `translate(${px + 30}px, ${py - 120}px) rotate(${(mx - px) * 0.05}deg)`;
+    requestAnimationFrame(loop);
+  })();
+
+  document.addEventListener("mouseover", e => {
+    const t = e.target.closest("[data-hover]");
+    const text = t?.dataset.hover;
+    cursor.classList.toggle("label", !!text);
+    cursor.classList.toggle("big", !!t && !text);
+    label.textContent = text || "";
+  });
+
+  // Vista previa flotante de cada trabajo
+  list.addEventListener("mouseover", e => {
+    const row = e.target.closest(".work");
+    if (!row) return;
+    preview.innerHTML = coverHTML(TRABAJOS[row.dataset.i]);
+    preview.classList.add("show");
+  });
+  list.addEventListener("mouseleave", () => preview.classList.remove("show"));
+
+  // Foto con efecto 3D
+  const tilt = $("[data-tilt]");
+  tilt.addEventListener("mousemove", e => {
+    const r = tilt.getBoundingClientRect();
+    tilt.style.setProperty("--ry", ((e.clientX - r.left) / r.width - 0.5) * 12 + "deg");
+    tilt.style.setProperty("--rx", -((e.clientY - r.top) / r.height - 0.5) * 12 + "deg");
+  });
+  tilt.addEventListener("mouseleave", () => { tilt.style.setProperty("--rx", 0); tilt.style.setProperty("--ry", 0); });
+}

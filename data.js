@@ -9,13 +9,15 @@ const PERFIL = {
   bio: "Estudiante de 2º de Marketing y Publicidad. Me apasiona crear ideas que se vean, se compartan y vendan: diseño para redes, contenido en vídeo y campañas de publicidad digital.",
   email: "tuemail@ejemplo.com", // <- cambia por tu email
   ubicacion: "España",
+  // Tu foto de presentación: súbela como assets/foto.jpg (o cambia la ruta)
+  foto: "assets/foto.jpg",
 };
 
 // Pon aquí tus usuarios reales (sin la @) o deja la URL completa
 const REDES = [
-  { nombre: "Instagram", usuario: "@tuusuario", url: "https://instagram.com/tuusuario", color: "var(--pink)" },
-  { nombre: "TikTok",    usuario: "@tuusuario", url: "https://tiktok.com/@tuusuario",   color: "var(--ink)" },
-  { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "https://linkedin.com/in/tuusuario", color: "var(--blue)" },
+  { nombre: "Instagram", usuario: "@tuusuario", url: "https://instagram.com/tuusuario", },
+  { nombre: "TikTok",    usuario: "@tuusuario", url: "https://tiktok.com/@tuusuario",   },
+  { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "https://linkedin.com/in/tuusuario", },
 ];
 
 const HABILIDADES = [
