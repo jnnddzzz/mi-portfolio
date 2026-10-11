@@ -80,8 +80,7 @@ const TRABAJOS = [
     cliente: "El Corte Inglés",
     categoria: "Email marketing",
     curso: "2º curso",
-    imagen: "assets/trabajos/halloween-el-corte-ingles.jpg",
-    imagenGrande: "assets/trabajos/halloween-el-corte-ingles-completo.jpg",
+    imagen: "assets/trabajos/halloween-portada.jpg",
     descripcion: "Campaña de email marketing «Noche de terror en tu casa» diseñada en MailerLite para presentar la colección de decoración de Halloween de El Corte Inglés.",
     puntos: [
       "Asunto con emoji para destacar en la bandeja: «🎃 Noche de terror: tu casa, lista para Halloween»",
@@ -96,8 +95,7 @@ const TRABAJOS = [
     cliente: "IKEA",
     categoria: "Web",
     curso: "2º curso",
-    imagen: "",
-    colores: ["#0058a3", "#ffdb00"],
+    imagen: "assets/trabajos/ikea-portada.jpg",
     descripcion: "Landing page para IKEA desarrollada y publicada con Google Apps Script, pensada para guiar al usuario hacia una única acción.",
     puntos: [
       "Estructura de landing: cabecera, propuesta de valor y llamada a la acción",

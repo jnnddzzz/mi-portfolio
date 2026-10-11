@@ -34,6 +34,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 img { display: block; max-width: 100%; }
 h2 { font-weight: 500; font-size: clamp(2.2rem, 5.5vw, 4.5rem); letter-spacing: -.035em; line-height: 1; text-wrap: balance; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+[hidden] { display: none !important; }
 
 /* ---------- Intro ---------- */
 .loader {
@@ -44,7 +45,7 @@ h2 { font-weight: 500; font-size: clamp(2.2rem, 5.5vw, 4.5rem); letter-spacing: 
 }
 .loader.done { clip-path: inset(0 0 100% 0); }
 .loader-name { font-weight: 600; font-size: clamp(1rem, 2vw, 1.4rem); }
-.loader-count { font-size: clamp(5rem, 18vw, 16rem); font-weight: 600; line-height: .8; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.loader-count { display: inline-block; min-width: 3.6ch; text-align: right; font-size: clamp(5rem, 18vw, 16rem); font-weight: 600; line-height: .8; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
 .loader-count::after { content: "%"; font-size: .3em; vertical-align: top; }
 html:not(.js) .loader { display: none; }
 

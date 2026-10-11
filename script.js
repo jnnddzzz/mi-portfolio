@@ -243,10 +243,12 @@ const gallery = $(".gallery");
 const gItems = $$(".post", posts);
 function sizeGallery() {
   if (reduced) { gallery.classList.add("static"); return; }
-  gallery.style.height = (posts.scrollWidth - innerWidth + innerHeight) + "px";
+  // altura fija con la del viewport inicial: evita saltos en móvil al ocultarse la barra del navegador
+  gallery.style.height = (posts.scrollWidth - innerWidth + document.documentElement.clientHeight) + "px";
 }
 sizeGallery();
-addEventListener("resize", sizeGallery);
+let lastW = innerWidth;
+addEventListener("resize", () => { if (innerWidth !== lastW) { lastW = innerWidth; sizeGallery(); } });
 addEventListener("load", sizeGallery);
 
 function like(post, x, y) {
@@ -406,6 +408,7 @@ new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { loadTikTok()
 const bar = $(".progress i");
 const stage = $(".hero-stage");
 const heroBg = $(".hero-bg");
+const heroWords = $$(".w", name);
 const nav = $(".nav");
 const navLinks = $$(".nav-links a");
 const sections = navLinks.map(a => $(a.getAttribute("href")));
@@ -422,14 +425,13 @@ function onScroll() {
   if (dy < -4) nav.classList.remove("hidden");
   lastY = scrollY;
 
-  if (scrollY < innerHeight * 1.2 && !reduced) {
-    const hp = scrollY / innerHeight;
-    stage.style.transform = `translateY(${scrollY * 0.18}px) scale(${1 - hp * 0.08})`;
+  if (!reduced) {
+    const hp = Math.min(scrollY / innerHeight, 1.2);
+    stage.style.transform = `translateY(${hp * innerHeight * 0.18}px) scale(${1 - hp * 0.08})`;
     heroBg.style.opacity = 1 - hp;
     // el nombre se separa hacia los lados al bajar
-    const ws = $$(".w", name);
-    ws.forEach((w, i) => {
-      const dir = ws.length === 1 ? 0 : (i / (ws.length - 1)) * 2 - 1;
+    heroWords.forEach((w, i) => {
+      const dir = heroWords.length === 1 ? 0 : (i / (heroWords.length - 1)) * 2 - 1;
       w.style.transform = `translateX(${dir * hp * 18}vw)`;
       w.style.opacity = 1 - hp * 0.9;
     });
@@ -452,6 +454,7 @@ const caseEls = $$(".case");
 const caseIO = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); caseIO.unobserve(e.target); } }), { threshold: 0.2 });
 caseEls.forEach(c => caseIO.observe(c));
 let lastIdx = -1;
+const gBar = $(".gallery-progress i");
 
 // Bucle de animación: cinta, imágenes ligadas al scroll y galería
 (function loop() {
@@ -481,7 +484,7 @@ let lastIdx = -1;
       const gp = clamp01(-gr.top / Math.max(1, dist));
       const maxX = posts.scrollWidth - innerWidth;
       posts.style.transform = `translateX(${-gp * maxX}px)`;
-      $(".gallery-progress i").style.transform = `scaleX(${gp})`;
+      gBar.style.transform = `scaleX(${gp})`;
       const cx = innerWidth / 2;
       let best = 0, bestD = Infinity;
       gItems.forEach((it, i) => {
