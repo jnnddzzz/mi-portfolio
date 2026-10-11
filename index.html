@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jano Arribas Díaz · Marketing & Publicidad</title>
+  <meta name="description" content="Portfolio de Jano Arribas Díaz, estudiante de Marketing y Publicidad: diseño, redes sociales, campañas y vídeo." />
+  <meta name="theme-color" content="#0b0b0c" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%230b0b0c'/><circle cx='50' cy='50' r='16' fill='%23d4ff3a'/></svg>" />
+</head>
+<body>
+  <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="preview" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a href="#inicio" class="logo" data-hover>JA<i>●</i></a>
+    <nav class="nav-links">
+      <a href="#sobre-mi" data-hover>Sobre mí</a>
+      <a href="#trabajos" data-hover>Trabajos</a>
+      <a href="#habilidades" data-hover>Habilidades</a>
+      <a href="#contacto" data-hover>Contacto</a>
+    </nav>
+    <span class="status"><i></i>Disponible para prácticas</span>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+      <div class="hero-text">
+        <p class="eyebrow reveal" data-perfil="estudios"></p>
+        <h1 class="hero-name" data-split></h1>
+        <p class="hero-claim reveal">Ideas que se <em>ven</em>, se <em>comparten</em> y <em>venden</em>.</p>
+        <a href="#trabajos" class="scroll-hint reveal" data-hover>
+          <span>Ver trabajos</span><b>↓</b>
+        </a>
+      </div>
+      <figure class="photo reveal" data-tilt>
+        <img alt="Foto de presentación" />
+        <div class="photo-ph"><span>JA</span><small>Tu foto aquí</small></div>
+        <figcaption><span data-perfil="ubicacion"></span> · <span data-perfil="titulo"></span></figcaption>
+      </figure>
+    </section>
+
+    <!-- SOBRE MÍ -->
+    <section id="sobre-mi" class="section">
+      <div class="section-label"><span>01</span>Sobre mí</div>
+      <p class="statement" data-words></p>
+      <div class="facts">
+        <div class="fact reveal"><b data-count="trabajos">0</b><span>Trabajos</span></div>
+        <div class="fact reveal"><b>2º</b><span>Curso de grado superior</span></div>
+        <div class="fact reveal"><b data-count="herramientas">0</b><span>Herramientas</span></div>
+      </div>
+    </section>
+
+    <!-- TRABAJOS -->
+    <section id="trabajos" class="section">
+      <div class="section-label"><span>02</span>Trabajos</div>
+      <div class="works-head">
+        <h2 class="reveal">Trabajos <em>seleccionados</em></h2>
+        <div class="filters reveal" role="tablist" aria-label="Filtrar trabajos"></div>
+      </div>
+      <ul class="works"></ul>
+    </section>
+
+    <!-- HABILIDADES -->
+    <section id="habilidades" class="section">
+      <div class="section-label"><span>03</span>Habilidades</div>
+      <div class="skills-wrap">
+        <ul class="tools"></ul>
+        <div class="soft reveal">
+          <h3>También se me da bien</h3>
+          <div class="chips"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REDES + CONTACTO -->
+    <section id="contacto" class="section contact">
+      <div class="section-label"><span>04</span>Contacto</div>
+      <h2 class="contact-title reveal">¿Hablamos?</h2>
+      <button class="mail reveal" data-hover="Copiar"><span data-perfil="email"></span><b>↗</b></button>
+      <ul class="socials"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year"></span> <span data-perfil="nombre"></span></span>
+    <a href="#inicio" data-hover>Volver arriba ↑</a>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <dialog class="modal" aria-labelledby="modal-title">
+    <button class="modal-close" aria-label="Cerrar" data-hover>✕</button>
+    <div class="modal-cover"></div>
+    <div class="modal-body">
+      <span class="modal-cat"></span>
+      <h3 id="modal-title"></h3>
+      <p class="modal-desc"></p>
+      <div class="modal-tools"></div>
+      <a class="modal-link" target="_blank" rel="noopener" data-hover>Ver trabajo completo ↗</a>
+    </div>
+  </dialog>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
