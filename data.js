@@ -40,6 +40,21 @@ const POSTS = [
   { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Chándal morado" },
 ];
 
+/* ---------- ESTILO: moda y diseños ----------
+   El texto y las etiquetas aparecen en el apartado "Estilo".
+   Tus looks son las fotos de POSTS.
+*/
+const ESTILO = {
+  texto: "La moda es parte de cómo me comunico. Me mueven el streetwear, los colores que no pasan desapercibidos y los looks que cuentan algo antes de decir nada.",
+  etiquetas: ["Streetwear", "Color", "Oversize", "Estampados", "Sneakers"],
+};
+
+/* Tus diseños: sube cada imagen a assets/disenos/ y añade una línea así:
+   { imagen: "assets/disenos/mi-diseno.jpg", titulo: "Nombre del diseño", tipo: "Camiseta" },
+   Mientras la lista esté vacía, se muestra "Diseños en proceso".
+*/
+const DISENOS = [];
+
 // Lo que ofreces: aparece en la sección "Qué hago"
 const SERVICIOS = [
   { titulo: "Contenido para redes sociales", texto: "Ideas, fotografía y vídeo vertical pensados para Instagram y TikTok, con una estética propia y coherente.", tags: ["Instagram", "TikTok", "CapCut", "Canva"] },
