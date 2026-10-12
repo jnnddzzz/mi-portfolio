@@ -4,13 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jano Arribas Díaz · Marketing & Publicidad</title>
-  <meta name="description" content="Portfolio de Jano Arribas Díaz, estudiante de Marketing y Publicidad: email marketing, landing pages, contenido para redes, moda y diseño." />
-  <meta name="theme-color" content="#0b0b0c" />
+  <meta name="description" content="Portfolio de Jano Arribas Díaz: webs y landing pages, campañas publicitarias, redes sociales, logotipos e identidad de marca, email marketing, moda y contenido." />
+  <meta name="theme-color" content="#000000" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%230b0b0c'/><circle cx='50' cy='50' r='16' fill='%23d4ff3a'/></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23000'/><circle cx='50' cy='50' r='16' fill='%23d4ff3a'/></svg>" />
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
@@ -20,24 +20,27 @@
     <span class="loader-count">0</span>
   </div>
 
-  <div class="progress" aria-hidden="true"><i></i></div>
   <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
 
+  <!-- Barra de navegación translúcida -->
   <header class="nav">
     <a href="#inicio" class="logo" data-hover>JA<i>●</i></a>
     <nav class="nav-links">
-      <a href="#sobre-mi" data-hover>Sobre mí</a>
-      <a href="#trabajos" data-hover>Trabajos</a>
-      <a href="#estilo" data-hover>Estilo</a>
-      <a href="#redes" data-hover>Redes</a>
-      <a href="#habilidades" data-hover>Habilidades</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#servicios">Qué hago</a>
+      <a href="#trabajos">Trabajos</a>
+      <a href="#estilo">Estilo</a>
+      <a href="#redes">Redes</a>
+      <a href="#habilidades">Habilidades</a>
     </nav>
     <a href="#contacto" class="nav-cta" data-hover>Contacto</a>
+    <div class="progress" aria-hidden="true"><i></i></div>
   </header>
 
   <main>
     <!-- INICIO -->
     <section id="inicio" class="hero">
+      <div class="bubbles" aria-label="Enlaces rápidos"></div>
       <p class="eyebrow" data-perfil="estudios"></p>
       <div class="hero-stage">
         <div class="hero-flip">
@@ -53,96 +56,120 @@
       <div class="hero-foot" aria-hidden="true">
         <span data-perfil="titulo"></span>
         <span class="scroll-cue">Scroll <i></i></span>
-        <span><span data-perfil="ubicacion"></span> · <span class="hero-year"></span></span>
+        <span class="bubble-hint">Arrastra las burbujas</span>
       </div>
     </section>
 
     <!-- SOBRE MÍ -->
     <section id="sobre-mi" class="section about">
-      <div class="section-label">Sobre mí</div>
+      <header class="head">
+        <p class="kicker">Sobre mí</p>
+      </header>
       <p class="statement" data-words></p>
-      <div class="facts">
-        <div class="fact reveal"><b data-count="trabajos">0</b><span>Trabajos realizados</span></div>
-        <div class="fact reveal"><b>2º</b><span>Grado superior</span></div>
-        <div class="fact reveal"><b data-count="herramientas">0</b><span>Herramientas</span></div>
+      <div class="stats">
+        <div class="stat reveal"><b data-count="servicios">0</b><span>Áreas en las que trabajo</span></div>
+        <div class="stat reveal"><b data-count="trabajos">0</b><span>Trabajos realizados</span></div>
+        <div class="stat reveal"><b>2º</b><span>Grado superior en Marketing y Publicidad</span></div>
       </div>
     </section>
 
     <!-- QUÉ HAGO -->
-    <section id="servicios" class="section services">
-      <div class="section-label">Qué hago</div>
-      <ol class="service-list"></ol>
+    <section id="servicios" class="section">
+      <header class="head reveal">
+        <p class="kicker">Qué hago</p>
+        <h2>Todo lo que una marca necesita <em>para crecer.</em></h2>
+        <p class="lead">De la idea a la publicación: diseño, estrategia y ejecución.</p>
+      </header>
+      <div class="bento"></div>
     </section>
 
     <!-- TRABAJOS -->
     <section id="trabajos" class="section">
-      <div class="section-label">Trabajos realizados</div>
-      <div class="works-head">
-        <h2 class="reveal">Trabajos <em>realizados</em></h2>
-        <p class="works-intro reveal">Proyectos que he realizado durante el Grado Superior en Marketing y Publicidad, trabajando sobre marcas reales.</p>
-      </div>
+      <header class="head reveal">
+        <p class="kicker">Trabajos realizados</p>
+        <h2>Proyectos para <em>marcas reales.</em></h2>
+        <p class="lead">Trabajos que he realizado durante el Grado Superior en Marketing y Publicidad.</p>
+      </header>
       <div class="cases"></div>
     </section>
 
-    <!-- ESTILO: moda y diseños -->
+    <!-- ESTILO -->
     <section id="estilo" class="section style">
-      <div class="section-label">Estilo</div>
-      <div class="style-head">
-        <h2 class="reveal">Moda, diseño <em>y actitud</em></h2>
-        <div class="style-intro reveal">
-          <p class="style-text"></p>
-          <ul class="style-tags"></ul>
-        </div>
-      </div>
-
+      <header class="head reveal">
+        <p class="kicker">Estilo</p>
+        <h2>Moda, diseño <em>y actitud.</em></h2>
+        <p class="lead style-text"></p>
+        <ul class="style-tags"></ul>
+      </header>
       <h3 class="sub-title reveal">Mis looks <a class="sub-link" target="_blank" rel="noopener" data-hover></a></h3>
       <div class="looks">
         <div class="look-col" data-speed="0.04"></div>
         <div class="look-col" data-speed="0.16"></div>
         <div class="look-col" data-speed="0.09"></div>
       </div>
-
       <h3 class="sub-title reveal">Mis diseños</h3>
       <div class="designs"></div>
     </section>
 
-    <!-- REDES SOCIALES -->
-    <section id="redes" class="section socials">
-      <div class="section-label">Redes sociales</div>
-      <h2 class="reveal">Sígueme en <em>redes</em></h2>
-      <div class="social-cards"></div>
+    <!-- REDES -->
+    <section id="redes" class="section">
+      <header class="head reveal">
+        <p class="kicker">Redes sociales</p>
+        <h2>Sígueme <em>en redes.</em></h2>
+        <p class="lead">Moda, contenido y lo que voy creando, cada día.</p>
+      </header>
+      <div class="social-grid">
+        <a class="tile ig-tile reveal" target="_blank" rel="noopener" data-hover="Seguir">
+          <div class="tile-top"><span class="tile-icon" data-icon="instagram"></span><span class="tile-arrow">↗</span></div>
+          <div class="ig-grid"></div>
+          <div class="tile-bottom"><b>Instagram</b><span class="ig-user"></span></div>
+        </a>
+        <div class="tile tt-tile reveal">
+          <div class="tile-top"><span class="tile-icon" data-icon="tiktok"></span><a class="tile-arrow tt-link" target="_blank" rel="noopener" data-hover="Abrir">↗</a></div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="tt-embed"></div>
+              <a class="tt-fallback" target="_blank" rel="noopener" data-hover="Ver">
+                <span class="tile-icon big" data-icon="tiktok"></span>
+                <b class="tt-user"></b>
+                <span>Vídeos, tendencias y contenido</span>
+                <i>Ver perfil ↗</i>
+              </a>
+            </div>
+          </div>
+          <div class="tile-bottom"><b>TikTok</b><span class="tt-user-2"></span></div>
+        </div>
+      </div>
     </section>
 
     <!-- HABILIDADES -->
     <section id="habilidades" class="section">
-      <div class="section-label">Habilidades</div>
-      <div class="skills-wrap">
-        <ul class="tools"></ul>
-        <p class="soft reveal"></p>
-      </div>
+      <header class="head reveal">
+        <p class="kicker">Habilidades</p>
+        <h2>Las herramientas <em>que domino.</em></h2>
+      </header>
+      <div class="skills"></div>
+      <p class="soft reveal"></p>
     </section>
 
-    <!-- CONTACTO + REDES -->
+    <!-- CONTACTO -->
     <section id="contacto" class="section contact">
-      <div class="section-label">Contacto</div>
-      <h2 class="contact-title" data-proximity>¿Hablamos?</h2>
-      <div class="contact-list">
-        <button class="contact-item reveal" data-copy="email" data-hover="Copiar">
-          <small>Email</small><span data-perfil="email"></span>
-        </button>
-        <button class="contact-item reveal" data-copy="telefono" data-hover="Copiar">
-          <small>Teléfono</small><span class="tel-text"></span>
-        </button>
-        <a class="contact-item reveal wa" target="_blank" rel="noopener" data-hover="Abrir">
-          <small>WhatsApp</small><span>Escríbeme ↗</span>
-        </a>
+      <header class="head">
+        <p class="kicker">Contacto</p>
+        <h2 class="contact-title" data-proximity>¿Hablamos?</h2>
+        <p class="lead">Para prácticas, colaboraciones o proyectos.</p>
+      </header>
+      <div class="contact-actions">
+        <button class="pill pill-solid" data-copy="email" data-hover><span data-perfil="email"></span></button>
+        <button class="pill" data-copy="telefono" data-hover><span class="tel-text"></span></button>
+        <a class="pill wa" target="_blank" rel="noopener" data-hover>WhatsApp ↗</a>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <span>© <span id="year"></span> <span data-perfil="nombre"></span></span>
-    <a href="#inicio" data-hover>Volver arriba ↑</a>
+    <a href="#inicio">Volver arriba ↑</a>
   </footer>
 
   <div class="toasts" aria-live="polite"></div>

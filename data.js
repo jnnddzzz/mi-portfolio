@@ -57,13 +57,24 @@ const ESTILO = {
 */
 const DISENOS = [];
 
-// Lo que ofreces: aparece en la sección "Qué hago"
+/* ---------- QUÉ HAGO ----------
+   Cada servicio es una tarjeta. icono: web | campana | redes | marca | email | video | estrategia
+   grande: true hace la tarjeta más ancha.
+*/
 const SERVICIOS = [
-  { titulo: "Contenido para redes sociales", texto: "Ideas, fotografía y vídeo vertical pensados para Instagram y TikTok, con una estética propia y coherente.", tags: ["Instagram", "TikTok", "CapCut", "Canva"] },
-  { titulo: "Email marketing", texto: "Campañas de email con asunto trabajado, diseño adaptado a la marca y llamadas a la acción claras.", tags: ["MailerLite", "Copywriting"] },
-  { titulo: "Publicidad digital", texto: "Planificación de anuncios y públicos para captar atención y convertirla en resultados.", tags: ["Meta Ads", "Google Ads"] },
-  { titulo: "Landing pages", texto: "Páginas de aterrizaje enfocadas a un único objetivo, con textos persuasivos y estructura clara.", tags: ["Apps Script", "HTML", "CSS"] },
+  { icono: "web",        grande: true, titulo: "Diseño de webs y landing pages", texto: "Webs y páginas de aterrizaje claras, rápidas y pensadas para convertir: estructura, textos persuasivos y diseño adaptado a la marca.", tags: ["HTML", "CSS", "Apps Script"] },
+  { icono: "campana",    titulo: "Campañas publicitarias", texto: "Planifico y lanzo campañas de principio a fin: objetivo, público, creatividades y seguimiento de resultados.", tags: ["Meta Ads", "Google Ads"] },
+  { icono: "redes",      titulo: "Gestión de redes sociales", texto: "Creo, programo y publico contenido, y llevo el día a día de las cuentas para que crezcan con una estética coherente.", tags: ["Instagram", "TikTok"] },
+  { icono: "marca",      titulo: "Logotipos e identidad de marca", texto: "Diseño logos y sistemas visuales completos: colores, tipografías y aplicaciones para que una marca se reconozca al instante.", tags: ["Branding", "Canva"] },
+  { icono: "email",      titulo: "Email marketing", texto: "Newsletters y campañas de email con asuntos que se abren y diseños que llevan a la acción.", tags: ["MailerLite"] },
+  { icono: "video",      grande: true, titulo: "Contenido en foto y vídeo", texto: "Fotografía y vídeo vertical para marcas y redes: idea, grabación y edición con ritmo y estilo propio.", tags: ["CapCut", "Reels", "TikTok"] },
+  { icono: "estrategia", titulo: "Estrategia y planes de marketing", texto: "Análisis de mercado, público objetivo y plan de acción para que cada paso tenga un porqué.", tags: ["DAFO", "Plan de marketing"] },
 ];
+
+/* ---------- BURBUJAS DE LA PORTADA ----------
+   Enlaces rápidos que flotan en la portada. tipo: instagram | tiktok | whatsapp | email | trabajos | linkedin
+*/
+const BURBUJAS = ["instagram", "tiktok", "whatsapp", "email", "trabajos"];
 
 const HABILIDADES = [
   { nombre: "Canva",       nivel: 90, tipo: "Diseño" },
