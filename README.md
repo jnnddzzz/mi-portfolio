@@ -2,16 +2,17 @@
 
 Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura, minimalista e interactiva, sin dependencias: HTML + CSS + JavaScript.
 
-**Interacciones:** intro con contador, foto de portada que se revela, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
+**Interacciones:** intro con contador, foto de portada que entra a pantalla completa y se encoge hasta su sitio, nombre gigante que invierte los colores sobre la foto, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
 
 ## Secciones
-1. **Inicio**: foto grande, nombre y frase que rota
+1. **Inicio**: foto a pantalla completa que se encoge, nombre gigante sobre la foto y frase que rota
 2. **Sobre mí**: bio y datos
 3. **Qué hago**: servicios desplegables (`SERVICIOS` en `data.js`)
 4. **Trabajos realizados**: imagen, título, marca y descripción breve
 5. **Estilo**: moda (tus looks, de `POSTS`) y tus diseños (`DISENOS`)
-6. **Habilidades**: herramientas y soft skills
-7. **Contacto**: email y teléfono que se copian con un clic, WhatsApp, Instagram y TikTok
+6. **Redes sociales**: tarjetas de Instagram y TikTok (`REDES` en `data.js`)
+7. **Habilidades**: herramientas y soft skills
+8. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
 
 ## ✏️ Cómo actualizar tu contenido
 **Todo se edita en `data.js`**, no tienes que tocar nada más.
@@ -53,7 +54,7 @@ Sube tu foto a `assets/` con el nombre `foto.jpg` (vertical queda mejor, formato
 En `styles.css`, primera línea de `:root`, cambia `--accent: #d4ff3a;` por el color que quieras.
 
 ### Cambiar tus datos
-En `data.js` edita `PERFIL` (email, bio...), `REDES` (tus usuarios) y `HABILIDADES` (nivel de 0 a 100).
+En `data.js` edita `PERFIL` (email, bio...), `REDES` (usuarios, texto y miniaturas de cada red) y `HABILIDADES` (nivel de 0 a 100). Si añades la url de LinkedIn, aparece su tarjeta.
 
 ## 🌐 Publicar con GitHub Pages
 1. Junta esta rama en `main`.

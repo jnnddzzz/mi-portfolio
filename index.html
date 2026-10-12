@@ -29,6 +29,7 @@
       <a href="#sobre-mi" data-hover>Sobre mí</a>
       <a href="#trabajos" data-hover>Trabajos</a>
       <a href="#estilo" data-hover>Estilo</a>
+      <a href="#redes" data-hover>Redes</a>
       <a href="#habilidades" data-hover>Habilidades</a>
     </nav>
     <a href="#contacto" class="nav-cta" data-hover>Contacto</a>
@@ -39,14 +40,21 @@
     <section id="inicio" class="hero">
       <p class="eyebrow" data-perfil="estudios"></p>
       <div class="hero-stage">
-        <figure class="photo" data-tilt>
-          <img alt="Jano Arribas Díaz" />
-          <div class="photo-ph"><span>JA</span></div>
-          <div class="glare"></div>
-        </figure>
+        <div class="hero-flip">
+          <figure class="photo" data-tilt>
+            <img alt="Jano Arribas Díaz" />
+            <div class="photo-ph"><span>JA</span></div>
+            <div class="glare"></div>
+          </figure>
+        </div>
       </div>
       <h1 class="hero-name" data-split></h1>
       <p class="hero-claim">Ideas que se <span class="rotator"><em class="rot-word">ven</em></span></p>
+      <div class="hero-foot" aria-hidden="true">
+        <span data-perfil="titulo"></span>
+        <span class="scroll-cue">Scroll <i></i></span>
+        <span><span data-perfil="ubicacion"></span> · <span class="hero-year"></span></span>
+      </div>
     </section>
 
     <!-- SOBRE MÍ -->
@@ -98,6 +106,13 @@
       <div class="designs"></div>
     </section>
 
+    <!-- REDES SOCIALES -->
+    <section id="redes" class="section socials">
+      <div class="section-label">Redes sociales</div>
+      <h2 class="reveal">Sígueme en <em>redes</em></h2>
+      <div class="social-cards"></div>
+    </section>
+
     <!-- HABILIDADES -->
     <section id="habilidades" class="section">
       <div class="section-label">Habilidades</div>
@@ -121,11 +136,6 @@
         <a class="contact-item reveal wa" target="_blank" rel="noopener" data-hover="Abrir">
           <small>WhatsApp</small><span>Escríbeme ↗</span>
         </a>
-      </div>
-      <div class="social-row"></div>
-      <div class="tiktok-box reveal">
-        <div class="tiktok-head"><span>TikTok</span><a class="tiktok-link" target="_blank" rel="noopener" data-hover></a></div>
-        <div class="tiktok-embed-slot"></div>
       </div>
     </section>
   </main>
