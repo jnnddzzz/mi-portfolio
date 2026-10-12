@@ -2,16 +2,16 @@
 
 Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura, minimalista e interactiva, sin dependencias: HTML + CSS + JavaScript.
 
-**Interacciones:** intro con contador, sistema de logros (el visitante desbloquea 8 logros mientras explora, con confeti al completar el 100%), barra de progreso, cursor personalizado, botones magnéticos, palabra que rota en la portada, foto y tarjetas con efecto 3D y brillo, cinta que reacciona a la velocidad del scroll, bio que se ilumina al hacer scroll, posts con "doble toque para dar like", perfil de TikTok en directo, letras de contacto que reaccionan al ratón y easter egg (5 clics en el logo).
+**Interacciones:** intro con contador, foto de portada que se revela, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
 
 ## Secciones
-1. **Inicio**: foto a pantalla completa, nombre que se separa al bajar y texto gigante en movimiento
-2. **Sobre mí**: bio que se ilumina al leer
+1. **Inicio**: foto grande, nombre y frase que rota
+2. **Sobre mí**: bio y datos
 3. **Qué hago**: servicios desplegables (`SERVICIOS` en `data.js`)
-4. **Trabajos realizados**: imagen, título, marca y descripción breve; la imagen se abre suavemente al bajar
-5. **Redes**: galería que avanza en horizontal al hacer scroll, perfil de TikTok en directo y enlaces
+4. **Trabajos realizados**: imagen, título, marca y descripción breve
+5. **Estilo**: moda (tus looks, de `POSTS`) y tus diseños (`DISENOS`)
 6. **Habilidades**: herramientas y soft skills
-7. **Contacto**: email y teléfono que se copian con un clic, y botón de WhatsApp
+7. **Contacto**: email y teléfono que se copian con un clic, WhatsApp, Instagram y TikTok
 
 ## ✏️ Cómo actualizar tu contenido
 **Todo se edita en `data.js`**, no tienes que tocar nada más.
@@ -36,11 +36,15 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 ```
 3. Guarda (**Commit changes**). En 1-2 minutos la web se actualiza sola.
 
-Si creas una categoría nueva, aparece automáticamente como filtro.
+### Añadir looks (fotos de tus redes)
+1. Sube la foto a `assets/redes/` (vertical, mejor la original que una captura).
+2. En `data.js`, en `POSTS`, pon la ruta en `imagen`, un título corto en `texto` y el enlace del post en `enlace`.
 
-### Añadir posts de tus redes
-1. Haz captura o descarga la imagen de tus mejores publicaciones y súbelas a `assets/redes/`.
-2. En `data.js`, en `POSTS`, pon la ruta en `imagen` y el enlace del post en `enlace`.
+### Añadir tus diseños
+1. Sube la imagen a `assets/disenos/`.
+2. En `data.js`, en `DISENOS`, añade: `{ imagen: "assets/disenos/mi-diseno.jpg", titulo: "Nombre", tipo: "Camiseta" },`
+
+El texto y las etiquetas del apartado Estilo se cambian en `ESTILO`.
 
 ### Poner tu foto
 Sube tu foto a `assets/` con el nombre `foto.jpg` (vertical queda mejor, formato 4:5). Mientras no exista se muestra un hueco con tus iniciales.
