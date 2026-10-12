@@ -115,7 +115,6 @@ const BUBBLE_DEF = {
 const hero = $(".hero");
 const bubbleLayer = $(".bubbles");
 const bubbles = [];
-let pointer = { x: -999, y: -999 };
 
 function spawnBubbles() {
   const small = innerWidth < 600;
@@ -123,21 +122,24 @@ function spawnBubbles() {
   const W = hero.clientWidth, H = hero.clientHeight;
   defs.forEach((d, i) => {
     const el = document.createElement(d.href ? "a" : "button");
-    el.className = "bubble" + (d.accent ? " accent" : "");
+    el.className = `bubble b-${d.key}`;
     el.draggable = false;
     if (d.href) { el.href = d.href; if (d.ext) { el.target = "_blank"; el.rel = "noopener"; } }
     el.setAttribute("aria-label", d.label);
-    el.innerHTML = `${ICON[d.key] || ""}<span>${esc(d.label)}</span>`;
-    const r = (small ? 34 : 50) + (i % 3) * (small ? 4 : 8);
+    el.innerHTML = `<span class="bubble-in">${ICON[d.key] || ""}</span><span class="b-label">${esc(d.label)}</span>`;
+    const r = (small ? 23 : 28) + (i % 2) * 3;
     el.style.setProperty("--r", r + "px");
     // reparte las burbujas a los lados de la foto
     const left = i % 2 === 0;
     const x = left ? W * (0.08 + Math.random() * 0.17) : W * (0.75 + Math.random() * 0.17);
-    const y = H * (0.2 + (i / defs.length) * 0.55);
-    const b = { el, d, r, x, y, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, drag: false, moved: 0 };
+    const y = H * (0.24 + (i / defs.length) * 0.5);
+    const b = { el, d, r, x, y, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8, drag: false, hover: false, moved: 0 };
     bubbles.push(b);
     bubbleLayer.append(el);
     setTimeout(() => el.classList.add("on"), i * 110);
+    // al pasar el ratón la burbuja se detiene para que sea fácil pulsarla
+    el.addEventListener("pointerenter", () => (b.hover = true));
+    el.addEventListener("pointerleave", () => (b.hover = false));
     attachDrag(b);
   });
 }
@@ -168,24 +170,23 @@ function attachDrag(b) {
   });
 }
 
-hero.addEventListener("pointermove", e => { const r = hero.getBoundingClientRect(); pointer = { x: e.clientX - r.left, y: e.clientY - r.top }; });
-hero.addEventListener("pointerleave", () => (pointer = { x: -999, y: -999 }));
 
 function stepBubbles() {
   if (!bubbles.length) return;
   const W = hero.clientWidth, H = hero.clientHeight;
   // la foto actúa como obstáculo en pantallas grandes
   const pr = innerWidth > 900 ? (() => { const a = $(".photo").getBoundingClientRect(), h = hero.getBoundingClientRect(); return { l: a.left - h.left, t: a.top - h.top, r: a.right - h.left, b: a.bottom - h.top }; })() : null;
-  const top = 64, bottom = H - 70;
+  // zona libre: debajo de la insignia de la portada y encima del pie
+  const top = $(".eyebrow").getBoundingClientRect().bottom - hero.getBoundingClientRect().top - 8, bottom = H - 70;
   for (const b of bubbles) {
-    if (!b.drag) {
-      // deriva suave + rozamiento
-      b.vx += (Math.random() - 0.5) * 0.06; b.vy += (Math.random() - 0.5) * 0.06;
-      b.vx *= 0.985; b.vy *= 0.985;
-      // el ratón las empuja
-      const dx = b.x - pointer.x, dy = b.y - pointer.y, d = Math.hypot(dx, dy);
-      if (d < b.r + 90 && d > 0) { const f = (1 - d / (b.r + 90)) * 1.4; b.vx += dx / d * f; b.vy += dy / d * f; }
-      const sp = Math.hypot(b.vx, b.vy); if (sp > 14) { b.vx *= 14 / sp; b.vy *= 14 / sp; }
+    if (b.hover && !b.drag) { b.vx *= 0.5; b.vy *= 0.5; }
+    else if (!b.drag) {
+      // deriva lenta y tranquila; un lanzamiento se frena poco a poco
+      b.vx += (Math.random() - 0.5) * 0.03; b.vy += (Math.random() - 0.5) * 0.03;
+      const sp = Math.hypot(b.vx, b.vy);
+      const damp = sp > 0.9 ? 0.96 : 0.995;
+      b.vx *= damp; b.vy *= damp;
+      if (sp > 12) { b.vx *= 12 / sp; b.vy *= 12 / sp; }
       b.x += b.vx; b.y += b.vy;
     }
     // bordes
@@ -217,6 +218,33 @@ function stepBubbles() {
   }
   for (const b of bubbles) b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px)`;
 }
+
+/* =========================================================
+   Capítulos desplegables
+   ========================================================= */
+const COUNTS = {
+  trabajos: () => `${TRABAJOS.length} proyectos`,
+  servicios: () => `${SERVICIOS.length} servicios`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length} looks`,
+  redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
+  habilidades: () => `${HABILIDADES.length} herramientas`,
+};
+$$("[data-count-of]").forEach(el => (el.textContent = COUNTS[el.dataset.countOf]?.() || ""));
+function setChapter(ch, open) {
+  ch.classList.toggle("open", open);
+  $(".chapter-head", ch).setAttribute("aria-expanded", open);
+}
+$$(".chapter-head").forEach(h => h.addEventListener("click", () => {
+  const ch = h.closest(".chapter");
+  setChapter(ch, !ch.classList.contains("open"));
+}));
+// los enlaces a un capítulo lo abren antes de llegar
+document.addEventListener("click", e => {
+  const a = e.target.closest('a[href^="#"]');
+  const ch = a && document.getElementById(a.getAttribute("href").slice(1));
+  if (ch?.classList.contains("chapter")) setChapter(ch, true);
+});
+if (location.hash) { const ch = document.getElementById(location.hash.slice(1)); if (ch?.classList.contains("chapter")) setChapter(ch, true); }
 
 /* =========================================================
    Sobre mí
