@@ -2,17 +2,18 @@
 
 Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura con concepto de presentación de producto (estilo Apple), interactiva y sin dependencias: HTML + CSS + JavaScript.
 
-**Interacciones:** burbujas con físicas en la portada (flotan, esquivan el ratón, se arrastran y abren tus redes), tarjetas con brillo que sigue al ratón, TikTok en directo dentro de un móvil, intro con contador, foto de portada que entra a pantalla completa y se encoge hasta su sitio, nombre gigante que invierte los colores sobre la foto, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
+**Interacciones:** burbujas con el logo de cada red en la portada (flotan despacio, se paran al pasar el ratón, se arrastran y abren tus redes), apartados desplegables, tarjetas con brillo que sigue al ratón, TikTok en directo dentro de un móvil, intro con contador, foto de portada que entra a pantalla completa y se encoge hasta su sitio, nombre gigante que invierte los colores sobre la foto, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
 
 ## Secciones
-1. **Inicio**: foto a pantalla completa que se encoge, nombre gigante y burbujas con enlaces (`BURBUJAS`)
+1. **Inicio**: insignia de estudios, foto a pantalla completa que se encoge, nombre gigante y burbujas con enlaces (`BURBUJAS`)
 2. **Sobre mí**: bio y cifras
-3. **Qué hago**: cuadrícula de servicios (`SERVICIOS`; `grande: true` la hace más ancha)
-4. **Trabajos realizados**: tarjetas de proyecto
-5. **Estilo**: moda (looks de `POSTS`) y diseños (`DISENOS`)
-6. **Redes sociales**: Instagram con tus fotos y TikTok en directo dentro de un móvil
-7. **Habilidades**: tarjetas con porcentaje
-8. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
+3. **Explora mi trabajo**: capítulos que se despliegan al pulsarlos
+   - Trabajos realizados (abierto por defecto)
+   - Qué hago (`SERVICIOS`)
+   - Estilo: looks y diseños (`POSTS`, `DISENOS`)
+   - Redes sociales: Instagram y TikTok en directo
+   - Habilidades
+4. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
 
 ## ✏️ Cómo actualizar tu contenido
 **Todo se edita en `data.js`**, no tienes que tocar nada más.

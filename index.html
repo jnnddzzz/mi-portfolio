@@ -27,8 +27,8 @@
     <a href="#inicio" class="logo" data-hover>JA<i>●</i></a>
     <nav class="nav-links">
       <a href="#sobre-mi">Sobre mí</a>
-      <a href="#servicios">Qué hago</a>
       <a href="#trabajos">Trabajos</a>
+      <a href="#servicios">Qué hago</a>
       <a href="#estilo">Estilo</a>
       <a href="#redes">Redes</a>
       <a href="#habilidades">Habilidades</a>
@@ -41,7 +41,7 @@
     <!-- INICIO -->
     <section id="inicio" class="hero">
       <div class="bubbles" aria-label="Enlaces rápidos"></div>
-      <p class="eyebrow" data-perfil="estudios"></p>
+      <p class="eyebrow badge"><b>2º curso</b><span>Técnico Superior en Marketing y Publicidad</span></p>
       <div class="hero-stage">
         <div class="hero-flip">
           <figure class="photo" data-tilt>
@@ -73,34 +73,44 @@
       </div>
     </section>
 
-    <!-- QUÉ HAGO -->
-    <section id="servicios" class="section">
+    <!-- CAPÍTULOS DESPLEGABLES -->
+    <div class="section chapters">
       <header class="head reveal">
-        <p class="kicker">Qué hago</p>
-        <h2>Todo lo que una marca necesita <em>para crecer.</em></h2>
-        <p class="lead">De la idea a la publicación: diseño, estrategia y ejecución.</p>
+        <p class="kicker">Portfolio</p>
+        <h2>Explora <em>mi trabajo.</em></h2>
+        <p class="lead">Pulsa cada apartado para desplegarlo.</p>
       </header>
-      <div class="bento"></div>
-    </section>
-
-    <!-- TRABAJOS -->
-    <section id="trabajos" class="section">
-      <header class="head reveal">
-        <p class="kicker">Trabajos realizados</p>
-        <h2>Proyectos para <em>marcas reales.</em></h2>
-        <p class="lead">Trabajos que he realizado durante el Grado Superior en Marketing y Publicidad.</p>
-      </header>
+      <section id="trabajos" class="chapter open">
+        <button class="chapter-head" aria-expanded="true" aria-controls="trabajos-body" data-hover>
+          <span class="ch-kicker">Trabajos realizados</span>
+          <span class="ch-title">Proyectos para <em>marcas reales.</em></span>
+          <span class="ch-meta"><span class="ch-count" data-count-of="trabajos"></span><i class="ch-toggle" aria-hidden="true"></i></span>
+        </button>
+        <div class="chapter-body" id="trabajos-body"><div class="chapter-inner">
+          <p class="lead ch-lead">Trabajos que he realizado durante el Grado Superior en Marketing y Publicidad.</p>
       <div class="cases"></div>
-    </section>
-
-    <!-- ESTILO -->
-    <section id="estilo" class="section style">
-      <header class="head reveal">
-        <p class="kicker">Estilo</p>
-        <h2>Moda, diseño <em>y actitud.</em></h2>
-        <p class="lead style-text"></p>
-        <ul class="style-tags"></ul>
-      </header>
+        </div></div>
+      </section>
+      <section id="servicios" class="chapter">
+        <button class="chapter-head" aria-expanded="false" aria-controls="servicios-body" data-hover>
+          <span class="ch-kicker">Qué hago</span>
+          <span class="ch-title">Todo lo que una marca necesita <em>para crecer.</em></span>
+          <span class="ch-meta"><span class="ch-count" data-count-of="servicios"></span><i class="ch-toggle" aria-hidden="true"></i></span>
+        </button>
+        <div class="chapter-body" id="servicios-body"><div class="chapter-inner">
+          <p class="lead ch-lead">De la idea a la publicación: diseño, estrategia y ejecución.</p>
+      <div class="bento"></div>
+        </div></div>
+      </section>
+      <section id="estilo" class="chapter">
+        <button class="chapter-head" aria-expanded="false" aria-controls="estilo-body" data-hover>
+          <span class="ch-kicker">Estilo</span>
+          <span class="ch-title">Moda, diseño <em>y actitud.</em></span>
+          <span class="ch-meta"><span class="ch-count" data-count-of="estilo"></span><i class="ch-toggle" aria-hidden="true"></i></span>
+        </button>
+        <div class="chapter-body" id="estilo-body"><div class="chapter-inner">
+          <p class="lead ch-lead"><span class="style-text"></span></p>
+          <ul class="style-tags"></ul>
       <h3 class="sub-title reveal">Mis looks <a class="sub-link" target="_blank" rel="noopener" data-hover></a></h3>
       <div class="looks">
         <div class="look-col" data-speed="0.04"></div>
@@ -109,15 +119,16 @@
       </div>
       <h3 class="sub-title reveal">Mis diseños</h3>
       <div class="designs"></div>
-    </section>
-
-    <!-- REDES -->
-    <section id="redes" class="section">
-      <header class="head reveal">
-        <p class="kicker">Redes sociales</p>
-        <h2>Sígueme <em>en redes.</em></h2>
-        <p class="lead">Moda, contenido y lo que voy creando, cada día.</p>
-      </header>
+        </div></div>
+      </section>
+      <section id="redes" class="chapter">
+        <button class="chapter-head" aria-expanded="false" aria-controls="redes-body" data-hover>
+          <span class="ch-kicker">Redes sociales</span>
+          <span class="ch-title">Sígueme <em>en redes.</em></span>
+          <span class="ch-meta"><span class="ch-count" data-count-of="redes"></span><i class="ch-toggle" aria-hidden="true"></i></span>
+        </button>
+        <div class="chapter-body" id="redes-body"><div class="chapter-inner">
+          <p class="lead ch-lead">Moda, contenido y lo que voy creando, cada día.</p>
       <div class="social-grid">
         <a class="tile ig-tile reveal" target="_blank" rel="noopener" data-hover="Seguir">
           <div class="tile-top"><span class="tile-icon" data-icon="instagram"></span><span class="tile-arrow">↗</span></div>
@@ -140,17 +151,21 @@
           <div class="tile-bottom"><b>TikTok</b><span class="tt-user-2"></span></div>
         </div>
       </div>
-    </section>
-
-    <!-- HABILIDADES -->
-    <section id="habilidades" class="section">
-      <header class="head reveal">
-        <p class="kicker">Habilidades</p>
-        <h2>Las herramientas <em>que domino.</em></h2>
-      </header>
+        </div></div>
+      </section>
+      <section id="habilidades" class="chapter">
+        <button class="chapter-head" aria-expanded="false" aria-controls="habilidades-body" data-hover>
+          <span class="ch-kicker">Habilidades</span>
+          <span class="ch-title">Las herramientas <em>que domino.</em></span>
+          <span class="ch-meta"><span class="ch-count" data-count-of="habilidades"></span><i class="ch-toggle" aria-hidden="true"></i></span>
+        </button>
+        <div class="chapter-body" id="habilidades-body"><div class="chapter-inner">
+          <p class="lead ch-lead">Lo que uso cada día para diseñar, editar, anunciar y medir.</p>
       <div class="skills"></div>
       <p class="soft reveal"></p>
-    </section>
+        </div></div>
+      </section>
+    </div>
 
     <!-- CONTACTO -->
     <section id="contacto" class="section contact">
