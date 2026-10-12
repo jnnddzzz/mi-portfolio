@@ -1,17 +1,17 @@
 # Portfolio · Jano Arribas Díaz
 
-Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura, minimalista e interactiva, sin dependencias: HTML + CSS + JavaScript.
+Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura con concepto de presentación de producto (estilo Apple), interactiva y sin dependencias: HTML + CSS + JavaScript.
 
-**Interacciones:** intro con contador, foto de portada que entra a pantalla completa y se encoge hasta su sitio, nombre gigante que invierte los colores sobre la foto, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
+**Interacciones:** burbujas con físicas en la portada (flotan, esquivan el ratón, se arrastran y abren tus redes), tarjetas con brillo que sigue al ratón, TikTok en directo dentro de un móvil, intro con contador, foto de portada que entra a pantalla completa y se encoge hasta su sitio, nombre gigante que invierte los colores sobre la foto, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
 
 ## Secciones
-1. **Inicio**: foto a pantalla completa que se encoge, nombre gigante sobre la foto y frase que rota
-2. **Sobre mí**: bio y datos
-3. **Qué hago**: servicios desplegables (`SERVICIOS` en `data.js`)
-4. **Trabajos realizados**: imagen, título, marca y descripción breve
-5. **Estilo**: moda (tus looks, de `POSTS`) y tus diseños (`DISENOS`)
-6. **Redes sociales**: tarjetas de Instagram y TikTok (`REDES` en `data.js`)
-7. **Habilidades**: herramientas y soft skills
+1. **Inicio**: foto a pantalla completa que se encoge, nombre gigante y burbujas con enlaces (`BURBUJAS`)
+2. **Sobre mí**: bio y cifras
+3. **Qué hago**: cuadrícula de servicios (`SERVICIOS`; `grande: true` la hace más ancha)
+4. **Trabajos realizados**: tarjetas de proyecto
+5. **Estilo**: moda (looks de `POSTS`) y diseños (`DISENOS`)
+6. **Redes sociales**: Instagram con tus fotos y TikTok en directo dentro de un móvil
+7. **Habilidades**: tarjetas con porcentaje
 8. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
 
 ## ✏️ Cómo actualizar tu contenido
