@@ -48,8 +48,31 @@ if (!reduced && words.length > 1) setInterval(() => {
   }, 450);
 }, 2200);
 
-// Intro con contador en cada carga
-function startHero() { name.classList.add("in"); $(".photo").classList.add("in"); }
+// Entrada: la foto empieza ocupando toda la pantalla y se encoge hasta su sitio
+const flip = $(".hero-flip");
+function coverScreen() {
+  flip.style.transition = "none";
+  flip.style.transform = "";
+  const r = flip.getBoundingClientRect();
+  // centra la cara (a un 32% de la altura de la foto) y cubre toda la pantalla
+  const fy = 0.32;
+  const s = Math.max(innerWidth / r.width, innerHeight / (2 * fy * r.height)) * 1.02;
+  const dx = innerWidth / 2 - (r.left + r.width / 2);
+  const dy = innerHeight / 2 - (r.top + r.height * fy);
+  flip.style.transformOrigin = `50% ${fy * 100}%`;
+  flip.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
+}
+if (!reduced) coverScreen();
+function startHero() {
+  $(".photo").classList.add("in");
+  // deja ver la foto a pantalla completa un instante y luego la encoge
+  setTimeout(() => {
+    flip.style.transition = "transform 1.5s cubic-bezier(.7,0,.2,1)";
+    flip.style.transform = "";
+  }, reduced ? 0 : 550);
+  setTimeout(() => $(".hero").classList.add("ready"), reduced ? 0 : 1400);
+  setTimeout(() => name.classList.add("in"), reduced ? 0 : 1450);
+}
 (function intro() {
   const loader = $(".loader");
   if (reduced) { loader.remove(); startHero(); return; }
@@ -62,7 +85,7 @@ function startHero() { name.classList.add("in"); $(".photo").classList.add("in")
     if (p < 1) return requestAnimationFrame(tick);
     loader.classList.add("done");
     document.body.classList.remove("loading");
-    setTimeout(startHero, 250);
+    startHero();
     setTimeout(() => loader.remove(), 1100);
   })(t0);
 })();
@@ -132,6 +155,7 @@ modal.addEventListener("click", e => { if (e.target === modal) modal.close(); })
 $(".style-text").textContent = ESTILO.texto;
 $(".style-tags").innerHTML = ESTILO.etiquetas.map(x => `<li>${esc(x)}</li>`).join("");
 const ig = REDES.find(r => r.nombre === "Instagram" && r.url);
+$(".hero-year").textContent = new Date().getFullYear();
 const subLink = $(".sub-link");
 if (ig) { subLink.href = ig.url; subLink.textContent = `${ig.usuario} ↗`; } else subLink.remove();
 
@@ -178,6 +202,24 @@ designs.innerHTML = DISENOS.length
   : `<div class="designs-empty reveal"><b>Diseños en proceso</b>Muy pronto, aquí.</div>`;
 
 /* =========================================================
+   Redes sociales
+   ========================================================= */
+const ICONOS = {
+  Instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
+  TikTok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.8 5.8 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg>',
+  LinkedIn: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg>',
+};
+$(".social-cards").innerHTML = REDES.filter(r => r.url).map(r => `
+  <a class="social-card reveal" href="${esc(r.url)}" target="_blank" rel="noopener" data-hover="Seguir">
+    <div class="sc-top"><span class="sc-icon">${ICONOS[r.nombre] || ""}</span><span class="sc-arrow">↗</span></div>
+    ${r.fotos?.length ? `<div class="sc-thumbs">${r.fotos.map(f => `<img src="${esc(f)}" alt="" loading="lazy" />`).join("")}</div>` : `<div class="sc-thumbs sc-empty"><span>${esc(r.usuario)}</span></div>`}
+    <div class="sc-bottom">
+      <b>${esc(r.nombre)}</b>
+      <span>${esc(r.usuario)} · ${esc(r.texto || "")}</span>
+    </div>
+  </a>`).join("");
+
+/* =========================================================
    Habilidades
    ========================================================= */
 $(".tools").innerHTML = HABILIDADES.map(h => `
@@ -212,38 +254,6 @@ $$("[data-copy]").forEach(btn => btn.addEventListener("click", async () => {
     toast("Selecciónalo y cópialo");
   }
 }));
-
-$(".social-row").innerHTML = REDES.filter(r => r.url).map(r =>
-  `<a href="${esc(r.url)}" target="_blank" rel="noopener" data-hover>${esc(r.nombre)}<i>↗</i></a>`).join("");
-
-const tiktokUrl = `https://www.tiktok.com/@${TIKTOK_USUARIO}`;
-const ttBox = $(".tiktok-box");
-const ttLink = $(".tiktok-link");
-ttLink.href = tiktokUrl; ttLink.textContent = `@${TIKTOK_USUARIO} ↗`;
-ttBox.hidden = true; // se muestra solo si el perfil en directo carga
-let ttLoaded = false;
-function loadTikTok() {
-  if (ttLoaded || !TIKTOK_USUARIO) return;
-  ttLoaded = true;
-  const slot = $(".tiktok-embed-slot");
-  const bq = document.createElement("blockquote");
-  bq.className = "tiktok-embed";
-  bq.cite = tiktokUrl;
-  bq.dataset.uniqueId = TIKTOK_USUARIO;
-  bq.dataset.embedType = "creator";
-  bq.style.cssText = "max-width:780px;min-width:288px;";
-  bq.innerHTML = `<section><a target="_blank" href="${tiktokUrl}?refer=creator_embed">@${esc(TIKTOK_USUARIO)}</a></section>`;
-  slot.append(bq);
-  const s = document.createElement("script");
-  s.src = "https://www.tiktok.com/embed.js";
-  s.async = true;
-  s.onload = () => {
-    const check = setInterval(() => { if ($("iframe", slot)) { ttBox.hidden = false; clearInterval(check); } }, 400);
-    setTimeout(() => clearInterval(check), 8000);
-  };
-  document.body.append(s);
-}
-new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { loadTikTok(); obs.disconnect(); } }, { rootMargin: "600px" }).observe($("#contacto"));
 
 /* =========================================================
    Contadores y aparición

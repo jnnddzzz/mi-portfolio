@@ -16,15 +16,17 @@ const PERFIL = {
   palabras: ["ven", "comparten", "recuerdan", "venden"],
 };
 
-// Si dejas la url vacía (""), esa red no aparece
+/* Tus redes: aparecen en la sección "Redes sociales".
+   Si dejas la url vacía (""), esa red no aparece.
+   - texto: qué publicas ahí
+   - fotos: miniaturas que se ven en la tarjeta (opcional)
+*/
 const REDES = [
-  { nombre: "Instagram", usuario: "@jjn.dzz", url: "https://www.instagram.com/jjn.dzz/" },
-  { nombre: "TikTok",    usuario: "@jjn.dzz", url: "https://www.tiktok.com/@jjn.dzz" },
-  { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "" },
+  { nombre: "Instagram", usuario: "@jjn.dzz", url: "https://www.instagram.com/jjn.dzz/", texto: "Moda, looks y estilo personal",
+    fotos: ["assets/redes/post-1.jpg", "assets/redes/post-4.jpg", "assets/redes/post-6.jpg"] },
+  { nombre: "TikTok",    usuario: "@jjn.dzz", url: "https://www.tiktok.com/@jjn.dzz", texto: "Vídeos, tendencias y contenido", fotos: [] },
+  { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "", texto: "Perfil profesional", fotos: [] },
 ];
-
-// Usuario de TikTok para mostrar tu perfil en directo en la sección de redes
-const TIKTOK_USUARIO = "jjn.dzz";
 
 /* ---------- POSTS DESTACADOS DE REDES ----------
    Sube capturas o fotos de tus mejores publicaciones a assets/redes/
