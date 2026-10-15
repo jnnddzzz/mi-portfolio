@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Chart Noir</title>
+  <meta name="description" content="Chart Noir. Se acerca algo serio. El primer drop está en camino: unidades limitadas y numeradas.">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Imagen y textos al compartir el enlace (Instagram, WhatsApp, X...).
+       Cuando tengas dominio, pon la dirección completa en og:image
+       (ej. https://chartnoir.com/og-image.png): algunas redes no aceptan rutas cortas. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Chart Noir">
+  <meta property="og:title" content="Chart Noir">
+  <meta property="og:description" content="Se acerca algo serio. No avisaremos dos veces.">
+  <meta property="og:image" content="og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logo de Chart Noir sobre fondo negro">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Tipografía: Archivo (una sola familia, con eje de anchura) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap">
+</head>
+<body>
+  <canvas id="scene" role="img" aria-label="Logo de Chart Noir en 3D. Arrástralo o usa las flechas del teclado para girarlo."></canvas>
+  <div id="flash" aria-hidden="true"></div>
+
+  <div id="loader" role="status" aria-live="polite" aria-label="Cargando">
+    <div id="num" aria-hidden="true">0</div>
+    <div id="bar" aria-hidden="true"></div>
+  </div>
+
+  <p class="hint" id="hint" aria-hidden="true">Arrastra el logo para girarlo</p>
+
+  <section class="info" id="info" aria-labelledby="frase">
+    <h1 class="phrase line" id="frase">Se acerca algo serio.</h1>
+    <p class="sub line">El primer drop está en camino. No avisaremos dos veces.</p>
+    <div class="count line" id="count" role="timer" aria-live="off">
+      <span><b data-unit="d">00</b><small>días</small></span><b class="sep" aria-hidden="true">:</b>
+      <span><b data-unit="h">00</b><small>horas</small></span><b class="sep" aria-hidden="true">:</b>
+      <span><b data-unit="m">00</b><small>min</small></span><b class="sep" aria-hidden="true">:</b>
+      <span><b data-unit="s">00</b><small>seg</small></span>
+    </div>
+  </section>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

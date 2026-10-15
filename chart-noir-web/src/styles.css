@@ -1,0 +1,210 @@
+/* =========================================================
+   Chart Noir — estilos de la web cerrada
+   Colores y tipografía según CLAUDE.md. Nada de niebla,
+   transparencias, grano ni desenfoques.
+   ========================================================= */
+
+:root {
+  /* Paleta de marca */
+  --negro: #000000;
+  --hueso: #f2eee8;
+  --humo: #7d7775;
+  --sangre: #8e1426;
+  --burdeos: #4c0a18;   /* reservado: piezas, packaging, redes */
+  --oro-viejo: #9c7a3c; /* reservado: detalles premium futuros */
+
+  --font: "Archivo", "Helvetica Neue", Arial, sans-serif;
+
+  /* Márgenes seguros (notch, barra de gestos del móvil) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* La web es siempre negra, también con el móvil en modo claro. */
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: var(--negro);
+  color: var(--hueso);
+  font-family: var(--font);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Escena 3D ---------- */
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: none; /* el dedo gira el logo, no hace scroll */
+  visibility: hidden;
+  outline: none;
+}
+#scene.dragging { cursor: grabbing; }
+
+/* ---------- Pantalla de carga ---------- */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: var(--negro);
+  display: grid;
+  place-items: center;
+}
+
+#num {
+  font-weight: 900;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  font-size: clamp(72px, 16vw, 200px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+#bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--sangre);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* Destello blanco al entrar el logo */
+#flash {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Mensaje y cuenta atrás ---------- */
+.info {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(6vh + var(--safe-bottom));
+  z-index: 6;
+  padding: 0 max(20px, var(--safe-left)) 0 max(20px, var(--safe-right));
+  text-align: center;
+  pointer-events: none;
+}
+
+.info .line {
+  display: block;
+  text-wrap: balance; /* evita una palabra sola en la última línea */
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.info.show .line { opacity: 1; transform: none; }
+.info.show .line:nth-child(2) { transition-delay: 0.25s; }
+.info.show .line:nth-child(3) { transition-delay: 0.5s; }
+
+.phrase {
+  margin: 0;
+  font-weight: 800;
+  font-variation-settings: "wdth" 112;
+  font-size: clamp(20px, 2.6vw, 32px);
+  letter-spacing: 0.01em;
+}
+
+.sub {
+  margin: 8px 0 26px;
+  font-weight: 400;
+  font-size: clamp(14px, 1.4vw, 16px);
+  color: var(--humo);
+}
+
+.count {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: clamp(14px, 3vw, 40px);
+}
+
+/* La cuenta atrás también es una .line: mantenemos su fila horizontal. */
+.info .count { display: inline-flex; }
+
+.count span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.count b {
+  font-weight: 900;
+  font-variation-settings: "wdth" 125;
+  font-size: clamp(34px, 5.6vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.count .sep { color: var(--sangre); }
+
+.count small {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--humo);
+}
+
+/* ---------- Pista "Arrastra el logo" ---------- */
+.hint {
+  position: fixed;
+  top: calc(22px + var(--safe-top));
+  left: 0;
+  right: 0;
+  z-index: 6;
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--humo);
+  opacity: 0;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+.hint.show { opacity: 1; }
+
+/* ---------- Móvil ---------- */
+@media (max-width: 600px) {
+  .count { gap: 8px; }
+  .count small { font-size: 11px; }
+}
+
+/* Pantallas muy bajas (móvil en horizontal): el texto se compacta */
+@media (max-height: 480px) {
+  .info { bottom: calc(3vh + var(--safe-bottom)); }
+  .sub { margin: 4px 0 12px; }
+  .count b { font-size: clamp(26px, 8vh, 44px); }
+  .count small { margin-top: 6px; }
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .info .line, .hint { transition: none; transform: none; }
+}
+
+/* ---------- Plan B: navegador sin WebGL ---------- */
+.logo-fallback {
+  position: fixed;
+  left: 50%;
+  top: 38%;
+  width: min(78vw, 720px);
+  transform: translate(-50%, -50%);
+}
