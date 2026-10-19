@@ -506,12 +506,27 @@ if (GALERIA.length) renderGal(GALERIA[0]); else gal.remove();
 $$("[data-icon]").forEach(el => (el.innerHTML = ICON[el.dataset.icon] || ""));
 const igRed = REDES.find(r => r.nombre === "Instagram");
 const igTile = $(".ig-tile");
-if (igRed?.url) {
-  igTile.href = igRed.url;
+const igUser = (igRed?.usuario || "").replace(/^@/, "");
+if (igRed?.url && igUser) {
+  $(".ig-link").href = igRed.url;
+  $(".ig-fallback").href = igRed.url;
+  $(".ig-handle").textContent = igRed.usuario;
   $(".ig-user").textContent = `${igRed.usuario} · ${igRed.texto || ""}`;
-  const fotos = POSTS.filter(p => p.imagen).slice(0, 6).map(p => p.imagen);
-  $(".ig-grid").innerHTML = fotos.map(f => `<img src="${esc(f)}" alt="" loading="lazy" />`).join("");
 } else igTile.remove();
+
+// Perfil de Instagram en directo (se carga al acercarse, encima de la tarjeta de respaldo)
+function loadInstagram() {
+  const f = document.createElement("iframe");
+  f.className = "ig-embed";
+  f.title = `Instagram de ${igRed.usuario}`;
+  f.src = `https://www.instagram.com/${encodeURIComponent(igUser)}/embed/`;
+  $(".ig-frame").append(f);
+}
+// Solo se muestra cuando Instagram responde de verdad; si no, se queda la tarjeta de respaldo
+addEventListener("message", e => {
+  if (/^https:\/\/www\.instagram\.com$/.test(e.origin) && e.source === $(".ig-embed")?.contentWindow) igTile.classList.add("live");
+});
+if (igTile.isConnected) new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { loadInstagram(); obs.disconnect(); } }, { rootMargin: "800px" }).observe(igTile);
 
 const ttRed = REDES.find(r => r.nombre === "TikTok");
 const ttTile = $(".tt-tile");
