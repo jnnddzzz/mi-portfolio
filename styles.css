@@ -53,6 +53,8 @@ html:not(.js) .loader { display: none; }
   .cursor.label { width: 78px; height: 78px; margin: -39px 0 0 -39px; mix-blend-mode: normal; background: var(--text); }
   .cursor-label { font-size: .72rem; font-weight: 700; color: #000; opacity: 0; transition: opacity .2s; }
   .cursor.label .cursor-label { opacity: 1; }
+  .viewer, .viewer * { cursor: auto; }
+  .cursor.off { opacity: 0; }
 }
 
 /* ---------- Barra de navegación ---------- */
@@ -245,6 +247,8 @@ h2 { font-weight: 600; font-size: clamp(2.6rem, 6.4vw, 5rem); letter-spacing: -.
 .v-email img { width: 100%; max-width: 600px; height: auto; }
 .v-frame { display: block; width: 100%; max-width: 600px; height: 100%; margin: 0 auto; border: 0; background: #0b0b0b; }
 .v-frame-own { position: absolute; inset: 0; }
+.v-web { background: #fff; }
+.v-web .v-frame { max-width: none; background: #fff; }
 .viewer-ui { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; justify-content: space-between; gap: .5rem; pointer-events: none; }
 .viewer-ui span { padding: .35rem .75rem; border-radius: 99px; font-size: .74rem; font-weight: 600; background: rgba(0,0,0,.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; font-variant-numeric: tabular-nums; }
 .v-hint { background: var(--accent) !important; color: #000 !important; animation: nudge 1.6s var(--ease) infinite; transition: opacity .4s; }
