@@ -42,6 +42,8 @@ Cada trabajo se ve dentro de su tarjeta y se recorre con scroll (diapositivas o 
 
 Si el trabajo es una sola imagen fija, usa `imagen: "assets/trabajos/portada.jpg"` en lugar de `paginas`.
 
+Para un email en HTML (por ejemplo de MailerLite), guarda el código en `assets/trabajos/emails/mi-email.html` y usa `tipoVisor: "email"` con `email: "assets/trabajos/emails/mi-email.html"`. Al publicar, sus imágenes se descargan solas en `assets/trabajos/emails/img/`.
+
 ### Añadir looks (fotos de tus redes)
 1. Sube la foto a `assets/redes/` (vertical, mejor la original que una captura).
 2. En `data.js`, en `POSTS`, pon la ruta en `imagen`, un título corto en `texto` y el enlace del post en `enlace`.
