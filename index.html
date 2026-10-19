@@ -25,7 +25,7 @@
   <!-- Barra de navegación translúcida -->
   <header class="nav">
     <a href="#inicio" class="logo" data-hover>JA<i>●</i></a>
-    <nav class="nav-links">
+    <nav class="nav-links"><i class="nav-ind" aria-hidden="true"></i>
       <a href="#sobre-mi">Sobre mí</a>
       <a href="#trabajos">Trabajos</a>
       <a href="#servicios">Qué hago</a>
@@ -111,21 +111,44 @@
         <div class="chapter-body" id="estilo-body"><div class="chapter-inner">
           <p class="lead ch-lead"><span class="style-text"></span></p>
           <ul class="style-tags"></ul>
-          <div class="gal reveal">
-            <div class="gal-bar">
-              <div class="gal-tabs" role="tablist" aria-label="Galería de estilo"><i class="gal-ind" aria-hidden="true"></i></div>
+          <nav class="sub-nav" aria-label="Apartados de estilo">
+            <a href="#looks" data-hover>Mis looks <small class="n-looks"></small></a>
+            <a href="#mi-ropa" data-hover>La ropa que hago <small class="n-ropa"></small></a>
+          </nav>
+
+          <section class="sub" id="looks">
+            <header class="sub-head">
+              <div>
+                <p class="sub-kicker">01 · Biblioteca</p>
+                <h3 class="sub-h">Mis <em>looks.</em></h3>
+              </div>
+              <div class="lib-filters" role="toolbar" aria-label="Filtrar looks"></div>
+            </header>
+            <div class="lib-grid"></div>
+            <div class="lib-foot">
+              <button class="pill lib-more" data-hover></button>
+              <a class="sub-link" target="_blank" rel="noopener" data-hover></a>
+            </div>
+          </section>
+
+          <section class="sub" id="mi-ropa">
+            <header class="sub-head">
+              <div>
+                <p class="sub-kicker">02 · Taller</p>
+                <h3 class="sub-h">La ropa <em>que hago.</em></h3>
+                <p class="sub-lead">Diseño, patronaje y costura: prendas hechas por mí, de la idea al tejido.</p>
+              </div>
               <div class="gal-nav">
                 <span class="gal-count" aria-live="polite"></span>
                 <button class="gal-arrow gal-prev" aria-label="Anterior" data-hover>←</button>
                 <button class="gal-arrow gal-next" aria-label="Siguiente" data-hover>→</button>
               </div>
+            </header>
+            <div class="gal">
+              <div class="gal-rail" tabindex="0" aria-label="La ropa que hago: desliza para ver más"></div>
+              <div class="gal-foot"><span class="gal-hint">Desliza o arrastra · Pulsa para ampliar</span></div>
             </div>
-            <div class="gal-rail" tabindex="0" aria-label="Fotos y vídeos: desliza para ver más"></div>
-            <div class="gal-foot">
-              <span class="gal-hint">Desliza o arrastra · Pulsa para ampliar</span>
-              <a class="sub-link" target="_blank" rel="noopener" data-hover></a>
-            </div>
-          </div>
+          </section>
         </div></div>
       </section>
       <section id="redes" class="chapter">
@@ -206,7 +229,10 @@
     <button class="lb-arrow lb-prev" aria-label="Anterior" data-hover>←</button>
     <button class="lb-arrow lb-next" aria-label="Siguiente" data-hover>→</button>
     <button class="lb-close" aria-label="Cerrar" data-hover>✕</button>
-    <p class="lb-cap"><b></b><span></span><em class="lb-count"></em></p>
+    <div class="lb-bottom">
+      <p class="lb-cap"><b></b><span></span><em class="lb-count"></em></p>
+      <div class="lb-thumbs" aria-label="Miniaturas"></div>
+    </div>
   </dialog>
 
   <dialog class="modal" aria-labelledby="modal-title">
