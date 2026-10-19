@@ -47,8 +47,8 @@ const POSTS = [
    Tus looks son las fotos de POSTS.
 */
 const ESTILO = {
-  texto: "La moda es parte de cómo me comunico. Me mueven el streetwear, los colores que no pasan desapercibidos y los looks que cuentan algo antes de decir nada.",
-  etiquetas: ["Streetwear", "Color", "Oversize", "Estampados", "Sneakers"],
+  texto: "La moda es parte de cómo me comunico. Me mueven el streetwear, los colores que no pasan desapercibidos y los looks que cuentan algo antes de decir nada. Y además diseño y coso mi propia ropa.",
+  etiquetas: ["Streetwear", "Color", "Oversize", "Estampados", "Confección", "Sneakers"],
 };
 
 /* Tus diseños: sube cada imagen a assets/disenos/ y añade una línea así:
@@ -57,13 +57,23 @@ const ESTILO = {
 */
 const DISENOS = [];
 
+/* ---------- MI ROPA: prendas que diseño y confecciono ----------
+   Fotos: { imagen: "assets/ropa/foto.jpg", titulo: "...", tipo: "..." }
+   Vídeos: { video: "assets/ropa/video.mp4", poster: "assets/ropa/video.jpg", titulo: "...", tipo: "..." }
+   Se ven en el apartado "Estilo", en la pestaña "Mi ropa".
+*/
+const ROPA = [
+  { imagen: "assets/ropa/ropa-02.jpg", titulo: "Pantalón de toile", tipo: "Patronaje y corte" },
+  { imagen: "assets/ropa/ropa-01.jpg", titulo: "Animal print y algodón crudo", tipo: "Tejidos y piezas" },
+];
+
 /* ---------- QUÉ HAGO ----------
    Cada servicio es una tarjeta. icono: web | campana | redes | marca | email | video | estrategia
    grande: true hace la tarjeta más ancha.
 */
 const SERVICIOS = [
   { icono: "web",        grande: true, titulo: "Diseño de webs y landing pages", texto: "Webs y páginas de aterrizaje claras, rápidas y pensadas para convertir: estructura, textos persuasivos y diseño adaptado a la marca.", tags: ["HTML", "CSS", "Apps Script"] },
-  { icono: "campana",    titulo: "Campañas publicitarias", texto: "Planifico y lanzo campañas de principio a fin: objetivo, público, creatividades y seguimiento de resultados.", tags: ["Meta Ads", "Google Ads"] },
+  { icono: "campana",    titulo: "Campañas publicitarias", texto: "Planifico y lanzo campañas de principio a fin: objetivo, público, creatividades y seguimiento de resultados.", tags: ["Estrategia", "Creatividades"] },
   { icono: "redes",      titulo: "Gestión de redes sociales", texto: "Creo, programo y publico contenido, y llevo el día a día de las cuentas para que crezcan con una estética coherente.", tags: ["Instagram", "TikTok"] },
   { icono: "marca",      titulo: "Logotipos e identidad de marca", texto: "Diseño logos y sistemas visuales completos: colores, tipografías y aplicaciones para que una marca se reconozca al instante.", tags: ["Branding", "Canva"] },
   { icono: "email",      titulo: "Email marketing", texto: "Newsletters y campañas de email con asuntos que se abren y diseños que llevan a la acción.", tags: ["MailerLite"] },
@@ -77,17 +87,20 @@ const SERVICIOS = [
 const BURBUJAS = ["instagram", "tiktok", "whatsapp", "email", "trabajos"];
 
 const HABILIDADES = [
-  { nombre: "Canva",       nivel: 90, tipo: "Diseño" },
-  { nombre: "CapCut",      nivel: 85, tipo: "Vídeo" },
-  { nombre: "Meta Ads",    nivel: 70, tipo: "Publicidad" },
-  { nombre: "Google Ads",  nivel: 65, tipo: "Publicidad" },
-  { nombre: "MailerLite",  nivel: 70, tipo: "Email marketing" },
-  { nombre: "Apps Script", nivel: 55, tipo: "Web" },
+  { nombre: "Moda y estilismo",      nivel: 92, tipo: "Looks, tendencias y estilismo" },
+  { nombre: "Creación de contenido", nivel: 90, tipo: "Foto y vídeo para redes" },
+  { nombre: "Redes sociales",        nivel: 90, tipo: "Instagram y TikTok" },
+  { nombre: "Canva",                 nivel: 90, tipo: "Diseño" },
+  { nombre: "CapCut",                nivel: 85, tipo: "Edición de vídeo" },
+  { nombre: "Copywriting",           nivel: 80, tipo: "Textos que venden" },
+  { nombre: "Branding",              nivel: 80, tipo: "Identidad de marca" },
+  { nombre: "MailerLite",            nivel: 75, tipo: "Email marketing" },
+  { nombre: "Apps Script",           nivel: 60, tipo: "Web" },
 ];
 
 const SOFT_SKILLS = [
-  "Creatividad", "Copywriting", "Storytelling", "Trabajo en equipo",
-  "Estrategia de contenido", "Análisis de métricas", "Gestión de RRSS", "Branding",
+  "Creatividad", "Storytelling", "Trabajo en equipo", "Estrategia de contenido",
+  "Tendencias", "Análisis de métricas", "Comunicación", "Atención al detalle",
 ];
 
 /* ---------- TRABAJOS ----------

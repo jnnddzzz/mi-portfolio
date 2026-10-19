@@ -111,14 +111,21 @@
         <div class="chapter-body" id="estilo-body"><div class="chapter-inner">
           <p class="lead ch-lead"><span class="style-text"></span></p>
           <ul class="style-tags"></ul>
-      <h3 class="sub-title reveal">Mis looks <a class="sub-link" target="_blank" rel="noopener" data-hover></a></h3>
-      <div class="looks">
-        <div class="look-col" data-speed="0.04"></div>
-        <div class="look-col" data-speed="0.16"></div>
-        <div class="look-col" data-speed="0.09"></div>
-      </div>
-      <h3 class="sub-title reveal">Mis diseños</h3>
-      <div class="designs"></div>
+          <div class="gal reveal">
+            <div class="gal-bar">
+              <div class="gal-tabs" role="tablist" aria-label="Galería de estilo"><i class="gal-ind" aria-hidden="true"></i></div>
+              <div class="gal-nav">
+                <span class="gal-count" aria-live="polite"></span>
+                <button class="gal-arrow gal-prev" aria-label="Anterior" data-hover>←</button>
+                <button class="gal-arrow gal-next" aria-label="Siguiente" data-hover>→</button>
+              </div>
+            </div>
+            <div class="gal-rail" tabindex="0" aria-label="Fotos y vídeos: desliza para ver más"></div>
+            <div class="gal-foot">
+              <span class="gal-hint">Desliza o arrastra · Pulsa para ampliar</span>
+              <a class="sub-link" target="_blank" rel="noopener" data-hover></a>
+            </div>
+          </div>
         </div></div>
       </section>
       <section id="redes" class="chapter">
@@ -137,16 +144,14 @@
         </a>
         <div class="tile tt-tile reveal">
           <div class="tile-top"><span class="tile-icon" data-icon="tiktok"></span><a class="tile-arrow tt-link" target="_blank" rel="noopener" data-hover="Abrir">↗</a></div>
-          <div class="phone">
-            <div class="phone-screen">
-              <div class="tt-embed"></div>
-              <a class="tt-fallback" target="_blank" rel="noopener" data-hover="Ver">
-                <span class="tile-icon big" data-icon="tiktok"></span>
-                <b class="tt-user"></b>
-                <span>Vídeos, tendencias y contenido</span>
-                <i>Ver perfil ↗</i>
-              </a>
-            </div>
+          <div class="tt-frame">
+            <div class="tt-embed"></div>
+            <a class="tt-fallback" target="_blank" rel="noopener" data-hover="Ver">
+              <span class="tile-icon big" data-icon="tiktok"></span>
+              <b class="tt-user"></b>
+              <span>Vídeos, tendencias y contenido</span>
+              <i>Ver perfil ↗</i>
+            </a>
           </div>
           <div class="tile-bottom"><b>TikTok</b><span class="tt-user-2"></span></div>
         </div>
@@ -188,6 +193,14 @@
   </footer>
 
   <div class="toasts" aria-live="polite"></div>
+
+  <dialog class="lightbox" aria-label="Galería ampliada">
+    <div class="lb-stage"></div>
+    <button class="lb-arrow lb-prev" aria-label="Anterior" data-hover>←</button>
+    <button class="lb-arrow lb-next" aria-label="Siguiente" data-hover>→</button>
+    <button class="lb-close" aria-label="Cerrar" data-hover>✕</button>
+    <p class="lb-cap"><b></b><span></span><em class="lb-count"></em></p>
+  </dialog>
 
   <dialog class="modal" aria-labelledby="modal-title">
     <button class="modal-close" aria-label="Cerrar" data-hover>✕</button>

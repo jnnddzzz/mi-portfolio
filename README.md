@@ -10,7 +10,7 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 3. **Explora mi trabajo**: capítulos que se despliegan al pulsarlos
    - Trabajos realizados (abierto por defecto)
    - Qué hago (`SERVICIOS`)
-   - Estilo: looks y diseños (`POSTS`, `DISENOS`)
+   - Estilo: galería con pestañas (Looks, Mi ropa y Diseños), carrusel que se arrastra y vista ampliada (`POSTS`, `ROPA`, `DISENOS`)
    - Redes sociales: Instagram y TikTok en directo
    - Habilidades
 4. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
@@ -47,6 +47,12 @@ Para un email en HTML (por ejemplo de MailerLite), guarda el código en `assets/
 ### Añadir looks (fotos de tus redes)
 1. Sube la foto a `assets/redes/` (vertical, mejor la original que una captura).
 2. En `data.js`, en `POSTS`, pon la ruta en `imagen`, un título corto en `texto` y el enlace del post en `enlace`.
+
+### Añadir fotos o vídeos de tu ropa
+1. Sube el archivo a `assets/ropa/` (fotos en JPG; vídeos en MP4, mejor de menos de 15 segundos y en vertical).
+2. En `data.js`, en `ROPA`, añade una línea:
+   - Foto: `{ imagen: "assets/ropa/mi-prenda.jpg", titulo: "Nombre", tipo: "Confección" },`
+   - Vídeo: `{ video: "assets/ropa/mi-video.mp4", poster: "assets/ropa/mi-video.jpg", titulo: "Nombre", tipo: "Proceso" },`
 
 ### Añadir tus diseños
 1. Sube la imagen a `assets/disenos/`.
