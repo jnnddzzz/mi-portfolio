@@ -93,29 +93,60 @@ const SOFT_SKILLS = [
 /* ---------- TRABAJOS ----------
    Para añadir un trabajo copia un bloque { ... } y rellénalo.
    - cliente: la marca para la que lo hiciste
-   - categoria: "Web" | "Diseño" | "Redes sociales" | "Campañas" | "Vídeo" (o la tuya)
-   - puntos: lo que hiciste, en frases cortas
-   - imagen: sube la captura a assets/trabajos/ y pon la ruta. Si la dejas
-             vacía se genera una portada automática.
-   - enlace: opcional (la web, PDF, Canva, Drive, post...)
-   - imagenGrande: opcional, imagen más completa para la vista ampliada
-   - colores: opcional, colores de la portada automática [fondo, texto]
+   - categoria: tipo de trabajo (Email marketing, Web, Investigación...)
+   - paginas: imágenes que se recorren con scroll dentro de la tarjeta
+              (diapositivas de Canva, un email largo, etc.). Súbelas a
+              assets/trabajos/ y pon aquí sus rutas en orden.
+   - tipoVisor: "diapositivas" (presentaciones) o "email" (una pieza larga)
+   - imagen: portada fija si el trabajo no tiene páginas
+   - enlace: opcional (la web, el PDF, etc.)
    El primero de la lista es el más reciente.
 */
+const pags = (carpeta, n) => Array.from({ length: n }, (_, i) => `assets/trabajos/${carpeta}/${String(i + 1).padStart(2, "0")}.jpg`);
+
 const TRABAJOS = [
+  {
+    titulo: "Email de Black Friday",
+    cliente: "Cestto Supermercados",
+    categoria: "Email marketing",
+    curso: "2º curso",
+    tipoVisor: "email",
+    paginas: ["assets/trabajos/cesto-email.jpg"],
+    descripcion: "Campaña de email para el Black Friday de Cestto, «tu súper de barrio», diseñada en MailerLite: asunto «🖤 BLACK FRIDAY: hasta -70 % y ya ha empezado», sello de descuento, oferta estrella y llamadas a la acción claras.",
+    herramientas: ["MailerLite", "Copywriting", "Diseño de email"],
+    enlace: "",
+  },
+  {
+    titulo: "Dossier de marca",
+    cliente: "Cruzcampo",
+    categoria: "Investigación publicitaria",
+    curso: "2º curso",
+    tipoVisor: "diapositivas",
+    paginas: pags("cruzcampo", 18),
+    descripcion: "Dossier para el Día de la Empresa Andaluza: dónde se anuncia Cruzcampo, análisis de los anuncios «Lola» (televisión) y «Sociedad Latera» (exterior) y recomendación de medios. Realizado junto a Antonio José Martín Pérez.",
+    herramientas: ["Canva", "Investigación de medios", "Análisis publicitario"],
+    enlace: "",
+  },
   {
     titulo: "Email de Halloween",
     cliente: "El Corte Inglés",
     categoria: "Email marketing",
     curso: "2º curso",
-    imagen: "assets/trabajos/halloween-portada.jpg",
-    descripcion: "Campaña de email marketing «Noche de terror en tu casa» diseñada en MailerLite para presentar la colección de decoración de Halloween de El Corte Inglés.",
-    puntos: [
-      "Asunto con emoji para destacar en la bandeja: «🎃 Noche de terror: tu casa, lista para Halloween»",
-      "Cabecera con la marca y estética oscura con el naranja como color protagonista",
-      "Fichas de producto con imagen, descripción y llamada a la compra",
-    ],
+    tipoVisor: "email",
+    paginas: ["assets/trabajos/halloween-email.jpg"],
+    descripcion: "Campaña de email «Noche de terror en tu casa» diseñada en MailerLite para presentar la colección de decoración de Halloween de El Corte Inglés.",
     herramientas: ["MailerLite", "Copywriting", "Diseño de email"],
+    enlace: "",
+  },
+  {
+    titulo: "Propuesta de publicidad en prensa",
+    cliente: "La Cookiteria",
+    categoria: "Planificación de medios",
+    curso: "2º curso",
+    tipoVisor: "diapositivas",
+    paginas: pags("cookiteria", 5),
+    descripcion: "Campaña regional en Cádiz en el periódico 20 minutos: soporte y formato elegidos, un anuncio personalizado que se descubre al deslizar la página y la estimación de costes de inserción.",
+    herramientas: ["Canva", "Planificación de medios", "Presupuesto"],
     enlace: "",
   },
   {
@@ -125,11 +156,6 @@ const TRABAJOS = [
     curso: "2º curso",
     imagen: "assets/trabajos/ikea-portada.jpg",
     descripcion: "Landing page para IKEA desarrollada y publicada con Google Apps Script, pensada para guiar al usuario hacia una única acción.",
-    puntos: [
-      "Estructura de landing: cabecera, propuesta de valor y llamada a la acción",
-      "Textos persuasivos adaptados al tono cercano de la marca",
-      "Diseño con los colores de IKEA y publicada como aplicación web",
-    ],
     herramientas: ["Google Apps Script", "HTML", "CSS", "Copywriting"],
     enlace: "https://script.google.com/a/macros/lassalinassf.es/s/AKfycbxoHOhpAaZDSxKR1KfTBNJbcLHLeM5A5ENgvMVPtDiW3_ZuyAW1uNkmiaCib9T1FpLe/exec",
   },

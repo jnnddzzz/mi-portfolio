@@ -267,30 +267,68 @@ $(".bento").innerHTML = SERVICIOS.map(sv => `
 /* =========================================================
    Trabajos
    ========================================================= */
+// Visor: las páginas de cada trabajo se recorren con scroll dentro de su recuadro
 const coverHTML = t => t.imagen ? `<img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" loading="lazy" />` : "";
+function viewerHTML(t) {
+  if (!t.paginas?.length) return `<div class="case-media-inner">${coverHTML(t)}</div>`;
+  const slides = t.tipoVisor !== "email";
+  return `
+    <div class="viewer v-${slides ? "slides" : "email"}" tabindex="0" aria-label="${esc(t.titulo)}: desliza para ver el trabajo" data-hover="Desliza">
+      <div class="viewer-track">${t.paginas.map((src, j) => `<img src="${esc(src)}" alt="${esc(t.titulo)} · ${slides ? "diapositiva" : "parte"} ${j + 1}" loading="lazy" draggable="false" />`).join("")}</div>
+    </div>
+    <div class="viewer-ui" aria-hidden="true">
+      <span class="v-count">${slides ? `1 / ${t.paginas.length}` : "Email completo"}</span>
+      <span class="v-hint">Desliza ↓</span>
+    </div>
+    <div class="v-bar" aria-hidden="true"><i></i></div>`;
+}
+function bindViewer(root) {
+  const v = $(".viewer", root);
+  if (!v) return;
+  const imgs = $$("img", v), count = $(".v-count", root), bar = $(".v-bar i", root), slides = v.classList.contains("v-slides");
+  const update = () => {
+    const max = v.scrollHeight - v.clientHeight;
+    bar.style.transform = `scaleY(${max > 0 ? v.scrollTop / max : 1})`;
+    if (v.scrollTop > 8) root.classList.add("scrolled");
+    if (slides) {
+      const mid = v.scrollTop + v.clientHeight / 2;
+      let idx = 0; imgs.forEach((im, j) => { if (im.offsetTop <= mid) idx = j; });
+      count.textContent = `${idx + 1} / ${imgs.length}`;
+    }
+  };
+  v.addEventListener("scroll", update, { passive: true });
+  imgs.forEach(im => im.addEventListener("load", update));
+  update();
+}
+
 const cases = $(".cases");
 cases.innerHTML = TRABAJOS.map((t, i) => `
   <article class="tile case reveal">
-    <button class="case-media" data-open="${i}" data-hover="Ver" aria-label="Ver ${esc(t.titulo)}">
-      <div class="case-media-inner">${coverHTML(t)}</div>
-    </button>
+    <div class="case-media">
+      ${viewerHTML(t)}
+      <button class="v-expand" data-open="${i}" aria-label="Ampliar ${esc(t.titulo)}" data-hover="Ampliar">⤢</button>
+    </div>
     <div class="case-info">
       <span class="case-kicker">Trabajo realizado · ${esc(t.categoria || "")}</span>
       <h3>${esc(t.titulo)}${t.cliente ? `<small>${esc(t.cliente)}</small>` : ""}</h3>
       <p class="case-desc">${esc(t.descripcion)}</p>
       <div class="case-actions">
-        <button class="pill pill-solid" data-open="${i}" data-hover>Ver proyecto</button>
+        <button class="pill pill-solid" data-open="${i}" data-hover>Ver en grande</button>
         ${t.enlace ? `<a class="pill" href="${esc(t.enlace)}" target="_blank" rel="noopener" data-hover>En vivo ↗</a>` : ""}
       </div>
     </div>
   </article>`).join("");
+$$(".case-media", cases).forEach(bindViewer);
 
 const modal = $(".modal");
 cases.addEventListener("click", e => {
   const opener = e.target.closest("[data-open]");
   if (!opener) return;
   const t = TRABAJOS[opener.dataset.open];
-  $(".modal-cover", modal).innerHTML = coverHTML(t);
+  const cover = $(".modal-cover", modal);
+  cover.className = "modal-cover" + (t.paginas?.length ? " has-viewer" : "");
+  cover.innerHTML = viewerHTML(t);
+  bindViewer(cover);
   $(".modal-cat", modal).textContent = ["Trabajo realizado", t.cliente].filter(Boolean).join(" · ");
   $("#modal-title").textContent = t.titulo;
   $(".modal-desc", modal).textContent = t.descripcion;
@@ -298,6 +336,7 @@ cases.addEventListener("click", e => {
   link.hidden = !t.enlace;
   if (t.enlace) link.href = t.enlace;
   modal.showModal();
+  $(".viewer", cover)?.focus({ preventScroll: true });
 });
 $(".modal-close").addEventListener("click", () => modal.close());
 modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
@@ -512,7 +551,7 @@ const looksEl = $(".looks");
       if (r.top > vh || r.bottom < 0) return;
       const p = clamp01((vh - r.top) / (vh * 0.75));
       m.style.setProperty("--ci", ((1 - p) * 6) + "%");
-      m.style.setProperty("--sc", 1.08 - p * 0.08);
+      m.style.setProperty("--sc", 1.06 - p * 0.06);
     });
     const lr = looksEl.getBoundingClientRect();
     if (lr.top < vh && lr.bottom > 0) {
