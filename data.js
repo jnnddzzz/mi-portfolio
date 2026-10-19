@@ -28,18 +28,30 @@ const REDES = [
   { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "", texto: "Perfil profesional", fotos: [] },
 ];
 
-/* ---------- POSTS DESTACADOS DE REDES ----------
-   Sube capturas o fotos de tus mejores publicaciones a assets/redes/
-   y pon aquí la ruta + el enlace al post. Si "imagen" está vacía
-   se muestra un hueco de color.
+/* ---------- BIBLIOTECA DE LOOKS ----------
+   Aparecen en "Estilo" > "Mis looks". Para añadir uno, sube la foto a assets/looks/
+   (y una copia pequeña, de unos 640 px, a assets/looks/mini/) y añade una línea:
+   { imagen: "assets/looks/mi-look.jpg", mini: "assets/looks/mini/mi-look.jpg", texto: "Nombre", grupo: "Color" },
+   grupo sirve para los filtros: "Color", "Neutros" o "Denim" (puedes crear otros).
+   mini y enlace son opcionales.
 */
 const POSTS = [
-  { imagen: "assets/redes/post-1.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Outfit amarillo" },
-  { imagen: "assets/redes/post-2.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Rojo en la piscina" },
-  { imagen: "assets/redes/post-3.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Look beige" },
-  { imagen: "assets/redes/post-4.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Rosa y crochet" },
-  { imagen: "assets/redes/post-5.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Diesel" },
-  { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", red: "Instagram", texto: "Chándal morado" },
+  { imagen: "assets/looks/look-01.jpg", mini: "assets/looks/mini/look-01.jpg", texto: "Amarillo y camuflaje", grupo: "Color" },
+  { imagen: "assets/looks/look-02.jpg", mini: "assets/looks/mini/look-02.jpg", texto: "Graffiti y denim", grupo: "Denim" },
+  { imagen: "assets/looks/look-03.jpg", mini: "assets/looks/mini/look-03.jpg", texto: "Gris total", grupo: "Neutros" },
+  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Morado 88", grupo: "Color" },
+  { imagen: "assets/looks/look-05.jpg", mini: "assets/looks/mini/look-05.jpg", texto: "Rojo y camuflaje", grupo: "Color" },
+  { imagen: "assets/looks/look-06.jpg", mini: "assets/looks/mini/look-06.jpg", texto: "Rosa con vistas", grupo: "Color" },
+  { imagen: "assets/redes/post-1.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Outfit amarillo", grupo: "Color" },
+  { imagen: "assets/looks/look-07.jpg", mini: "assets/looks/mini/look-07.jpg", texto: "Baggy negro y botas", grupo: "Neutros" },
+  { imagen: "assets/looks/look-08.jpg", mini: "assets/looks/mini/look-08.jpg", texto: "Azul y blanco", grupo: "Color" },
+  { imagen: "assets/redes/post-2.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Rojo en la piscina", grupo: "Color" },
+  { imagen: "assets/looks/look-09.jpg", mini: "assets/looks/mini/look-09.jpg", texto: "Denim y rojo", grupo: "Denim" },
+  { imagen: "assets/redes/post-3.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Look beige", grupo: "Neutros" },
+  { imagen: "assets/looks/look-10.jpg", mini: "assets/looks/mini/look-10.jpg", texto: "Tirantes y estampado", grupo: "Neutros" },
+  { imagen: "assets/redes/post-4.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Rosa y crochet", grupo: "Denim" },
+  { imagen: "assets/redes/post-5.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Diesel", grupo: "Neutros" },
+  { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Chándal morado", grupo: "Color" },
 ];
 
 /* ---------- ESTILO: moda y diseños ----------

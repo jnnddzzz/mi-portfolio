@@ -227,7 +227,7 @@ function stepBubbles() {
 const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
   servicios: () => `${SERVICIOS.length} servicios`,
-  estilo: () => `${POSTS.filter(p => p.imagen).length + MI_ROPA.length + DISENOS.length} fotos`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length} looks · ${MI_ROPA.length} prendas`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -236,17 +236,28 @@ function setChapter(ch, open) {
   ch.classList.toggle("open", open);
   $(".chapter-head", ch).setAttribute("aria-expanded", open);
 }
+const irA = el => el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
 $$(".chapter-head").forEach(h => h.addEventListener("click", () => {
   const ch = h.closest(".chapter");
-  setChapter(ch, !ch.classList.contains("open"));
+  const abrir = !ch.classList.contains("open");
+  setChapter(ch, abrir);
+  // al abrir un capítulo que queda abajo, sube suavemente para leerlo entero
+  if (abrir && h.getBoundingClientRect().top > innerHeight * 0.4) setTimeout(() => irA(ch), 120);
 }));
-// los enlaces a un capítulo lo abren antes de llegar
+// Enlaces internos: abren el capítulo que contiene el destino y llegan con un desplazamiento suave
 document.addEventListener("click", e => {
   const a = e.target.closest('a[href^="#"]');
-  const ch = a && document.getElementById(a.getAttribute("href").slice(1));
-  if (ch?.classList.contains("chapter")) setChapter(ch, true);
+  const id = a?.getAttribute("href").slice(1);
+  const dest = id && document.getElementById(id);
+  if (!dest) return;
+  e.preventDefault();
+  const ch = dest.closest(".chapter");
+  const cerrado = ch && !ch.classList.contains("open");
+  if (ch) setChapter(ch, true);
+  setTimeout(() => irA(dest), cerrado && dest !== ch ? 420 : 0);
+  history.replaceState(null, "", "#" + id);
 });
-if (location.hash) { const ch = document.getElementById(location.hash.slice(1)); if (ch?.classList.contains("chapter")) setChapter(ch, true); }
+if (location.hash) { const d = document.getElementById(location.hash.slice(1)); const ch = d?.closest(".chapter"); if (ch) setChapter(ch, true); }
 
 /* =========================================================
    Sobre mí
@@ -374,61 +385,76 @@ modal.addEventListener("click", e => { if (e.target === modal) modal.close(); })
    ========================================================= */
 $(".style-text").textContent = ESTILO.texto;
 $(".style-tags").innerHTML = ESTILO.etiquetas.map(x => `<li>${esc(x)}</li>`).join("");
-const ig = REDES.find(r => r.nombre === "Instagram" && r.url);
+
+// Transiciones suaves entre estados (View Transitions) cuando el navegador las tiene
+const conTransicion = fn => (!reduced && document.startViewTransition) ? document.startViewTransition(fn) : (fn(), null);
+const mediaHTML = (it, enLista) => it.video
+  ? `<video src="${esc(it.video)}" ${it.poster ? `poster="${esc(it.poster)}"` : ""} muted loop playsinline ${enLista ? 'preload="metadata"' : "autoplay controls"}></video>`
+  : `<img src="${esc(enLista && it.mini || it.imagen)}" alt="${esc(it.titulo || "")}" ${enLista ? 'loading="lazy"' : ""} draggable="false" />`;
+
+/* ---------- Biblioteca de looks: filtros, cuadrícula y "ver todos" ---------- */
+const LOOKS = POSTS.filter(p => p.imagen).map((p, n) => ({ ...p, titulo: p.texto, tipo: p.grupo, n }));
+const libGrid = $(".lib-grid"), libMore = $(".lib-more");
+const LIB_MAX = innerWidth <= 560 ? 6 : 8;
+let libFiltro = "Todos", libTodos = false, libLista = LOOKS;
+const grupos = ["Todos", ...new Set(LOOKS.map(l => l.grupo).filter(Boolean))];
+$(".lib-filters").innerHTML = grupos.map(g => `<button class="chip" aria-pressed="${g === "Todos"}" data-g="${esc(g)}" data-hover>${esc(g)} <small>${g === "Todos" ? LOOKS.length : LOOKS.filter(l => l.grupo === g).length}</small></button>`).join("");
+$(".n-looks").textContent = LOOKS.length;
+$(".n-ropa").textContent = MI_ROPA.length;
+
+function renderLib() {
+  libLista = libFiltro === "Todos" ? LOOKS : LOOKS.filter(l => l.grupo === libFiltro);
+  const vista = libTodos ? libLista : libLista.slice(0, LIB_MAX);
+  libGrid.innerHTML = vista.map((l, i) => `
+    <button class="lib-item" style="--i:${i % LIB_MAX};view-transition-name:look-${l.n}" data-i="${i}" data-hover="Ver" aria-label="Ver ${esc(l.titulo || "look")}">
+      ${mediaHTML(l, true)}
+      <span class="lib-cap"><b>${esc(l.titulo || "")}</b><small>${esc(l.grupo || "")}</small></span>
+    </button>`).join("");
+  libMore.hidden = libLista.length <= LIB_MAX;
+  libMore.textContent = libTodos ? "Ver menos" : `Ver los ${libLista.length} looks`;
+}
+$(".lib-filters").addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b || b.dataset.g === libFiltro) return;
+  $$(".lib-filters .chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+  conTransicion(() => { libFiltro = b.dataset.g; libTodos = false; renderLib(); });
+});
+libMore.addEventListener("click", () => {
+  const cerrar = libTodos;
+  conTransicion(() => { libTodos = !libTodos; renderLib(); });
+  if (cerrar) $("#looks").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+});
+libGrid.addEventListener("click", e => {
+  const b = e.target.closest(".lib-item");
+  if (b) openLightbox(libLista, +b.dataset.i, $("img", b));
+});
+const igPerfil = REDES.find(r => r.nombre === "Instagram" && r.url);
 const subLink = $(".sub-link");
-if (ig) { subLink.href = ig.url; subLink.textContent = `${ig.usuario} ↗`; } else subLink.remove();
+if (igPerfil) { subLink.href = igPerfil.url; subLink.textContent = `Más en Instagram ${igPerfil.usuario} ↗`; } else subLink.remove();
+if (LOOKS.length) renderLib(); else $("#looks").remove();
 
-// Galería por pestañas: looks, ropa que hago y diseños. Carrusel con arrastre y vista ampliada.
-const GALERIA = [
-  { id: "looks", nombre: "Looks", items: POSTS.filter(p => p.imagen).map(p => ({ imagen: p.imagen, titulo: p.texto, tipo: p.red, enlace: p.enlace })) },
-  { id: "ropa", nombre: "Mi ropa", items: MI_ROPA },
-  { id: "disenos", nombre: "Diseños", items: DISENOS },
-].filter(g => g.items.length);
-const gal = $(".gal"), rail = $(".gal-rail"), galCount = $(".gal-count");
-let galActual = GALERIA[0];
-
-$(".gal-tabs").insertAdjacentHTML("beforeend", GALERIA.map((g, i) => `
-  <button class="gal-tab" role="tab" aria-selected="${i === 0}" data-gal="${g.id}" data-hover>${esc(g.nombre)} <small>${g.items.length}</small></button>`).join(""));
-const mediaHTML = (it, enRail) => it.video
-  ? `<video src="${esc(it.video)}" ${it.poster ? `poster="${esc(it.poster)}"` : ""} muted loop playsinline ${enRail ? 'preload="metadata"' : "autoplay controls"}></video>`
-  : `<img src="${esc(it.imagen)}" alt="${esc(it.titulo || "")}" ${enRail ? 'loading="lazy"' : ""} draggable="false" />`;
-
+/* ---------- La ropa que hago: carrusel que se arrastra ---------- */
+const rail = $(".gal-rail"), galCount = $(".gal-count"), taller = $("#mi-ropa");
 const vidIO = new IntersectionObserver(en => en.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: 0.5 });
-function renderGal(g) {
-  galActual = g;
-  $$(".gal-tab").forEach(b => b.setAttribute("aria-selected", b.dataset.gal === g.id));
-  galInd();
-  rail.innerHTML = g.items.map((it, i) => `
+function renderRopa() {
+  rail.innerHTML = MI_ROPA.map((it, i) => `
     <figure class="gal-item${it.video ? " is-video" : ""}" style="--i:${i}" data-i="${i}" data-hover="Ampliar">
       ${mediaHTML(it, true)}
       <figcaption><b>${esc(it.titulo || "")}</b><span>${esc(it.tipo || "")}</span></figcaption>
-    </figure>`).join("");
-  rail.scrollLeft = 0;
+    </figure>`).join("") + `<div class="gal-soon"><b>Próximamente</b><span>Nuevas prendas en camino</span></div>`;
   $$("video", rail).forEach(v => vidIO.observe(v));
   galUpdate();
 }
-function galInd() {
-  const tab = $(`.gal-tab[data-gal="${galActual.id}"]`), ind = $(".gal-ind");
-  ind.style.width = tab.offsetWidth + "px";
-  ind.style.transform = `translateX(${tab.offsetLeft}px)`;
-}
-if (galActual) new ResizeObserver(() => { galInd(); galUpdate(); }).observe($(".gal-tabs"));
 function galStep() { const it = $(".gal-item", rail); return it ? it.offsetWidth + parseFloat(getComputedStyle(rail).columnGap || 0) : 300; }
 function galUpdate() {
-  const n = galActual.items.length, step = galStep();
+  const n = MI_ROPA.length, step = galStep();
   const i = Math.min(n, Math.round(rail.scrollLeft / step) + 1);
   const max = rail.scrollWidth - rail.clientWidth;
   galCount.textContent = `${String(i).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
   $(".gal-prev").disabled = rail.scrollLeft <= 4;
   $(".gal-next").disabled = rail.scrollLeft >= max - 4;
-  gal.classList.toggle("no-scroll", max <= 4);
+  taller.classList.toggle("no-scroll", max <= 4);
 }
-$(".gal-tabs").addEventListener("click", e => {
-  const b = e.target.closest(".gal-tab");
-  if (!b || b.dataset.gal === galActual.id) return;
-  rail.classList.add("swap");
-  setTimeout(() => { renderGal(GALERIA.find(g => g.id === b.dataset.gal)); rail.classList.remove("swap"); }, 220);
-});
 $(".gal-prev").addEventListener("click", () => rail.scrollBy({ left: -galStep(), behavior: "smooth" }));
 $(".gal-next").addEventListener("click", () => rail.scrollBy({ left: galStep(), behavior: "smooth" }));
 rail.addEventListener("scroll", galUpdate, { passive: true });
@@ -436,7 +462,6 @@ rail.addEventListener("keydown", e => {
   if (e.key === "ArrowRight") { e.preventDefault(); $(".gal-next").click(); }
   if (e.key === "ArrowLeft") { e.preventDefault(); $(".gal-prev").click(); }
 });
-
 // Arrastrar con el ratón; un clic sin arrastrar abre la vista ampliada
 let drag = null, justDragged = false;
 rail.addEventListener("pointerdown", e => {
@@ -463,44 +488,73 @@ addEventListener("pointerup", () => {
 rail.addEventListener("click", e => {
   if (justDragged) return;
   const f = e.target.closest(".gal-item");
-  if (f) openLightbox(+f.dataset.i);
+  if (f) openLightbox(MI_ROPA, +f.dataset.i, $("img", f));
 });
+if (MI_ROPA.length) { renderRopa(); new ResizeObserver(galUpdate).observe(rail); } else taller.remove();
 
-// Vista ampliada: flechas, teclado y deslizar con el dedo
-const lb = $(".lightbox"), lbStage = $(".lb-stage");
-let lbIndex = 0;
+/* ---------- Vista ampliada: miniaturas, flechas, teclado y deslizar ---------- */
+const lb = $(".lightbox"), lbStage = $(".lb-stage"), lbThumbs = $(".lb-thumbs");
+let lbList = [], lbIndex = 0, lbOrigen = null;
 function showLightbox(i, dir = 0) {
-  const items = galActual.items;
-  lbIndex = (i + items.length) % items.length;
-  const it = items[lbIndex];
+  lbIndex = (i + lbList.length) % lbList.length;
+  const it = lbList[lbIndex];
   lbStage.innerHTML = mediaHTML(it, false);
   lbStage.style.setProperty("--dir", dir);
   lbStage.classList.remove("in"); void lbStage.offsetWidth; lbStage.classList.add("in");
   $(".lb-cap b", lb).textContent = it.titulo || "";
   $(".lb-cap span", lb).textContent = it.tipo || "";
-  $(".lb-count", lb).textContent = `${lbIndex + 1} / ${items.length}`;
-  lb.classList.toggle("single", items.length < 2);
+  $(".lb-count", lb).textContent = `${lbIndex + 1} / ${lbList.length}`;
+  $$("button", lbThumbs).forEach((t, j) => t.setAttribute("aria-current", j === lbIndex));
+  $$("button", lbThumbs)[lbIndex]?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  [lbIndex + 1, lbIndex - 1].forEach(j => { const n = lbList[(j + lbList.length) % lbList.length]; if (n?.imagen) new Image().src = n.imagen; });
 }
-function openLightbox(i) { showLightbox(i); lb.showModal(); }
+function openLightbox(list, i, origen) {
+  lbList = list;
+  lb.classList.toggle("single", list.length < 2);
+  lbThumbs.innerHTML = list.map((it, j) => `<button aria-label="Ver ${j + 1}">${it.video ? `<video src="${esc(it.video)}" muted preload="metadata"></video>` : `<img src="${esc(it.mini || it.imagen)}" alt="" loading="lazy" />`}</button>`).join("");
+  // La foto "vuela" desde la miniatura hasta la vista ampliada
+  lbOrigen = origen;
+  if (origen) origen.style.viewTransitionName = "foto-abierta";
+  const abrir = () => {
+    if (origen) origen.style.viewTransitionName = "";
+    showLightbox(i);
+    lbStage.classList.remove("in");
+    const m = lbStage.firstElementChild;
+    if (m && origen) m.style.viewTransitionName = "foto-abierta";
+    lb.showModal();
+  };
+  const vt = conTransicion(abrir);
+  vt?.finished.then(() => { const m = lbStage.firstElementChild; if (m) m.style.viewTransitionName = ""; });
+}
+function cerrarLightbox() {
+  const m = lbStage.firstElementChild;
+  const destino = lbList === libLista
+    ? $(`.lib-item[data-i="${lbIndex}"] img`, libGrid)
+    : $(`.gal-item[data-i="${lbIndex}"] img`, rail);
+  if (!m || !destino || !document.startViewTransition || reduced) return lb.close();
+  m.style.viewTransitionName = "foto-abierta";
+  const vt = document.startViewTransition(() => { m.style.viewTransitionName = ""; destino.style.viewTransitionName = "foto-abierta"; lb.close(); });
+  vt.finished.then(() => { destino.style.viewTransitionName = ""; });
+}
+lbThumbs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) { const j = [...lbThumbs.children].indexOf(b); showLightbox(j, Math.sign(j - lbIndex)); } });
 $(".lb-prev").addEventListener("click", () => showLightbox(lbIndex - 1, -1));
 $(".lb-next").addEventListener("click", () => showLightbox(lbIndex + 1, 1));
-$(".lb-close").addEventListener("click", () => lb.close());
-lb.addEventListener("click", e => { if (e.target === lb || e.target === lbStage) lb.close(); });
+$(".lb-close").addEventListener("click", cerrarLightbox);
+lb.addEventListener("click", e => { if (e.target === lb || e.target === lbStage) cerrarLightbox(); });
+lb.addEventListener("cancel", e => { e.preventDefault(); cerrarLightbox(); });
 lb.addEventListener("close", () => { lbStage.innerHTML = ""; });
 lb.addEventListener("keydown", e => {
   if (e.key === "ArrowRight") showLightbox(lbIndex + 1, 1);
   if (e.key === "ArrowLeft") showLightbox(lbIndex - 1, -1);
 });
 let touchX = null;
-lb.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
-lb.addEventListener("touchend", e => {
+lbStage.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+lbStage.addEventListener("touchend", e => {
   if (touchX === null) return;
   const dx = e.changedTouches[0].clientX - touchX;
   if (Math.abs(dx) > 50) showLightbox(lbIndex + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
   touchX = null;
 });
-
-if (GALERIA.length) renderGal(GALERIA[0]); else gal.remove();
 
 /* =========================================================
    Redes: Instagram y TikTok en directo
@@ -635,6 +689,7 @@ const bar = $(".progress i");
 const stage = $(".hero-stage");
 const nav = $(".nav");
 const navLinks = $$(".nav-links a");
+let navActual = -2;
 const sections = navLinks.map(a => $(a.getAttribute("href")));
 let lastY = scrollY;
 
@@ -662,7 +717,14 @@ function onScroll() {
 
   let current = -1;
   sections.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.4) current = i; });
-  navLinks.forEach((a, i) => a.classList.toggle("active", i === current));
+  if (current !== navActual) { navActual = current; navLinks.forEach((a, i) => a.classList.toggle("active", i === current)); navInd(); }
+}
+// Indicador que se desliza bajo el enlace del apartado en el que estás
+function navInd() {
+  const ind = $(".nav-ind"), a = navLinks[navActual];
+  if (!ind) return;
+  ind.style.opacity = a ? 1 : 0;
+  if (a) { ind.style.width = a.offsetWidth + "px"; ind.style.transform = `translateX(${a.offsetLeft}px)`; }
 }
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
@@ -684,7 +746,7 @@ const caseMedia = $$(".case-media");
 })();
 
 let lastW = innerWidth;
-addEventListener("resize", () => { if (innerWidth !== lastW && galActual) { lastW = innerWidth; renderGal(galActual); } });
+addEventListener("resize", () => { if (innerWidth !== lastW) { lastW = innerWidth; navInd(); } });
 
 /* =========================================================
    Ratón: cursor, foto 3D y letras de contacto
