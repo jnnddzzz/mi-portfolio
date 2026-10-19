@@ -225,7 +225,7 @@ function stepBubbles() {
 const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
   servicios: () => `${SERVICIOS.length} servicios`,
-  estilo: () => `${POSTS.filter(p => p.imagen).length} looks`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length + ROPA.length + DISENOS.length} fotos`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -376,45 +376,129 @@ const ig = REDES.find(r => r.nombre === "Instagram" && r.url);
 const subLink = $(".sub-link");
 if (ig) { subLink.href = ig.url; subLink.textContent = `${ig.usuario} ↗`; } else subLink.remove();
 
-const lookCols = $$(".look-col");
-const lookIO = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); lookIO.unobserve(e.target); } }), { threshold: 0.2 });
-function renderLooks() {
-  const n = innerWidth <= 560 ? 2 : 3;
-  lookCols.forEach((c, i) => { c.hidden = i >= n; c.innerHTML = ""; });
-  POSTS.filter(p => p.imagen).forEach((p, i) => {
-    lookCols[i % n].insertAdjacentHTML("beforeend", `
-      <figure class="look">
-        <img src="${esc(p.imagen)}" alt="${esc(p.texto || "Look")}" loading="lazy" draggable="false" />
-        <figcaption><span>${esc(p.texto || "")}</span>${p.enlace ? `<a href="${esc(p.enlace)}" target="_blank" rel="noopener" data-hover="Ver"><i>Ver ↗</i></a>` : ""}</figcaption>
-      </figure>`);
-  });
-  $$(".look").forEach(l => lookIO.observe(l));
-}
-renderLooks();
+// Galería por pestañas: looks, ropa que hago y diseños. Carrusel con arrastre y vista ampliada.
+const GALERIA = [
+  { id: "looks", nombre: "Looks", items: POSTS.filter(p => p.imagen).map(p => ({ imagen: p.imagen, titulo: p.texto, tipo: p.red, enlace: p.enlace })) },
+  { id: "ropa", nombre: "Mi ropa", items: ROPA },
+  { id: "disenos", nombre: "Diseños", items: DISENOS },
+].filter(g => g.items.length);
+const gal = $(".gal"), rail = $(".gal-rail"), galCount = $(".gal-count");
+let galActual = GALERIA[0];
 
-let lastTap = 0;
-$(".looks").addEventListener("pointerup", e => {
-  const look = e.target.closest(".look");
-  if (!look || e.target.closest("a")) return;
-  const now = Date.now();
-  if (now - lastTap < 320) {
-    const r = look.getBoundingClientRect();
-    const h = document.createElement("span");
-    h.className = "heart"; h.textContent = "♥";
-    h.style.setProperty("--hx", e.clientX - r.left + "px"); h.style.setProperty("--hy", e.clientY - r.top + "px");
-    look.append(h);
-    setTimeout(() => h.remove(), 1000);
-    lastTap = 0;
-  } else lastTap = now;
+$(".gal-tabs").insertAdjacentHTML("beforeend", GALERIA.map((g, i) => `
+  <button class="gal-tab" role="tab" aria-selected="${i === 0}" data-gal="${g.id}" data-hover>${esc(g.nombre)} <small>${g.items.length}</small></button>`).join(""));
+const mediaHTML = (it, enRail) => it.video
+  ? `<video src="${esc(it.video)}" ${it.poster ? `poster="${esc(it.poster)}"` : ""} muted loop playsinline ${enRail ? 'preload="metadata"' : "autoplay controls"}></video>`
+  : `<img src="${esc(it.imagen)}" alt="${esc(it.titulo || "")}" ${enRail ? 'loading="lazy"' : ""} draggable="false" />`;
+
+const vidIO = new IntersectionObserver(en => en.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: 0.5 });
+function renderGal(g) {
+  galActual = g;
+  $$(".gal-tab").forEach(b => b.setAttribute("aria-selected", b.dataset.gal === g.id));
+  galInd();
+  rail.innerHTML = g.items.map((it, i) => `
+    <figure class="gal-item${it.video ? " is-video" : ""}" style="--i:${i}" data-i="${i}" data-hover="Ampliar">
+      ${mediaHTML(it, true)}
+      <figcaption><b>${esc(it.titulo || "")}</b><span>${esc(it.tipo || "")}</span></figcaption>
+    </figure>`).join("");
+  rail.scrollLeft = 0;
+  $$("video", rail).forEach(v => vidIO.observe(v));
+  galUpdate();
+}
+function galInd() {
+  const tab = $(`.gal-tab[data-gal="${galActual.id}"]`), ind = $(".gal-ind");
+  ind.style.width = tab.offsetWidth + "px";
+  ind.style.transform = `translateX(${tab.offsetLeft}px)`;
+}
+if (galActual) new ResizeObserver(() => { galInd(); galUpdate(); }).observe($(".gal-tabs"));
+function galStep() { const it = $(".gal-item", rail); return it ? it.offsetWidth + parseFloat(getComputedStyle(rail).columnGap || 0) : 300; }
+function galUpdate() {
+  const n = galActual.items.length, step = galStep();
+  const i = Math.min(n, Math.round(rail.scrollLeft / step) + 1);
+  const max = rail.scrollWidth - rail.clientWidth;
+  galCount.textContent = `${String(i).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
+  $(".gal-prev").disabled = rail.scrollLeft <= 4;
+  $(".gal-next").disabled = rail.scrollLeft >= max - 4;
+  gal.classList.toggle("no-scroll", max <= 4);
+}
+$(".gal-tabs").addEventListener("click", e => {
+  const b = e.target.closest(".gal-tab");
+  if (!b || b.dataset.gal === galActual.id) return;
+  rail.classList.add("swap");
+  setTimeout(() => { renderGal(GALERIA.find(g => g.id === b.dataset.gal)); rail.classList.remove("swap"); }, 220);
+});
+$(".gal-prev").addEventListener("click", () => rail.scrollBy({ left: -galStep(), behavior: "smooth" }));
+$(".gal-next").addEventListener("click", () => rail.scrollBy({ left: galStep(), behavior: "smooth" }));
+rail.addEventListener("scroll", galUpdate, { passive: true });
+rail.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") { e.preventDefault(); $(".gal-next").click(); }
+  if (e.key === "ArrowLeft") { e.preventDefault(); $(".gal-prev").click(); }
 });
 
-$(".designs").innerHTML = DISENOS.length
-  ? DISENOS.map(d => `
-    <figure class="design reveal">
-      <div class="design-img"><img src="${esc(d.imagen)}" alt="${esc(d.titulo || "Diseño")}" loading="lazy" /></div>
-      <p>${esc(d.titulo || "")}<span>${esc(d.tipo || "")}</span></p>
-    </figure>`).join("")
-  : `<div class="designs-empty reveal"><b>Diseños en proceso</b>Muy pronto, aquí.</div>`;
+// Arrastrar con el ratón; un clic sin arrastrar abre la vista ampliada
+let drag = null, justDragged = false;
+rail.addEventListener("pointerdown", e => {
+  if (e.pointerType !== "mouse" || e.button !== 0) return;
+  drag = { x: e.clientX, left: rail.scrollLeft, moved: false };
+});
+addEventListener("pointermove", e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x;
+  if (!drag.moved && Math.abs(dx) > 5) { drag.moved = true; rail.classList.add("dragging"); }
+  if (drag.moved) rail.scrollLeft = drag.left - dx;
+});
+addEventListener("pointerup", () => {
+  if (!drag) return;
+  if (drag.moved) {
+    rail.classList.remove("dragging");
+    const step = galStep();
+    rail.scrollTo({ left: Math.round(rail.scrollLeft / step) * step, behavior: "smooth" });
+    justDragged = true;
+    setTimeout(() => { justDragged = false; });
+  }
+  drag = null;
+});
+rail.addEventListener("click", e => {
+  if (justDragged) return;
+  const f = e.target.closest(".gal-item");
+  if (f) openLightbox(+f.dataset.i);
+});
+
+// Vista ampliada: flechas, teclado y deslizar con el dedo
+const lb = $(".lightbox"), lbStage = $(".lb-stage");
+let lbIndex = 0;
+function showLightbox(i, dir = 0) {
+  const items = galActual.items;
+  lbIndex = (i + items.length) % items.length;
+  const it = items[lbIndex];
+  lbStage.innerHTML = mediaHTML(it, false);
+  lbStage.style.setProperty("--dir", dir);
+  lbStage.classList.remove("in"); void lbStage.offsetWidth; lbStage.classList.add("in");
+  $(".lb-cap b", lb).textContent = it.titulo || "";
+  $(".lb-cap span", lb).textContent = it.tipo || "";
+  $(".lb-count", lb).textContent = `${lbIndex + 1} / ${items.length}`;
+  lb.classList.toggle("single", items.length < 2);
+}
+function openLightbox(i) { showLightbox(i); lb.showModal(); }
+$(".lb-prev").addEventListener("click", () => showLightbox(lbIndex - 1, -1));
+$(".lb-next").addEventListener("click", () => showLightbox(lbIndex + 1, 1));
+$(".lb-close").addEventListener("click", () => lb.close());
+lb.addEventListener("click", e => { if (e.target === lb || e.target === lbStage) lb.close(); });
+lb.addEventListener("close", () => { lbStage.innerHTML = ""; });
+lb.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") showLightbox(lbIndex + 1, 1);
+  if (e.key === "ArrowLeft") showLightbox(lbIndex - 1, -1);
+});
+let touchX = null;
+lb.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) showLightbox(lbIndex + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+  touchX = null;
+});
+
+if (GALERIA.length) renderGal(GALERIA[0]); else gal.remove();
 
 /* =========================================================
    Redes: Instagram y TikTok en directo
@@ -567,7 +651,6 @@ addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 const caseMedia = $$(".case-media");
-const looksEl = $(".looks");
 (function loop() {
   if (!reduced) {
     const vh = innerHeight;
@@ -579,17 +662,12 @@ const looksEl = $(".looks");
       m.style.setProperty("--ci", ((1 - p) * 6) + "%");
       m.style.setProperty("--sc", 1.06 - p * 0.06);
     });
-    const lr = looksEl.getBoundingClientRect();
-    if (lr.top < vh && lr.bottom > 0) {
-      const off = Math.max(0, lr.top + lr.height / 2 - vh / 2);
-      lookCols.forEach(c => c.style.setProperty("--ty", (off * parseFloat(c.dataset.speed)) + "px"));
-    }
   } else if (bubbles.length) stepBubbles();
   requestAnimationFrame(loop);
 })();
 
 let lastW = innerWidth;
-addEventListener("resize", () => { if (innerWidth !== lastW) { lastW = innerWidth; renderLooks(); } });
+addEventListener("resize", () => { if (innerWidth !== lastW && galActual) { lastW = innerWidth; renderGal(galActual); } });
 
 /* =========================================================
    Ratón: cursor, foto 3D y letras de contacto
