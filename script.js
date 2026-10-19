@@ -270,6 +270,12 @@ $(".bento").innerHTML = SERVICIOS.map(sv => `
 // Visor: las páginas de cada trabajo se recorren con scroll dentro de su recuadro
 const coverHTML = t => t.imagen ? `<img src="${esc(t.imagen)}" alt="${esc(t.titulo)}" loading="lazy" />` : "";
 function viewerHTML(t) {
+  if (t.email) return `
+    <div class="viewer v-email" tabindex="0" aria-label="${esc(t.titulo)}: desliza para ver el email" data-hover="Desliza">
+      <iframe class="v-frame" src="${esc(t.email)}" title="${esc(t.titulo)}" scrolling="no" loading="lazy"></iframe>
+    </div>
+    <div class="viewer-ui" aria-hidden="true"><span class="v-count">Email completo</span><span class="v-hint">Desliza ↓</span></div>
+    <div class="v-bar" aria-hidden="true"><i></i></div>`;
   if (!t.paginas?.length) return `<div class="case-media-inner">${coverHTML(t)}</div>`;
   const slides = t.tipoVisor !== "email";
   return `
@@ -298,6 +304,16 @@ function bindViewer(root) {
   };
   v.addEventListener("scroll", update, { passive: true });
   imgs.forEach(im => im.addEventListener("load", update));
+  // Email en HTML: el marco crece hasta el alto del correo y se recorre con el scroll del recuadro
+  const frame = $(".v-frame", v);
+  if (frame) frame.addEventListener("load", () => {
+    try {
+      const doc = frame.contentDocument.documentElement;
+      const fit = () => { frame.style.height = doc.scrollHeight + "px"; update(); };
+      new ResizeObserver(fit).observe(frame.contentDocument.body);
+      fit();
+    } catch { frame.classList.add("v-frame-own"); }
+  });
   update();
 }
 
@@ -326,7 +342,7 @@ cases.addEventListener("click", e => {
   if (!opener) return;
   const t = TRABAJOS[opener.dataset.open];
   const cover = $(".modal-cover", modal);
-  cover.className = "modal-cover" + (t.paginas?.length ? " has-viewer" : "");
+  cover.className = "modal-cover" + (t.paginas?.length || t.email ? " has-viewer" : "");
   cover.innerHTML = viewerHTML(t);
   bindViewer(cover);
   $(".modal-cat", modal).textContent = ["Trabajo realizado", t.cliente].filter(Boolean).join(" · ");
