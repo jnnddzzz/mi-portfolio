@@ -19,24 +19,28 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 **Todo se edita en `data.js`**, no tienes que tocar nada más.
 
 ### Añadir un trabajo nuevo
-1. Sube la imagen a la carpeta `assets/trabajos/` (por ejemplo `assets/trabajos/cartel-feria.jpg`).
+Cada trabajo se ve dentro de su tarjeta y se recorre con scroll (diapositivas o un email largo), y se puede ampliar.
+
+1. Exporta las páginas (por ejemplo desde Canva: Compartir → Descargar → JPG, todas las páginas) y súbelas a una carpeta nueva, como `assets/trabajos/mi-trabajo/01.jpg`, `02.jpg`…
    Desde GitHub: entra en la carpeta → **Add file → Upload files**.
-2. Abre `data.js`, busca `TRABAJOS` y copia un bloque al principio de la lista:
+2. Abre `data.js`, busca `TRABAJOS` y añade un bloque al principio de la lista:
 
 ```js
 {
-  titulo: "Cartel feria del libro",
-  cliente: "Biblioteca municipal",
-  categoria: "Diseño",          // Diseño, Redes sociales, Campañas, Vídeo... o una nueva
+  titulo: "Campaña de verano",
+  cliente: "Nombre de la marca",
+  categoria: "Campañas",
   curso: "2º curso",
-  imagen: "assets/trabajos/cartel-feria.jpg",
+  tipoVisor: "diapositivas",          // o "email" para una pieza larga
+  paginas: pags("mi-trabajo", 12),    // carpeta y número de páginas
   descripcion: "Qué hiciste, para qué y con qué resultado.",
-  puntos: ["Lo primero que hiciste", "Lo segundo", "Lo tercero"],
   herramientas: ["Canva"],
-  enlace: "",                   // opcional: PDF, Canva, Drive, post de Instagram...
+  enlace: "",                         // opcional
 },
 ```
 3. Guarda (**Commit changes**). En 1-2 minutos la web se actualiza sola.
+
+Si el trabajo es una sola imagen fija, usa `imagen: "assets/trabajos/portada.jpg"` en lugar de `paginas`.
 
 ### Añadir looks (fotos de tus redes)
 1. Sube la foto a `assets/redes/` (vertical, mejor la original que una captura).
