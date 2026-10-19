@@ -1,4 +1,6 @@
 // Renderiza la web a partir de data.js y añade las interacciones — no hace falta tocar este archivo.
+// Por si data.js es de una versión anterior sin ROPA
+const MI_ROPA = typeof ROPA !== "undefined" ? ROPA : [];
 
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
@@ -225,7 +227,7 @@ function stepBubbles() {
 const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
   servicios: () => `${SERVICIOS.length} servicios`,
-  estilo: () => `${POSTS.filter(p => p.imagen).length + ROPA.length + DISENOS.length} fotos`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length + MI_ROPA.length + DISENOS.length} fotos`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -379,7 +381,7 @@ if (ig) { subLink.href = ig.url; subLink.textContent = `${ig.usuario} ↗`; } el
 // Galería por pestañas: looks, ropa que hago y diseños. Carrusel con arrastre y vista ampliada.
 const GALERIA = [
   { id: "looks", nombre: "Looks", items: POSTS.filter(p => p.imagen).map(p => ({ imagen: p.imagen, titulo: p.texto, tipo: p.red, enlace: p.enlace })) },
-  { id: "ropa", nombre: "Mi ropa", items: ROPA },
+  { id: "ropa", nombre: "Mi ropa", items: MI_ROPA },
   { id: "disenos", nombre: "Diseños", items: DISENOS },
 ].filter(g => g.items.length);
 const gal = $(".gal"), rail = $(".gal-rail"), galCount = $(".gal-count");

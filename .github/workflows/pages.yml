@@ -22,6 +22,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Forzar que los navegadores carguen la versión nueva
+        run: sed -i "s/?v=dev/?v=${GITHUB_SHA::8}/g" index.html
       - name: Descargar imágenes de los emails
         run: python3 scripts/descargar-imagenes.py
       - uses: actions/configure-pages@v5
