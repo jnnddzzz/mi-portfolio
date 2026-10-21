@@ -69,14 +69,43 @@ const ESTILO = {
 */
 const DISENOS = [];
 
-/* ---------- MI ROPA: prendas que diseño y confecciono ----------
-   Fotos: { imagen: "assets/ropa/foto.jpg", titulo: "...", tipo: "..." }
-   Vídeos: { video: "assets/ropa/video.mp4", poster: "assets/ropa/video.jpg", titulo: "...", tipo: "..." }
-   Se ven en el apartado "Estilo", en la pestaña "Mi ropa".
+/* ---------- LA ROPA QUE HAGO: colecciones ----------
+   Cada colección es un bloque que se recorre con el scroll (la página pasa las fotos de lado).
+   Para añadir fotos a una colección, súbelas a su carpeta y añade una línea en "piezas":
+   { imagen: "assets/ropa/vaca/02-foto.jpg", paso: "Confección", texto: "Qué se ve en la foto" },
+   (también vale vídeo: { video: "assets/ropa/vaca/clip.mp4", poster: "...jpg", paso: "...", texto: "..." })
+   "proximamente" añade huecos de "Próximamente" al final mientras la colección está en marcha.
 */
-const ROPA = [
-  { imagen: "assets/ropa/ropa-02.jpg", titulo: "Pantalón de toile", tipo: "Patronaje y corte" },
-  { imagen: "assets/ropa/ropa-01.jpg", titulo: "Animal print y algodón crudo", tipo: "Tejidos y piezas" },
+const COLECCIONES = [
+  {
+    id: "toile",
+    nombre: "Conjunto toile",
+    subtitulo: "Bermuda y chaleco en blanco y burdeos",
+    texto: "Un conjunto a dos piezas en tela toile de Jouy: estampado clásico de escenas campestres llevado a un corte streetwear. Desde el tejido hasta la prenda terminada, hecho a mano.",
+    color: "#8f1d32",
+    estado: "Terminado",
+    piezas: [
+      { imagen: "assets/ropa/toile/01-tejido.jpg", paso: "Tejido", texto: "Toile de Jouy en crudo y burdeos" },
+      { imagen: "assets/ropa/toile/02-corte.jpg", paso: "Patronaje y corte", texto: "Las piezas de la bermuda, recién cortadas" },
+      { imagen: "assets/ropa/toile/03-corte.jpg", paso: "Patronaje y corte", texto: "Delanteros listos para coser" },
+      { imagen: "assets/ropa/toile/04-bermuda.jpg", paso: "Confección", texto: "La bermuda montada" },
+      { imagen: "assets/ropa/toile/05-bermuda-frente.jpg", paso: "Confección", texto: "Frontal con pinza central" },
+      { imagen: "assets/ropa/toile/06-detalle.jpg", paso: "Detalle", texto: "El estampado de cerca" },
+      { imagen: "assets/ropa/toile/07-chaleco.jpg", paso: "Resultado", texto: "El chaleco que completa el conjunto" },
+    ],
+  },
+  {
+    id: "vaca",
+    nombre: "Camiseta de vaca",
+    subtitulo: "Animal print sobre algodón crudo",
+    texto: "Una camiseta que mezcla el estampado de vaca con una base de algodón crudo. Ahora mismo en el taller: aquí irá apareciendo todo el proceso.",
+    color: "#6b4a2f",
+    estado: "En proceso",
+    proximamente: 2,
+    piezas: [
+      { imagen: "assets/ropa/vaca/01-tejido.jpg", paso: "Tejidos", texto: "Animal print y la camiseta base" },
+    ],
+  },
 ];
 
 /* ---------- QUÉ HAGO ----------

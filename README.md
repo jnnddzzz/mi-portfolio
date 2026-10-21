@@ -10,7 +10,7 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 3. **Explora mi trabajo**: capítulos que se despliegan al pulsarlos
    - Trabajos realizados (abierto por defecto)
    - Qué hago (`SERVICIOS`)
-   - Estilo: biblioteca de looks con filtros y vista ampliada con miniaturas (`POSTS`), y "La ropa que hago" en carrusel (`ROPA`)
+   - Estilo: biblioteca de looks con filtros y vista ampliada con miniaturas (`POSTS`), y "La ropa que hago": colecciones que se quedan fijas y pasan sus fotos de lado al hacer scroll (`COLECCIONES`)
    - Redes sociales: Instagram y TikTok en directo
    - Habilidades
 4. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
@@ -50,11 +50,12 @@ Para un email en HTML (por ejemplo de MailerLite), guarda el código en `assets/
    `{ imagen: "assets/looks/mi-look.jpg", mini: "assets/looks/mini/mi-look.jpg", texto: "Nombre del look", grupo: "Color" },`
    `grupo` crea los filtros (Color, Neutros, Denim… o uno nuevo).
 
-### Añadir fotos o vídeos de tu ropa
-1. Sube el archivo a `assets/ropa/` (fotos en JPG; vídeos en MP4, mejor de menos de 15 segundos y en vertical).
-2. En `data.js`, en `ROPA`, añade una línea:
-   - Foto: `{ imagen: "assets/ropa/mi-prenda.jpg", titulo: "Nombre", tipo: "Confección" },`
-   - Vídeo: `{ video: "assets/ropa/mi-video.mp4", poster: "assets/ropa/mi-video.jpg", titulo: "Nombre", tipo: "Proceso" },`
+### Añadir fotos a una colección de ropa
+1. Sube la foto a la carpeta de la colección (`assets/ropa/toile/`, `assets/ropa/vaca/`…).
+2. En `data.js`, en `COLECCIONES`, añade una línea en `piezas` de esa colección:
+   `{ imagen: "assets/ropa/vaca/02-foto.jpg", paso: "Confección", texto: "Qué se ve en la foto" },`
+   Los `paso` iguales se agrupan en la lista de pasos. Baja `proximamente` cuando ya no quieras huecos de "Próximamente".
+3. Para una colección nueva, copia un bloque `{ id, nombre, subtitulo, texto, color, estado, piezas }`.
 
 ### Añadir tus diseños
 1. Sube la imagen a `assets/disenos/`.
