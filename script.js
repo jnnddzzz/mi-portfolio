@@ -1,6 +1,7 @@
 // Renderiza la web a partir de data.js y añade las interacciones — no hace falta tocar este archivo.
-// Por si data.js es de una versión anterior sin ROPA
-const MI_ROPA = typeof ROPA !== "undefined" ? ROPA : [];
+// Por si data.js es de una versión anterior sin colecciones
+const COLS = typeof COLECCIONES !== "undefined" ? COLECCIONES.filter(c => c.piezas?.length) : [];
+const N_PIEZAS = COLS.reduce((n, c) => n + c.piezas.length, 0);
 
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
@@ -227,7 +228,7 @@ function stepBubbles() {
 const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
   servicios: () => `${SERVICIOS.length} servicios`,
-  estilo: () => `${POSTS.filter(p => p.imagen).length} looks · ${MI_ROPA.length} prendas`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length} looks · ${COLS.length} colecciones`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -387,7 +388,24 @@ $(".style-text").textContent = ESTILO.texto;
 $(".style-tags").innerHTML = ESTILO.etiquetas.map(x => `<li>${esc(x)}</li>`).join("");
 
 // Transiciones suaves entre estados (View Transitions) cuando el navegador las tiene
-const conTransicion = fn => (!reduced && document.startViewTransition) ? document.startViewTransition(fn) : (fn(), null);
+// (si el navegador tarda en hacer la transición, el cambio se aplica igualmente)
+function conTransicion(fn) {
+  if (reduced || !document.startViewTransition) return fn();
+  let hecho = false;
+  const run = () => { if (!hecho) { hecho = true; fn(); } };
+  const vt = document.startViewTransition(run);
+  vt.finished.catch(() => {});
+  setTimeout(() => { if (!hecho) { vt.skipTransition(); run(); } }, 300);
+}
+// Animación "FLIP": la foto sale de (o vuelve a) su miniatura
+function volar(el, desde, inverso = false) {
+  if (reduced || !el || !desde) return Promise.resolve();
+  const a = desde.getBoundingClientRect(), b = el.getBoundingClientRect();
+  if (!a.width || !b.width) return Promise.resolve();
+  const t = `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) scale(${a.width / b.width}, ${a.height / b.height})`;
+  const frames = [{ transform: t, borderRadius: "40px", opacity: .6 }, { transform: "none", borderRadius: "16px", opacity: 1 }];
+  return el.animate(inverso ? frames.reverse() : frames, { duration: inverso ? 420 : 560, easing: "cubic-bezier(.2,.8,.2,1)", fill: "both" }).finished.catch(() => {});
+}
 const mediaHTML = (it, enLista) => it.video
   ? `<video src="${esc(it.video)}" ${it.poster ? `poster="${esc(it.poster)}"` : ""} muted loop playsinline ${enLista ? 'preload="metadata"' : "autoplay controls"}></video>`
   : `<img src="${esc(enLista && it.mini || it.imagen)}" alt="${esc(it.titulo || "")}" ${enLista ? 'loading="lazy"' : ""} draggable="false" />`;
@@ -400,7 +418,7 @@ let libFiltro = "Todos", libTodos = false, libLista = LOOKS;
 const grupos = ["Todos", ...new Set(LOOKS.map(l => l.grupo).filter(Boolean))];
 $(".lib-filters").innerHTML = grupos.map(g => `<button class="chip" aria-pressed="${g === "Todos"}" data-g="${esc(g)}" data-hover>${esc(g)} <small>${g === "Todos" ? LOOKS.length : LOOKS.filter(l => l.grupo === g).length}</small></button>`).join("");
 $(".n-looks").textContent = LOOKS.length;
-$(".n-ropa").textContent = MI_ROPA.length;
+$(".n-ropa").textContent = COLS.length;
 
 function renderLib() {
   libLista = libFiltro === "Todos" ? LOOKS : LOOKS.filter(l => l.grupo === libFiltro);
@@ -433,64 +451,99 @@ const subLink = $(".sub-link");
 if (igPerfil) { subLink.href = igPerfil.url; subLink.textContent = `Más en Instagram ${igPerfil.usuario} ↗`; } else subLink.remove();
 if (LOOKS.length) renderLib(); else $("#looks").remove();
 
-/* ---------- La ropa que hago: carrusel que se arrastra ---------- */
-const rail = $(".gal-rail"), galCount = $(".gal-count"), taller = $("#mi-ropa");
+/* ---------- La ropa que hago: colecciones que se recorren con el scroll ----------
+   Cada colección se queda fija en pantalla mientras bajas y sus fotos pasan de lado. */
+const coleccionesEl = $(".colecciones"), taller = $("#mi-ropa");
+let ultimaY = -1; // último scroll pintado: si no cambia, no se repinta
 const vidIO = new IntersectionObserver(en => en.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: 0.5 });
-function renderRopa() {
-  rail.innerHTML = MI_ROPA.map((it, i) => `
-    <figure class="gal-item${it.video ? " is-video" : ""}" style="--i:${i}" data-i="${i}" data-hover="Ampliar">
-      ${mediaHTML(it, true)}
-      <figcaption><b>${esc(it.titulo || "")}</b><span>${esc(it.tipo || "")}</span></figcaption>
-    </figure>`).join("") + `<div class="gal-soon"><b>Próximamente</b><span>Nuevas prendas en camino</span></div>`;
-  $$("video", rail).forEach(v => vidIO.observe(v));
-  galUpdate();
+$(".col-index").innerHTML = COLS.map((c, i) => `<a href="#col-${esc(c.id)}" class="chip" data-hover><i style="background:${esc(c.color || "#d4ff3a")}"></i>${esc(c.nombre)} <small>${c.piezas.length}</small></a>`).join("");
+coleccionesEl.innerHTML = COLS.map((c, ci) => {
+  const pasos = [...new Set(c.piezas.map(p => p.paso).filter(Boolean))];
+  const huecos = Array.from({ length: c.proximamente || 0 }, () => `<div class="col-card soon"><b>Próximamente</b><span>Más fotos del proceso</span></div>`).join("");
+  return `
+  <article class="col" id="col-${esc(c.id)}" style="--c:${esc(c.color || "#d4ff3a")}">
+    <div class="col-pin">
+      <div class="col-bg" aria-hidden="true">${esc(c.nombre)}</div>
+      <header class="col-info">
+        <div class="col-title">
+          <span class="col-num">${String(ci + 1).padStart(2, "0")}</span>
+          <div>
+            <h4>${esc(c.nombre)}</h4>
+            <p>${esc(c.subtitulo || "")}${c.estado ? ` <span class="col-estado">${esc(c.estado)}</span>` : ""}</p>
+          </div>
+        </div>
+        <p class="col-text">${esc(c.texto || "")}</p>
+        <ol class="col-steps">${pasos.map(p => `<li data-paso="${esc(p)}">${esc(p)}</li>`).join("")}</ol>
+      </header>
+      <div class="col-track">
+        ${c.piezas.map((p, i) => `
+          <figure class="col-card${p.video ? " is-video" : ""}" data-col="${ci}" data-i="${i}" data-paso="${esc(p.paso || "")}" data-hover="Ampliar">
+            <div class="col-media">${mediaHTML({ ...p, titulo: p.texto }, true)}</div>
+            <figcaption><span>${String(i + 1).padStart(2, "0")} · ${esc(p.paso || "")}</span>${esc(p.texto || "")}</figcaption>
+          </figure>`).join("")}
+        ${huecos}
+      </div>
+      <footer class="col-foot"><span class="col-count">01 / ${String(c.piezas.length).padStart(2, "0")}</span><span class="col-bar"><i></i></span><span class="col-hint">Sigue bajando</span></footer>
+    </div>
+  </article>`;
+}).join("");
+$$("video", coleccionesEl).forEach(v => vidIO.observe(v));
+const colEls = $$(".col", coleccionesEl).map(el => ({
+  el, pin: $(".col-pin", el), track: $(".col-track", el), bg: $(".col-bg", el), bar: $(".col-bar i", el),
+  count: $(".col-count", el), cards: $$(".col-card", el), steps: $$(".col-steps li", el), dist: 0, idx: -1,
+}));
+// El alto de cada colección = una pantalla + lo que tiene que recorrer su fila de fotos
+function medirColecciones() {
+  colEls.forEach(c => {
+    c.track.style.transform = "none";
+    const base = c.track.getBoundingClientRect().left;
+    c.centros = c.cards.map(card => { const r = card.getBoundingClientRect(); return r.left - base + r.width / 2; });
+    c.x0 = base;
+    c.dist = Math.max(0, c.track.scrollWidth - c.pin.clientWidth);
+    c.el.style.height = (c.pin.offsetHeight + c.dist) + "px";
+  });
+  ultimaY = -1;
 }
-function galStep() { const it = $(".gal-item", rail); return it ? it.offsetWidth + parseFloat(getComputedStyle(rail).columnGap || 0) : 300; }
-function galUpdate() {
-  const n = MI_ROPA.length, step = galStep();
-  const i = Math.min(n, Math.round(rail.scrollLeft / step) + 1);
-  const max = rail.scrollWidth - rail.clientWidth;
-  galCount.textContent = `${String(i).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
-  $(".gal-prev").disabled = rail.scrollLeft <= 4;
-  $(".gal-next").disabled = rail.scrollLeft >= max - 4;
-  taller.classList.toggle("no-scroll", max <= 4);
+function pintarColecciones() {
+  const vw = innerWidth;
+  let fija = false;
+  colEls.forEach(c => {
+    const r = c.el.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    if (r.top < innerHeight * 0.3 && r.bottom > innerHeight * 0.7) fija = true;
+    const p = c.dist ? clamp01(-r.top / c.dist) : 0;
+    c.track.style.transform = `translate3d(${-p * c.dist}px,0,0)`;
+    c.bg.style.transform = `translate3d(${(0.5 - p) * 30}vw,0,0)`;
+    c.bar.style.transform = `scaleX(${p})`;
+    // cada foto gira y se escala según lo lejos que esté del centro
+    const reales = c.cards.filter(x => !x.classList.contains("soon")).length;
+    const best = Math.round(p * (c.cards.length - 1)) >= reales ? reales - 1 : Math.round(p * (c.cards.length - 1));
+    c.cards.forEach((card, i) => {
+      // posición calculada (sin leer el DOM en cada fotograma)
+      const d = (c.x0 + c.centros[i] - p * c.dist - vw * 0.5) / vw;
+      const dd = Math.max(-1, Math.min(1, d)), a = Math.abs(dd);
+      card.style.transform = `perspective(1400px) rotateY(${(-dd * 16).toFixed(2)}deg) scale(${(1 - a * .14).toFixed(3)})`;
+      card.style.opacity = (1 - a * .45).toFixed(3);
+    });
+    if (best !== c.idx) {
+      c.idx = best;
+      c.count.textContent = `${String(best + 1).padStart(2, "0")} / ${String(reales).padStart(2, "0")}`;
+      const paso = c.cards[best]?.dataset.paso;
+      c.steps.forEach(s => s.classList.toggle("on", s.dataset.paso === paso));
+      const on = c.steps.find(s => s.classList.contains("on")), lista = on?.parentElement;
+      if (on && lista.scrollWidth > lista.clientWidth) lista.scrollTo({ left: on.offsetLeft - lista.clientWidth / 2 + on.offsetWidth / 2, behavior: "smooth" });
+      c.cards.forEach((card, i) => card.classList.toggle("on", i === best));
+    }
+  });
+  hud.classList.toggle("off", fija);
 }
-$(".gal-prev").addEventListener("click", () => rail.scrollBy({ left: -galStep(), behavior: "smooth" }));
-$(".gal-next").addEventListener("click", () => rail.scrollBy({ left: galStep(), behavior: "smooth" }));
-rail.addEventListener("scroll", galUpdate, { passive: true });
-rail.addEventListener("keydown", e => {
-  if (e.key === "ArrowRight") { e.preventDefault(); $(".gal-next").click(); }
-  if (e.key === "ArrowLeft") { e.preventDefault(); $(".gal-prev").click(); }
+coleccionesEl.addEventListener("click", e => {
+  const f = e.target.closest(".col-card:not(.soon)");
+  if (!f) return;
+  const c = COLS[+f.dataset.col];
+  openLightbox(c.piezas.map(p => ({ ...p, titulo: p.texto, tipo: `${c.nombre} · ${p.paso || ""}` })), +f.dataset.i, $("img", f));
 });
-// Arrastrar con el ratón; un clic sin arrastrar abre la vista ampliada
-let drag = null, justDragged = false;
-rail.addEventListener("pointerdown", e => {
-  if (e.pointerType !== "mouse" || e.button !== 0) return;
-  drag = { x: e.clientX, left: rail.scrollLeft, moved: false };
-});
-addEventListener("pointermove", e => {
-  if (!drag) return;
-  const dx = e.clientX - drag.x;
-  if (!drag.moved && Math.abs(dx) > 5) { drag.moved = true; rail.classList.add("dragging"); }
-  if (drag.moved) rail.scrollLeft = drag.left - dx;
-});
-addEventListener("pointerup", () => {
-  if (!drag) return;
-  if (drag.moved) {
-    rail.classList.remove("dragging");
-    const step = galStep();
-    rail.scrollTo({ left: Math.round(rail.scrollLeft / step) * step, behavior: "smooth" });
-    justDragged = true;
-    setTimeout(() => { justDragged = false; });
-  }
-  drag = null;
-});
-rail.addEventListener("click", e => {
-  if (justDragged) return;
-  const f = e.target.closest(".gal-item");
-  if (f) openLightbox(MI_ROPA, +f.dataset.i, $("img", f));
-});
-if (MI_ROPA.length) { renderRopa(); new ResizeObserver(galUpdate).observe(rail); } else taller.remove();
+if (COLS.length) { medirColecciones(); new ResizeObserver(medirColecciones).observe(coleccionesEl); addEventListener("load", medirColecciones); } else taller.remove();
 
 /* ---------- Vista ampliada: miniaturas, flechas, teclado y deslizar ---------- */
 const lb = $(".lightbox"), lbStage = $(".lb-stage"), lbThumbs = $(".lb-thumbs");
@@ -510,31 +563,29 @@ function showLightbox(i, dir = 0) {
 }
 function openLightbox(list, i, origen) {
   lbList = list;
+  lbOrigen = origen;
   lb.classList.toggle("single", list.length < 2);
   lbThumbs.innerHTML = list.map((it, j) => `<button aria-label="Ver ${j + 1}">${it.video ? `<video src="${esc(it.video)}" muted preload="metadata"></video>` : `<img src="${esc(it.mini || it.imagen)}" alt="" loading="lazy" />`}</button>`).join("");
-  // La foto "vuela" desde la miniatura hasta la vista ampliada
-  lbOrigen = origen;
-  if (origen) origen.style.viewTransitionName = "foto-abierta";
-  const abrir = () => {
-    if (origen) origen.style.viewTransitionName = "";
-    showLightbox(i);
-    lbStage.classList.remove("in");
-    const m = lbStage.firstElementChild;
-    if (m && origen) m.style.viewTransitionName = "foto-abierta";
-    lb.showModal();
-  };
-  const vt = conTransicion(abrir);
-  vt?.finished.then(() => { const m = lbStage.firstElementChild; if (m) m.style.viewTransitionName = ""; });
+  showLightbox(i);
+  lbStage.classList.remove("in");
+  lb.showModal();
+  const m = lbStage.firstElementChild;
+  if (m?.tagName === "IMG" && origen && !reduced) {
+    m.style.opacity = 0;
+    const ir = () => { m.style.opacity = ""; volar(m, origen); };
+    (m.decode ? m.decode() : Promise.resolve()).then(ir, ir);
+  }
 }
 function cerrarLightbox() {
   const m = lbStage.firstElementChild;
   const destino = lbList === libLista
     ? $(`.lib-item[data-i="${lbIndex}"] img`, libGrid)
-    : $(`.gal-item[data-i="${lbIndex}"] img`, rail);
-  if (!m || !destino || !document.startViewTransition || reduced) return lb.close();
-  m.style.viewTransitionName = "foto-abierta";
-  const vt = document.startViewTransition(() => { m.style.viewTransitionName = ""; destino.style.viewTransitionName = "foto-abierta"; lb.close(); });
-  vt.finished.then(() => { destino.style.viewTransitionName = ""; });
+    : lbOrigen && $(`.col-card[data-col="${lbOrigen.closest(".col-card")?.dataset.col}"][data-i="${lbIndex}"] img`, coleccionesEl);
+  const r = destino?.getBoundingClientRect();
+  const visible = r && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
+  if (!m || m.tagName !== "IMG" || !visible) return lb.close();
+  lb.classList.add("closing");
+  volar(m, destino, true).then(() => { lb.classList.remove("closing"); lb.close(); });
 }
 lbThumbs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) { const j = [...lbThumbs.children].indexOf(b); showLightbox(j, Math.sign(j - lbIndex)); } });
 $(".lb-prev").addEventListener("click", () => showLightbox(lbIndex - 1, -1));
@@ -729,9 +780,91 @@ function navInd() {
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
+/* =========================================================
+   Efectos globales: cintas de texto, enlaces, botones magnéticos, textos que se descifran y HUD
+   ========================================================= */
+// Cintas de texto infinitas que aceleran y se inclinan con la velocidad del scroll
+const marquees = $$(".marquee").map((m, i) => {
+  const t = m.dataset.text;
+  m.innerHTML = `<div class="mq-track">${Array.from({ length: 6 }, () => `<span>${t.split("·").filter(x => x.trim()).map(w => `${esc(w.trim())}<i>✦</i>`).join("")}</span>`).join("")}</div>`;
+  return { track: $(".mq-track", m), x: 0, dir: i % 2 ? 1 : -1, w: 0 };
+});
+const medirMarquees = () => marquees.forEach(m => { m.w = m.track.firstElementChild.offsetWidth; });
+medirMarquees(); addEventListener("load", medirMarquees); addEventListener("resize", medirMarquees);
+
+// Enlaces con texto que "rueda" al pasar el ratón
+$$(".nav-links a, .nav-cta, .footer a, .sub-nav a").forEach(a => {
+  const nodo = [...a.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+  if (!nodo) return;
+  const txt = nodo.textContent.trim();
+  const roll = document.createElement("span");
+  roll.className = "roll";
+  roll.innerHTML = `<span>${esc(txt)}</span><span aria-hidden="true">${esc(txt)}</span>`;
+  nodo.replaceWith(roll);
+});
+
+// Botones magnéticos: se acercan un poco al cursor
+if (finePointer && !reduced) $$(".pill, .nav-cta, .gal-arrow, .lb-arrow, .ch-toggle, .tile-arrow, .chip").forEach(b => {
+  b.classList.add("magnetic");
+  b.addEventListener("mousemove", e => {
+    const r = b.getBoundingClientRect();
+    b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
+  });
+  b.addEventListener("mouseleave", () => { b.style.transform = ""; });
+});
+
+// Títulos pequeños que se "descifran" al aparecer
+const GLIFOS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/";
+function descifrar(el) {
+  const final = el.dataset.final || (el.dataset.final = el.textContent);
+  let f = 0;
+  const tick = () => {
+    const hecho = Math.floor(f / 2);
+    el.textContent = [...final].map((ch, i) => i < hecho || ch === " " ? ch : GLIFOS[(Math.random() * GLIFOS.length) | 0]).join("");
+    if (hecho < final.length) { f++; requestAnimationFrame(tick); } else el.textContent = final;
+  };
+  tick();
+}
+if (!reduced) {
+  const decIO = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) { descifrar(e.target); decIO.unobserve(e.target); } }), { threshold: 1 });
+  $$(".kicker, .ch-kicker, .sub-kicker").forEach(k => { if (!k.children.length) decIO.observe(k); });
+}
+
+// HUD: número y nombre del apartado en el que estás
+const hud = $(".hud"), hudN = $(".hud-n"), hudT = $(".hud-t"), hudBar = $(".hud-line i");
+const hudSecciones = [["inicio", "Inicio"], ["sobre-mi", "Sobre mí"], ["trabajos", "Trabajos"], ["servicios", "Qué hago"], ["estilo", "Estilo"], ["looks", "Mis looks"], ["mi-ropa", "La ropa que hago"], ["redes", "Redes"], ["habilidades", "Habilidades"], ["contacto", "Contacto"]]
+  .map(([id, t]) => [document.getElementById(id), t]).filter(([el]) => el);
+let hudActual = -1, hudTops = [];
+const medirHud = () => { hudTops = hudSecciones.map(([el]) => el.offsetHeight ? el.getBoundingClientRect().top + scrollY : Infinity); ultimaY = -1; };
+new ResizeObserver(medirHud).observe(document.body);
+function pintarHud() {
+  let i = 0;
+  hudTops.forEach((t, j) => { if (t < scrollY + innerHeight * 0.5) i = j; });
+  if (i !== hudActual) {
+    hudActual = i;
+    hudN.textContent = String(i).padStart(2, "0");
+    hudT.textContent = hudSecciones[i][1];
+    hud.classList.remove("swap"); void hud.offsetWidth; hud.classList.add("swap");
+  }
+  const max = document.documentElement.scrollHeight - innerHeight;
+  hudBar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+}
+
+let velY = 0, prevY = scrollY;
+const libGridEl = $(".lib-grid");
 const caseMedia = $$(".case-media");
 (function loop() {
+  // velocidad del scroll suavizada, para inclinar y acelerar elementos
+  velY += ((scrollY - prevY) - velY) * 0.12; prevY = scrollY;
+  if (scrollY !== ultimaY) { ultimaY = scrollY; pintarColecciones(); pintarHud(); }
   if (!reduced) {
+    marquees.forEach(m => {
+      if (!m.w) return;
+      m.x += m.dir * (0.6 + Math.min(Math.abs(velY), 60) * 0.35);
+      if (m.x <= -m.w) m.x += m.w; if (m.x > 0) m.x -= m.w;
+      m.track.style.transform = `translate3d(${m.x}px,0,0) skewX(${Math.max(-12, Math.min(12, -velY * 0.4))}deg)`;
+    });
+    if (libGridEl) libGridEl.style.setProperty("--skew", `${Math.max(-4, Math.min(4, velY * 0.12))}deg`);
     const vh = innerHeight;
     if (hero.getBoundingClientRect().bottom > 0) stepBubbles();
     caseMedia.forEach(m => {
