@@ -23,13 +23,14 @@ const PERFIL = {
 */
 const REDES = [
   { nombre: "Instagram", usuario: "@jjn.dzz", url: "https://www.instagram.com/jjn.dzz/", texto: "Moda, looks y estilo personal",
-    fotos: ["assets/redes/post-1.jpg", "assets/redes/post-4.jpg", "assets/redes/post-6.jpg"] },
+    fotos: [] },
   { nombre: "TikTok",    usuario: "@jjn.dzz", url: "https://www.tiktok.com/@jjn.dzz", texto: "Vídeos, tendencias y contenido", fotos: [] },
   { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "", texto: "Perfil profesional", fotos: [] },
 ];
 
 /* ---------- BIBLIOTECA DE OUTFITS ----------
-   Aparecen en "Estilo" > "Mis outfits". Para añadir uno, sube la foto a assets/looks/
+   Aparecen en "Estilo" > "Mis outfits". Todas están recortadas igual: formato 3:4, de cuerpo
+   entero, centrado y ocupando unos 4/5 del alto. Para añadir uno, sube la foto a assets/looks/
    (y una copia pequeña, de unos 640 px, a assets/looks/mini/) y añade una línea:
    { imagen: "assets/looks/mi-look.jpg", mini: "assets/looks/mini/mi-look.jpg", texto: "Nombre", grupo: "Color" },
    grupo sirve para los filtros: "Color", "Neutros" o "Denim" (puedes crear otros).
@@ -39,20 +40,38 @@ const POSTS = [
   { imagen: "assets/looks/look-01.jpg", mini: "assets/looks/mini/look-01.jpg", texto: "Modo sol", grupo: "Color" },
   { imagen: "assets/looks/look-02.jpg", mini: "assets/looks/mini/look-02.jpg", texto: "Firmado en la pared", grupo: "Denim" },
   { imagen: "assets/looks/look-03.jpg", mini: "assets/looks/mini/look-03.jpg", texto: "Llamada desde Londres", grupo: "Neutros" },
-  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Número 88", grupo: "Color" },
-  { imagen: "assets/looks/look-05.jpg", mini: "assets/looks/mini/look-05.jpg", texto: "Alerta roja", grupo: "Color" },
-  { imagen: "assets/looks/look-06.jpg", mini: "assets/looks/mini/look-06.jpg", texto: "Atardecer en rosa", grupo: "Color" },
-  { imagen: "assets/redes/post-1.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Golden hour", grupo: "Color" },
-  { imagen: "assets/looks/look-07.jpg", mini: "assets/looks/mini/look-07.jpg", texto: "Andén 7", grupo: "Neutros" },
-  { imagen: "assets/looks/look-08.jpg", mini: "assets/looks/mini/look-08.jpg", texto: "Cielo de barrio", grupo: "Color" },
-  { imagen: "assets/redes/post-2.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Splash", grupo: "Color" },
-  { imagen: "assets/looks/look-09.jpg", mini: "assets/looks/mini/look-09.jpg", texto: "Aparcado con estilo", grupo: "Denim" },
-  { imagen: "assets/redes/post-3.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Arena y sombra", grupo: "Neutros" },
-  { imagen: "assets/looks/look-10.jpg", mini: "assets/looks/mini/look-10.jpg", texto: "Subiendo de nivel", grupo: "Neutros" },
-  { imagen: "assets/redes/post-4.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Punto a punto", grupo: "Denim" },
-  { imagen: "assets/redes/post-5.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Only the brave", grupo: "Neutros" },
-  { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Violeta eléctrico", grupo: "Color" },
-];
+  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Sesión golfa", grupo: "Color" },
+  { imagen: "assets/looks/look-05.jpg", mini: "assets/looks/mini/look-05.jpg", texto: "Recién llegado de París", grupo: "Neutros" },
+  { imagen: "assets/looks/look-06.jpg", mini: "assets/looks/mini/look-06.jpg", texto: "Túnel infinito", grupo: "Color" },
+  { imagen: "assets/looks/look-07.jpg", mini: "assets/looks/mini/look-07.jpg", texto: "Sobre el Támesis", grupo: "Denim" },
+  { imagen: "assets/looks/look-08.jpg", mini: "assets/looks/mini/look-08.jpg", texto: "Número 88", grupo: "Color" },
+  { imagen: "assets/looks/look-09.jpg", mini: "assets/looks/mini/look-09.jpg", texto: "Golden hour", grupo: "Neutros" },
+  { imagen: "assets/looks/look-10.jpg", mini: "assets/looks/mini/look-10.jpg", texto: "Año del dragón", grupo: "Color" },
+  { imagen: "assets/looks/look-11.jpg", mini: "assets/looks/mini/look-11.jpg", texto: "Planta 08", grupo: "Denim" },
+  { imagen: "assets/looks/look-12.jpg", mini: "assets/looks/mini/look-12.jpg", texto: "Cero filtros", grupo: "Neutros" },
+  { imagen: "assets/looks/look-13.jpg", mini: "assets/looks/mini/look-13.jpg", texto: "Alerta roja", grupo: "Color" },
+  { imagen: "assets/looks/look-14.jpg", mini: "assets/looks/mini/look-14.jpg", texto: "Mirando arriba", grupo: "Denim" },
+  { imagen: "assets/looks/look-15.jpg", mini: "assets/looks/mini/look-15.jpg", texto: "Telaraña", grupo: "Color" },
+  { imagen: "assets/looks/look-16.jpg", mini: "assets/looks/mini/look-16.jpg", texto: "Rayas salvajes", grupo: "Neutros" },
+  { imagen: "assets/looks/look-17.jpg", mini: "assets/looks/mini/look-17.jpg", texto: "Atardecer en rosa", grupo: "Color" },
+  { imagen: "assets/looks/look-18.jpg", mini: "assets/looks/mini/look-18.jpg", texto: "Galería blanca", grupo: "Denim" },
+  { imagen: "assets/looks/look-19.jpg", mini: "assets/looks/mini/look-19.jpg", texto: "Vistas a la City", grupo: "Color" },
+  { imagen: "assets/looks/look-20.jpg", mini: "assets/looks/mini/look-20.jpg", texto: "Andén 7", grupo: "Neutros" },
+  { imagen: "assets/looks/look-21.jpg", mini: "assets/looks/mini/look-21.jpg", texto: "El 10", grupo: "Color" },
+  { imagen: "assets/looks/look-22.jpg", mini: "assets/looks/mini/look-22.jpg", texto: "Básicos con actitud", grupo: "Denim" },
+  { imagen: "assets/looks/look-23.jpg", mini: "assets/looks/mini/look-23.jpg", texto: "Pasillo de chuches", grupo: "Color" },
+  { imagen: "assets/looks/look-24.jpg", mini: "assets/looks/mini/look-24.jpg", texto: "Jardín de cemento", grupo: "Denim" },
+  { imagen: "assets/looks/look-25.jpg", mini: "assets/looks/mini/look-25.jpg", texto: "Cielo de barrio", grupo: "Color" },
+  { imagen: "assets/looks/look-26.jpg", mini: "assets/looks/mini/look-26.jpg", texto: "From hustle to riches", grupo: "Color" },
+  { imagen: "assets/looks/look-27.jpg", mini: "assets/looks/mini/look-27.jpg", texto: "Aparcado con estilo", grupo: "Denim" },
+  { imagen: "assets/looks/look-28.jpg", mini: "assets/looks/mini/look-28.jpg", texto: "Modo noche", grupo: "Neutros" },
+  { imagen: "assets/looks/look-29.jpg", mini: "assets/looks/mini/look-29.jpg", texto: "Verano en pausa", grupo: "Denim" },
+  { imagen: "assets/looks/look-30.jpg", mini: "assets/looks/mini/look-30.jpg", texto: "Subiendo de nivel", grupo: "Neutros" },
+  { imagen: "assets/looks/look-31.jpg", mini: "assets/looks/mini/look-31.jpg", texto: "Splash", grupo: "Color" },
+  { imagen: "assets/looks/look-32.jpg", mini: "assets/looks/mini/look-32.jpg", texto: "Arena y sombra", grupo: "Neutros" },
+  { imagen: "assets/looks/look-33.jpg", mini: "assets/looks/mini/look-33.jpg", texto: "Only the brave", grupo: "Neutros" },
+  { imagen: "assets/looks/look-34.jpg", mini: "assets/looks/mini/look-34.jpg", texto: "Violeta eléctrico", grupo: "Color" },
+]
 
 /* ---------- ESTILO: moda y diseños ----------
    El texto y las etiquetas aparecen en el apartado "Estilo".
