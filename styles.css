@@ -222,16 +222,25 @@ h2 { font-weight: 600; font-size: clamp(2.6rem, 6.4vw, 5rem); letter-spacing: -.
 
 /* ---------- Qué hago: cuadrícula tipo bento ---------- */
 .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.service { padding: clamp(1.6rem, 2.6vw, 2.2rem); min-height: 290px; display: flex; flex-direction: column; gap: 1rem; }
+.service { padding: clamp(1.5rem, 2.4vw, 2.1rem); min-height: 340px; display: flex; flex-direction: column; gap: .8rem; }
 .service.wide { grid-column: span 2; }
+.service-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: auto; }
 .service-icon { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; background: var(--tile-2); color: var(--accent); transition: background .4s, color .4s, rotate .6s var(--ease); }
 .service-icon svg { width: 28px; height: 28px; }
 .service:hover .service-icon { background: var(--accent); color: #000; rotate: -8deg; }
-.service h3 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 600; letter-spacing: -.03em; line-height: 1.08; margin-top: auto; max-width: 18ch; }
+.service-num { font-family: var(--serif); font-style: italic; font-size: clamp(2.6rem, 4vw, 3.6rem); line-height: .8; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.22); transition: color .5s, -webkit-text-stroke-color .5s; }
+.service:hover .service-num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+.service-hook { font-family: var(--serif); font-style: italic; font-size: clamp(1.05rem, 1.5vw, 1.25rem); color: var(--accent); margin: 1.2rem 0 0; }
+.service h3 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 600; letter-spacing: -.03em; line-height: 1.08; max-width: 18ch; }
 .service.wide h3 { font-size: clamp(1.8rem, 3.4vw, 2.8rem); }
-.service p { color: var(--muted); max-width: 46ch; }
-.service-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
-.service-tags span { font-size: .78rem; padding: .25rem .7rem; border-radius: 99px; background: var(--tile-2); color: #c7c7cc; }
+.service-text { color: var(--muted); max-width: 52ch; }
+.service-deliv { list-style: none; margin: .2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.service-deliv li { font-size: .8rem; padding: .3rem .75rem .3rem .6rem; border-radius: 99px; background: var(--tile-2); color: #d8d8dc; }
+.service-deliv li::before { content: "✓ "; color: var(--accent); font-weight: 700; }
+.service-proof { align-self: flex-start; display: inline-flex; align-items: center; gap: .45rem; margin-top: .3rem; padding-top: .7rem; border-top: 1px solid var(--line); width: 100%; font-size: .88rem; font-weight: 600; color: #fff; transition: color .3s; }
+.service-proof i { font-style: normal; margin-left: auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--tile-2); transition: background .3s, color .3s, translate .4s var(--ease); }
+.service-proof:hover { color: var(--accent); }
+.service-proof:hover i { background: var(--accent); color: #000; translate: 4px 0; }
 
 /* ---------- Trabajos ---------- */
 .cases { display: grid; gap: 1rem; }

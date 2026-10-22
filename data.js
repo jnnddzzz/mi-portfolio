@@ -28,30 +28,30 @@ const REDES = [
   { nombre: "LinkedIn",  usuario: "Jano Arribas Díaz", url: "", texto: "Perfil profesional", fotos: [] },
 ];
 
-/* ---------- BIBLIOTECA DE LOOKS ----------
-   Aparecen en "Estilo" > "Mis looks". Para añadir uno, sube la foto a assets/looks/
+/* ---------- BIBLIOTECA DE OUTFITS ----------
+   Aparecen en "Estilo" > "Mis outfits". Para añadir uno, sube la foto a assets/looks/
    (y una copia pequeña, de unos 640 px, a assets/looks/mini/) y añade una línea:
    { imagen: "assets/looks/mi-look.jpg", mini: "assets/looks/mini/mi-look.jpg", texto: "Nombre", grupo: "Color" },
    grupo sirve para los filtros: "Color", "Neutros" o "Denim" (puedes crear otros).
    mini y enlace son opcionales.
 */
 const POSTS = [
-  { imagen: "assets/looks/look-01.jpg", mini: "assets/looks/mini/look-01.jpg", texto: "Amarillo y camuflaje", grupo: "Color" },
-  { imagen: "assets/looks/look-02.jpg", mini: "assets/looks/mini/look-02.jpg", texto: "Graffiti y denim", grupo: "Denim" },
-  { imagen: "assets/looks/look-03.jpg", mini: "assets/looks/mini/look-03.jpg", texto: "Gris total", grupo: "Neutros" },
-  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Morado 88", grupo: "Color" },
-  { imagen: "assets/looks/look-05.jpg", mini: "assets/looks/mini/look-05.jpg", texto: "Rojo y camuflaje", grupo: "Color" },
-  { imagen: "assets/looks/look-06.jpg", mini: "assets/looks/mini/look-06.jpg", texto: "Rosa con vistas", grupo: "Color" },
-  { imagen: "assets/redes/post-1.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Outfit amarillo", grupo: "Color" },
-  { imagen: "assets/looks/look-07.jpg", mini: "assets/looks/mini/look-07.jpg", texto: "Baggy negro y botas", grupo: "Neutros" },
-  { imagen: "assets/looks/look-08.jpg", mini: "assets/looks/mini/look-08.jpg", texto: "Azul y blanco", grupo: "Color" },
-  { imagen: "assets/redes/post-2.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Rojo en la piscina", grupo: "Color" },
-  { imagen: "assets/looks/look-09.jpg", mini: "assets/looks/mini/look-09.jpg", texto: "Denim y rojo", grupo: "Denim" },
-  { imagen: "assets/redes/post-3.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Look beige", grupo: "Neutros" },
-  { imagen: "assets/looks/look-10.jpg", mini: "assets/looks/mini/look-10.jpg", texto: "Tirantes y estampado", grupo: "Neutros" },
-  { imagen: "assets/redes/post-4.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Rosa y crochet", grupo: "Denim" },
-  { imagen: "assets/redes/post-5.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Diesel", grupo: "Neutros" },
-  { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Chándal morado", grupo: "Color" },
+  { imagen: "assets/looks/look-01.jpg", mini: "assets/looks/mini/look-01.jpg", texto: "Modo sol", grupo: "Color" },
+  { imagen: "assets/looks/look-02.jpg", mini: "assets/looks/mini/look-02.jpg", texto: "Firmado en la pared", grupo: "Denim" },
+  { imagen: "assets/looks/look-03.jpg", mini: "assets/looks/mini/look-03.jpg", texto: "Llamada desde Londres", grupo: "Neutros" },
+  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Número 88", grupo: "Color" },
+  { imagen: "assets/looks/look-05.jpg", mini: "assets/looks/mini/look-05.jpg", texto: "Alerta roja", grupo: "Color" },
+  { imagen: "assets/looks/look-06.jpg", mini: "assets/looks/mini/look-06.jpg", texto: "Atardecer en rosa", grupo: "Color" },
+  { imagen: "assets/redes/post-1.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Golden hour", grupo: "Color" },
+  { imagen: "assets/looks/look-07.jpg", mini: "assets/looks/mini/look-07.jpg", texto: "Andén 7", grupo: "Neutros" },
+  { imagen: "assets/looks/look-08.jpg", mini: "assets/looks/mini/look-08.jpg", texto: "Cielo de barrio", grupo: "Color" },
+  { imagen: "assets/redes/post-2.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Splash", grupo: "Color" },
+  { imagen: "assets/looks/look-09.jpg", mini: "assets/looks/mini/look-09.jpg", texto: "Aparcado con estilo", grupo: "Denim" },
+  { imagen: "assets/redes/post-3.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Arena y sombra", grupo: "Neutros" },
+  { imagen: "assets/looks/look-10.jpg", mini: "assets/looks/mini/look-10.jpg", texto: "Subiendo de nivel", grupo: "Neutros" },
+  { imagen: "assets/redes/post-4.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Punto a punto", grupo: "Denim" },
+  { imagen: "assets/redes/post-5.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Only the brave", grupo: "Neutros" },
+  { imagen: "assets/redes/post-6.jpg", enlace: "https://www.instagram.com/jjn.dzz/", texto: "Violeta eléctrico", grupo: "Color" },
 ];
 
 /* ---------- ESTILO: moda y diseños ----------
@@ -69,7 +69,7 @@ const ESTILO = {
 */
 const DISENOS = [];
 
-/* ---------- LA ROPA QUE HAGO: colecciones ----------
+/* ---------- MI MUSEO DE ARTE: la ropa que diseño y coso ----------
    Cada colección es un bloque que se recorre con el scroll (la página pasa las fotos de lado).
    Para añadir fotos a una colección, súbelas a su carpeta y añade una línea en "piezas":
    { imagen: "assets/ropa/vaca/02-foto.jpg", paso: "Confección", texto: "Qué se ve en la foto" },
@@ -109,17 +109,36 @@ const COLECCIONES = [
 ];
 
 /* ---------- QUÉ HAGO ----------
-   Cada servicio es una tarjeta. icono: web | campana | redes | marca | email | video | estrategia
-   grande: true hace la tarjeta más ancha.
+   Cada servicio es una tarjeta. icono: web | campana | redes | marca | email | video | estrategia | moda
+   gancho: la frase corta en cursiva. entregables: lo que se lleva la empresa.
+   prueba: { texto, href } enlace a un trabajo o apartado que lo demuestra (opcional).
+   grande: true hace la tarjeta más ancha (en escritorio van en zigzag: ancha + normal).
 */
 const SERVICIOS = [
-  { icono: "web",        grande: true, titulo: "Diseño de webs y landing pages", texto: "Webs y páginas de aterrizaje claras, rápidas y pensadas para convertir: estructura, textos persuasivos y diseño adaptado a la marca.", tags: ["HTML", "CSS", "Apps Script"] },
-  { icono: "campana",    titulo: "Campañas publicitarias", texto: "Planifico y lanzo campañas de principio a fin: objetivo, público, creatividades y seguimiento de resultados.", tags: ["Estrategia", "Creatividades"] },
-  { icono: "redes",      titulo: "Gestión de redes sociales", texto: "Creo, programo y publico contenido, y llevo el día a día de las cuentas para que crezcan con una estética coherente.", tags: ["Instagram", "TikTok"] },
-  { icono: "marca",      titulo: "Logotipos e identidad de marca", texto: "Diseño logos y sistemas visuales completos: colores, tipografías y aplicaciones para que una marca se reconozca al instante.", tags: ["Branding", "Canva"] },
-  { icono: "email",      titulo: "Email marketing", texto: "Newsletters y campañas de email con asuntos que se abren y diseños que llevan a la acción.", tags: ["MailerLite"] },
-  { icono: "video",      grande: true, titulo: "Contenido en foto y vídeo", texto: "Fotografía y vídeo vertical para marcas y redes: idea, grabación y edición con ritmo y estilo propio.", tags: ["CapCut", "Reels", "TikTok"] },
-  { icono: "estrategia", titulo: "Estrategia y planes de marketing", texto: "Análisis de mercado, público objetivo y plan de acción para que cada paso tenga un porqué.", tags: ["DAFO", "Plan de marketing"] },
+  { icono: "web", grande: true, titulo: "Webs que convierten", gancho: "Tu web no es un folleto: es tu mejor vendedor.",
+    texto: "Landing pages con un solo objetivo, textos que empujan a la acción y formularios conectados a hojas de cálculo y correos automáticos.",
+    entregables: ["Landing page", "Formulario + Google Sheets", "Email automático"], prueba: { texto: "Landing de IKEA Family", href: "#caso-ikea" } },
+  { icono: "campana", titulo: "Campañas con idea", gancho: "Primero la idea, después el anuncio.",
+    texto: "Del brief a la pieza final: concepto creativo, público, mensajes y calendario, con métricas para saber qué funciona.",
+    entregables: ["Concepto creativo", "Plan de medios", "Piezas y copys"], prueba: { texto: "Prensa para La Cookiteria", href: "#caso-la-cookiteria" } },
+  { icono: "redes", titulo: "Redes con estética", gancho: "Feeds que se reconocen sin leer el nombre.",
+    texto: "Línea visual, calendario y publicaciones con tono propio. Lo que hago cada día en mis perfiles, aplicado a tu marca.",
+    entregables: ["Calendario de contenidos", "Línea visual", "Gestión diaria"], prueba: { texto: "Mis redes", href: "#redes" } },
+  { icono: "moda", grande: true, titulo: "Estilismo para marcas", gancho: "La ropa también comunica.",
+    texto: "Estilismo para sesiones, campañas y contenido: outfits que cuentan la historia de la marca antes de leer una sola palabra.",
+    entregables: ["Estilismo de sesión", "Moodboards", "Contenido de moda"], prueba: { texto: "Mis outfits", href: "#looks" } },
+  { icono: "video", grande: true, titulo: "Contenido que frena el scroll", gancho: "Los dos primeros segundos lo deciden todo.",
+    texto: "Foto y vídeo vertical con gancho, ritmo y tendencia: idea, grabación y edición listas para Reels y TikTok.",
+    entregables: ["Reels y TikToks", "Sesiones de fotos", "Edición en CapCut"], prueba: { texto: "Mi TikTok", href: "#redes" } },
+  { icono: "email", titulo: "Emails que se abren", gancho: "Un asunto que engancha, un diseño que lleva al clic.",
+    texto: "Newsletters y campañas con estructura de venta: oferta estrella, beneficios claros y llamadas a la acción.",
+    entregables: ["Asunto y preheader", "Diseño en HTML", "Campañas de temporada"], prueba: { texto: "Black Friday de Cestto", href: "#caso-cestto-supermercados" } },
+  { icono: "estrategia", titulo: "Estrategia con datos", gancho: "Cada acción, con un porqué.",
+    texto: "Investigación de mercado, competencia y público, DAFO y plan de marketing con objetivos que se pueden medir.",
+    entregables: ["Investigación", "DAFO", "Plan de marketing"], prueba: { texto: "Dossier de Cruzcampo", href: "#caso-cruzcampo" } },
+  { icono: "marca", grande: true, titulo: "Identidades con carácter", gancho: "Que tu marca se recuerde a la primera.",
+    texto: "Logotipo, colores, tipografías y aplicaciones: un sistema visual completo y coherente en cada punto de contacto con el cliente.",
+    entregables: ["Logotipo", "Paleta y tipografías", "Manual de marca"] },
 ];
 
 /* ---------- BURBUJAS DE LA PORTADA ----------

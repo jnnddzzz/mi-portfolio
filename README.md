@@ -9,8 +9,8 @@ Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estát
 2. **Sobre mí**: bio y cifras
 3. **Explora mi trabajo**: capítulos que se despliegan al pulsarlos
    - Trabajos realizados (abierto por defecto)
-   - Qué hago (`SERVICIOS`)
-   - Estilo: biblioteca de looks con filtros y vista ampliada con miniaturas (`POSTS`), y "La ropa que hago": colecciones que se quedan fijas y pasan sus fotos de lado al hacer scroll (`COLECCIONES`)
+   - Qué hago: 8 servicios con gancho, entregables y enlace a un trabajo que lo demuestra (`SERVICIOS`)
+   - Estilo: "Mis outfits", biblioteca con filtros y vista ampliada con miniaturas (`POSTS`), y "Mi museo de arte": colecciones que se quedan fijas y pasan sus fotos de lado al hacer scroll (`COLECCIONES`)
    - Redes sociales: Instagram y TikTok en directo
    - Habilidades
 4. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
@@ -44,7 +44,7 @@ Si el trabajo es una sola imagen fija, usa `imagen: "assets/trabajos/portada.jpg
 
 Para un email en HTML (por ejemplo de MailerLite), guarda el código en `assets/trabajos/emails/mi-email.html` y usa `tipoVisor: "email"` con `email: "assets/trabajos/emails/mi-email.html"`. Al publicar, sus imágenes se descargan solas en `assets/trabajos/emails/img/`.
 
-### Añadir looks a la biblioteca
+### Añadir outfits a la biblioteca
 1. Sube la foto a `assets/looks/` y una copia pequeña (unos 640 px de ancho) a `assets/looks/mini/`.
 2. En `data.js`, en `POSTS`, añade una línea:
    `{ imagen: "assets/looks/mi-look.jpg", mini: "assets/looks/mini/mi-look.jpg", texto: "Nombre del look", grupo: "Color" },`

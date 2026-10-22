@@ -32,6 +32,7 @@ const ICON = {
   redes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M12 16.5s-2.8-1.6-2.8-3.4a1.5 1.5 0 0 1 2.8-.8 1.5 1.5 0 0 1 2.8.8c0 1.8-2.8 3.4-2.8 3.4z" fill="currentColor" stroke="none"/></svg>',
   marca: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 7 4v10l-7 4-7-4V7z"/><path d="m12 3v18M5 7l7 4 7-4"/></svg>',
   video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10.5 5-3v9l-5-3z"/></svg>',
+  moda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5a1.75 1.75 0 1 0-1.75-1.75"/><path d="M12 6.5v1.2L3.6 13.4a1.4 1.4 0 0 0 .8 2.6h15.2a1.4 1.4 0 0 0 .8-2.6L12 7.7"/></svg>',
   estrategia: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
 };
 
@@ -227,8 +228,8 @@ function stepBubbles() {
    ========================================================= */
 const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
-  servicios: () => `${SERVICIOS.length} servicios`,
-  estilo: () => `${POSTS.filter(p => p.imagen).length} looks · ${COLS.length} colecciones`,
+  servicios: () => `${SERVICIOS.length} formas de ayudarte`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length} outfits · ${COLS.length} obras`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -270,12 +271,17 @@ const bioWords = $$("span", statement);
 /* =========================================================
    Qué hago (bento)
    ========================================================= */
-$(".bento").innerHTML = SERVICIOS.map(sv => `
+$(".bento").innerHTML = SERVICIOS.map((sv, i) => `
   <article class="tile service reveal${sv.grande ? " wide" : ""}">
-    <span class="service-icon">${ICON[sv.icono] || ICON.estrategia}</span>
+    <div class="service-top">
+      <span class="service-icon">${ICON[sv.icono] || ICON.estrategia}</span>
+      <span class="service-num">${String(i + 1).padStart(2, "0")}</span>
+    </div>
+    <p class="service-hook">${esc(sv.gancho || "")}</p>
     <h3>${esc(sv.titulo)}</h3>
-    <p>${esc(sv.texto)}</p>
-    <div class="service-tags">${(sv.tags || []).map(x => `<span>${esc(x)}</span>`).join("")}</div>
+    <p class="service-text">${esc(sv.texto)}</p>
+    <ul class="service-deliv" aria-label="Lo que te llevas">${(sv.entregables || sv.tags || []).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    ${sv.prueba ? `<a class="service-proof" href="${esc(sv.prueba.href)}" data-hover>Ver prueba · ${esc(sv.prueba.texto)} <i>→</i></a>` : ""}
   </article>`).join("");
 
 /* =========================================================
@@ -341,9 +347,10 @@ function bindViewer(root) {
   update();
 }
 
+const slug = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const cases = $(".cases");
 cases.innerHTML = TRABAJOS.map((t, i) => `
-  <article class="tile case reveal">
+  <article class="tile case reveal" id="caso-${slug(t.cliente || t.titulo)}">
     <div class="case-media">
       ${viewerHTML(t)}
       <button class="v-expand" data-open="${i}" aria-label="Ampliar ${esc(t.titulo)}" data-hover="Ampliar">⤢</button>
@@ -410,7 +417,7 @@ const mediaHTML = (it, enLista) => it.video
   ? `<video src="${esc(it.video)}" ${it.poster ? `poster="${esc(it.poster)}"` : ""} muted loop playsinline ${enLista ? 'preload="metadata"' : "autoplay controls"}></video>`
   : `<img src="${esc(enLista && it.mini || it.imagen)}" alt="${esc(it.titulo || "")}" ${enLista ? 'loading="lazy"' : ""} draggable="false" />`;
 
-/* ---------- Biblioteca de looks: filtros, cuadrícula y "ver todos" ---------- */
+/* ---------- Biblioteca de outfits: filtros, cuadrícula y "ver todos" ---------- */
 const LOOKS = POSTS.filter(p => p.imagen).map((p, n) => ({ ...p, titulo: p.texto, tipo: p.grupo, n }));
 const libGrid = $(".lib-grid"), libMore = $(".lib-more");
 const LIB_MAX = innerWidth <= 560 ? 6 : 8;
@@ -424,12 +431,12 @@ function renderLib() {
   libLista = libFiltro === "Todos" ? LOOKS : LOOKS.filter(l => l.grupo === libFiltro);
   const vista = libTodos ? libLista : libLista.slice(0, LIB_MAX);
   libGrid.innerHTML = vista.map((l, i) => `
-    <button class="lib-item" style="--i:${i % LIB_MAX};view-transition-name:look-${l.n}" data-i="${i}" data-hover="Ver" aria-label="Ver ${esc(l.titulo || "look")}">
+    <button class="lib-item" style="--i:${i % LIB_MAX};view-transition-name:look-${l.n}" data-i="${i}" data-hover="Ver" aria-label="Ver ${esc(l.titulo || "outfit")}">
       ${mediaHTML(l, true)}
       <span class="lib-cap"><b>${esc(l.titulo || "")}</b><small>${esc(l.grupo || "")}</small></span>
     </button>`).join("");
   libMore.hidden = libLista.length <= LIB_MAX;
-  libMore.textContent = libTodos ? "Ver menos" : `Ver los ${libLista.length} looks`;
+  libMore.textContent = libTodos ? "Ver menos" : `Ver los ${libLista.length} outfits`;
 }
 $(".lib-filters").addEventListener("click", e => {
   const b = e.target.closest(".chip");
@@ -451,7 +458,7 @@ const subLink = $(".sub-link");
 if (igPerfil) { subLink.href = igPerfil.url; subLink.textContent = `Más en Instagram ${igPerfil.usuario} ↗`; } else subLink.remove();
 if (LOOKS.length) renderLib(); else $("#looks").remove();
 
-/* ---------- La ropa que hago: colecciones que se recorren con el scroll ----------
+/* ---------- Mi museo de arte: colecciones que se recorren con el scroll ----------
    Cada colección se queda fija en pantalla mientras bajas y sus fotos pasan de lado. */
 const coleccionesEl = $(".colecciones"), taller = $("#mi-ropa");
 let ultimaY = -1; // último scroll pintado: si no cambia, no se repinta
@@ -832,7 +839,7 @@ if (!reduced) {
 
 // HUD: número y nombre del apartado en el que estás
 const hud = $(".hud"), hudN = $(".hud-n"), hudT = $(".hud-t"), hudBar = $(".hud-line i");
-const hudSecciones = [["inicio", "Inicio"], ["sobre-mi", "Sobre mí"], ["trabajos", "Trabajos"], ["servicios", "Qué hago"], ["estilo", "Estilo"], ["looks", "Mis looks"], ["mi-ropa", "La ropa que hago"], ["redes", "Redes"], ["habilidades", "Habilidades"], ["contacto", "Contacto"]]
+const hudSecciones = [["inicio", "Inicio"], ["sobre-mi", "Sobre mí"], ["trabajos", "Trabajos"], ["servicios", "Qué hago"], ["estilo", "Estilo"], ["looks", "Mis outfits"], ["mi-ropa", "Mi museo de arte"], ["redes", "Redes"], ["habilidades", "Habilidades"], ["contacto", "Contacto"]]
   .map(([id, t]) => [document.getElementById(id), t]).filter(([el]) => el);
 let hudActual = -1, hudTops = [];
 const medirHud = () => { hudTops = hudSecciones.map(([el]) => el.offsetHeight ? el.getBoundingClientRect().top + scrollY : Infinity); ultimaY = -1; };
