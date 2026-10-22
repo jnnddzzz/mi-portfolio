@@ -45,6 +45,7 @@ Si el trabajo es una sola imagen fija, usa `imagen: "assets/trabajos/portada.jpg
 Para un email en HTML (por ejemplo de MailerLite), guarda el código en `assets/trabajos/emails/mi-email.html` y usa `tipoVisor: "email"` con `email: "assets/trabajos/emails/mi-email.html"`. Al publicar, sus imágenes se descargan solas en `assets/trabajos/emails/img/`.
 
 ### Añadir outfits a la biblioteca
+Todas las fotos van recortadas igual: formato 3:4, de cuerpo entero (con zapatos), centrado y ocupando unos 4/5 del alto.
 1. Sube la foto a `assets/looks/` y una copia pequeña (unos 640 px de ancho) a `assets/looks/mini/`.
 2. En `data.js`, en `POSTS`, añade una línea:
    `{ imagen: "assets/looks/mi-look.jpg", mini: "assets/looks/mini/mi-look.jpg", texto: "Nombre del look", grupo: "Color" },`
