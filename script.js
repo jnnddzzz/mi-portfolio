@@ -331,6 +331,18 @@ function bindViewer(root) {
     try {
       const doc = frame.contentDocument.documentElement;
       doc.style.overflow = "hidden";
+      // Lo que en la página va fijo a pantalla completa (avisos, modales) se queda arriba, a la vista del recuadro
+      const fijos = [...frame.contentDocument.querySelectorAll("body *")].filter(el => getComputedStyle(el).position === "fixed");
+      const ajustarFijos = () => fijos.forEach(el => Object.assign(el.style, { position: "absolute", top: v.scrollTop + "px", bottom: "auto", height: v.clientHeight + "px" }));
+      if (fijos.length) { ajustarFijos(); v.addEventListener("scroll", ajustarFijos, { passive: true }); }
+      // Si la web no se ve, sus animaciones se pausan (así no ralentiza el resto del portfolio)
+      const w = frame.contentWindow, raf = w.requestAnimationFrame.bind(w);
+      let oculta = false, cola = [];
+      w.requestAnimationFrame = cb => oculta ? (cola.push(cb), 0) : raf(cb);
+      new IntersectionObserver(([e]) => {
+        oculta = !e.isIntersecting;
+        if (!oculta) cola.splice(0).forEach(cb => raf(cb));
+      }).observe(v);
       // Los enlaces internos (#alta…) desplazan el recuadro, no la página de dentro
       frame.contentDocument.addEventListener("click", e => {
         const a = e.target.closest('a[href^="#"]');
