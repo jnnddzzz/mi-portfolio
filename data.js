@@ -198,6 +198,17 @@ const pags = (carpeta, n) => Array.from({ length: n }, (_, i) => `assets/trabajo
 
 const TRABAJOS = [
   {
+    titulo: "Landing con videojuego",
+    cliente: "El Oro Verde",
+    categoria: "Web · Gamificación",
+    curso: "2º curso",
+    tipoVisor: "web",
+    web: "assets/trabajos/oroverde/index.html",
+    descripcion: "Landing promocional para la tienda El Oro Verde con un videojuego de plataformas propio: esquivas al duende Don Chistera, recoges monedas y ganas hasta un 15 % de descuento con tu código. Aviso de edad, envío gratis, cómo funciona, productos y ventajas de la tienda. Pruébala: el juego funciona aquí mismo.",
+    herramientas: ["HTML", "CSS", "JavaScript", "Canvas", "Gamificación"],
+    enlace: "assets/trabajos/oroverde/index.html",
+  },
+  {
     titulo: "Email de Black Friday",
     cliente: "Cestto Supermercados",
     categoria: "Email marketing",
