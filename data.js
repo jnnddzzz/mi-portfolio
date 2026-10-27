@@ -160,6 +160,11 @@ const SERVICIOS = [
     entregables: ["Logotipo", "Paleta y tipografías", "Manual de marca"], prueba: { texto: "Chart Noir, mi marca", href: "#moda" } },
 ];
 
+/* ---------- BURBUJAS DE LA PORTADA ----------
+   Enlaces rápidos que flotan en la portada. tipo: instagram | tiktok | whatsapp | email | trabajos | linkedin
+*/
+const BURBUJAS = ["instagram", "tiktok", "whatsapp", "email", "trabajos"];
+
 const HABILIDADES = [
   { nombre: "Moda y estilismo",      nivel: 92, tipo: "Looks, tendencias y estilismo" },
   { nombre: "Creación de contenido", nivel: 90, tipo: "Foto y vídeo para redes" },
