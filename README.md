@@ -2,19 +2,19 @@
 
 Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura con concepto de presentación de producto (estilo Apple), interactiva y sin dependencias: HTML + CSS + JavaScript.
 
-**Estilo:** negro, tipografía grande y un único acento arena; animaciones discretas (intro con contador, foto de portada que se encoge, aparición al hacer scroll, enlaces con texto que rueda).
+**Interacciones:** burbujas con el logo de cada red en la portada (flotan, se arrastran y abren tus redes), intro con contador, foto de portada que se encoge, cintas de texto que aceleran con el scroll, apartados desplegables, enlaces con texto que rueda y botones magnéticos.
 
 ## Secciones
-1. **Inicio**: insignia de estudios, foto, nombre gigante y enlaces rápidos
+1. **Inicio**: insignia de estudios, foto, nombre gigante y burbujas con enlaces (`BURBUJAS`)
 2. **Sobre mí**: bio y cifras
-3. **Moda · Chart Noir**: mi marca, enlace a https://chartnoir.github.io, la Obra 001, cómo hago la ropa y "Mi museo de arte" (`COLECCIONES`): colecciones que se quedan fijas y pasan sus fotos de lado al hacer scroll
-4. **Capítulos desplegables**
+3. **Capítulos desplegables**
    - Trabajos realizados (abierto por defecto), con la estrategia de cada uno (`TRABAJOS`)
    - Qué hago (`SERVICIOS`)
+   - Chart Noir, mi marca: enlace a https://chartnoir.github.io, cómo hago la ropa y "Mi museo de arte" (`COLECCIONES`), colecciones que pasan sus fotos de lado al hacer scroll
    - Outfits: biblioteca con filtros y vista ampliada (`POSTS`)
    - Redes sociales: Instagram y TikTok en directo
    - Habilidades
-5. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
+4. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
 
 ## ✏️ Cómo actualizar tu contenido
 **Todo se edita en `data.js`**, no tienes que tocar nada más.

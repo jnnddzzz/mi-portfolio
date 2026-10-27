@@ -85,6 +85,7 @@ function startHero() {
   setTimeout(() => { flip.style.transition = "transform 1.5s cubic-bezier(.7,0,.2,1)"; flip.style.transform = ""; }, reduced ? 0 : 550);
   setTimeout(() => $(".hero").classList.add("ready"), reduced ? 0 : 1400);
   setTimeout(() => name.classList.add("in"), reduced ? 0 : 1450);
+  setTimeout(spawnBubbles, reduced ? 0 : 1900);
 }
 (function intro() {
   const loader = $(".loader");
@@ -104,15 +105,122 @@ function startHero() {
 })();
 
 /* =========================================================
-   Enlaces de la portada
+   Burbujas: flotan, rebotan, esquivan el ratón y se pueden lanzar
    ========================================================= */
+const BUBBLE_DEF = {
+  instagram: () => redUrl("instagram") && { label: "Instagram", href: redUrl("instagram"), ext: true },
+  tiktok: () => redUrl("tiktok") && { label: "TikTok", href: redUrl("tiktok"), ext: true },
+  linkedin: () => redUrl("linkedin") && { label: "LinkedIn", href: redUrl("linkedin"), ext: true },
+  whatsapp: () => tel && { label: "WhatsApp", href: `https://wa.me/34${tel}`, ext: true },
+  email: () => PERFIL.email && { label: "Email", copy: PERFIL.email },
+  trabajos: () => ({ label: "Trabajos", href: "#trabajos", accent: true }),
+};
 const hero = $(".hero");
-$(".hero-links").innerHTML = [
-  redUrl("instagram") && `<a href="${esc(redUrl("instagram"))}" target="_blank" rel="noopener">Instagram</a>`,
-  redUrl("tiktok") && `<a href="${esc(redUrl("tiktok"))}" target="_blank" rel="noopener">TikTok</a>`,
-  PERFIL.email && `<a href="mailto:${esc(PERFIL.email)}">Email</a>`,
-  `<a href="#trabajos">Trabajos</a>`,
-].filter(Boolean).join("");
+const bubbleLayer = $(".bubbles");
+const bubbles = [];
+
+function spawnBubbles() {
+  const small = innerWidth < 600;
+  const defs = BURBUJAS.map(k => BUBBLE_DEF[k]?.() && { key: k, ...BUBBLE_DEF[k]() }).filter(Boolean);
+  const W = hero.clientWidth, H = hero.clientHeight;
+  defs.forEach((d, i) => {
+    const el = document.createElement(d.href ? "a" : "button");
+    el.className = `bubble b-${d.key}`;
+    el.draggable = false;
+    if (d.href) { el.href = d.href; if (d.ext) { el.target = "_blank"; el.rel = "noopener"; } }
+    el.setAttribute("aria-label", d.label);
+    el.innerHTML = `<span class="bubble-in">${ICON[d.key] || ""}</span><span class="b-label">${esc(d.label)}</span>`;
+    const r = (small ? 23 : 28) + (i % 2) * 3;
+    el.style.setProperty("--r", r + "px");
+    // reparte las burbujas a los lados de la foto
+    const left = i % 2 === 0;
+    const x = left ? W * (0.08 + Math.random() * 0.17) : W * (0.75 + Math.random() * 0.17);
+    const y = H * (0.24 + (i / defs.length) * 0.5);
+    const b = { el, d, r, x, y, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8, drag: false, hover: false, moved: 0 };
+    bubbles.push(b);
+    bubbleLayer.append(el);
+    setTimeout(() => el.classList.add("on"), i * 110);
+    // al pasar el ratón la burbuja se detiene para que sea fácil pulsarla
+    el.addEventListener("pointerenter", () => (b.hover = true));
+    el.addEventListener("pointerleave", () => (b.hover = false));
+    attachDrag(b);
+  });
+}
+
+function attachDrag(b) {
+  let last = null;
+  b.el.addEventListener("pointerdown", e => {
+    b.drag = true; b.moved = 0; b.el.classList.add("drag");
+    b.el.setPointerCapture(e.pointerId);
+    last = { x: e.clientX, y: e.clientY, t: performance.now() };
+  });
+  b.el.addEventListener("pointermove", e => {
+    if (!b.drag) return;
+    const dx = e.clientX - last.x, dy = e.clientY - last.y, dt = Math.max(16, performance.now() - last.t);
+    b.x += dx; b.y += dy; b.moved += Math.abs(dx) + Math.abs(dy);
+    b.vx = dx / dt * 16; b.vy = dy / dt * 16;
+    last = { x: e.clientX, y: e.clientY, t: performance.now() };
+  });
+  const end = () => { b.drag = false; b.el.classList.remove("drag"); };
+  b.el.addEventListener("pointerup", end);
+  b.el.addEventListener("pointercancel", end);
+  b.el.addEventListener("click", async e => {
+    if (b.moved > 8) { e.preventDefault(); return; } // fue un arrastre, no un clic
+    if (b.d.copy) {
+      try { await navigator.clipboard.writeText(b.d.copy); toast("Email copiado"); }
+      catch { toast(b.d.copy); }
+    }
+  });
+}
+
+
+function stepBubbles() {
+  if (!bubbles.length) return;
+  const W = hero.clientWidth, H = hero.clientHeight;
+  // la foto actúa como obstáculo en pantallas grandes
+  const pr = innerWidth > 900 ? (() => { const a = $(".photo").getBoundingClientRect(), h = hero.getBoundingClientRect(); return { l: a.left - h.left, t: a.top - h.top, r: a.right - h.left, b: a.bottom - h.top }; })() : null;
+  // zona libre: debajo de la insignia de la portada y encima del pie
+  const top = $(".eyebrow").getBoundingClientRect().bottom - hero.getBoundingClientRect().top - 8, bottom = H - 70;
+  for (const b of bubbles) {
+    if (b.hover && !b.drag) { b.vx *= 0.5; b.vy *= 0.5; }
+    else if (!b.drag) {
+      // deriva lenta y tranquila; un lanzamiento se frena poco a poco
+      b.vx += (Math.random() - 0.5) * 0.03; b.vy += (Math.random() - 0.5) * 0.03;
+      const sp = Math.hypot(b.vx, b.vy);
+      const damp = sp > 0.9 ? 0.96 : 0.995;
+      b.vx *= damp; b.vy *= damp;
+      if (sp > 12) { b.vx *= 12 / sp; b.vy *= 12 / sp; }
+      b.x += b.vx; b.y += b.vy;
+    }
+    // bordes
+    if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.8; }
+    if (b.x > W - b.r) { b.x = W - b.r; b.vx = -Math.abs(b.vx) * 0.8; }
+    if (b.y < top + b.r) { b.y = top + b.r; b.vy = Math.abs(b.vy) * 0.8; }
+    if (b.y > bottom - b.r) { b.y = bottom - b.r; b.vy = -Math.abs(b.vy) * 0.8; }
+    // obstáculo: la foto
+    if (pr && !b.drag) {
+      const cx = Math.max(pr.l, Math.min(b.x, pr.r)), cy = Math.max(pr.t, Math.min(b.y, pr.b));
+      const ox = b.x - cx, oy = b.y - cy, od = Math.hypot(ox, oy);
+      if (od < b.r) {
+        if (od === 0) { b.x = b.x < (pr.l + pr.r) / 2 ? pr.l - b.r : pr.r + b.r; }
+        else { b.x = cx + ox / od * b.r; b.y = cy + oy / od * b.r; const dot = b.vx * ox / od + b.vy * oy / od; if (dot < 0) { b.vx -= 1.8 * dot * ox / od; b.vy -= 1.8 * dot * oy / od; } }
+      }
+    }
+  }
+  // choques entre burbujas
+  for (let i = 0; i < bubbles.length; i++) for (let j = i + 1; j < bubbles.length; j++) {
+    const a = bubbles[i], c = bubbles[j];
+    const dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy), min = a.r + c.r + 4;
+    if (d < min && d > 0) {
+      const nx = dx / d, ny = dy / d, push = (min - d) / 2;
+      if (!a.drag) { a.x -= nx * push; a.y -= ny * push; }
+      if (!c.drag) { c.x += nx * push; c.y += ny * push; }
+      const rel = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny;
+      if (rel < 0) { a.vx += rel * nx; a.vy += rel * ny; c.vx -= rel * nx; c.vy -= rel * ny; }
+    }
+  }
+  for (const b of bubbles) b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px)`;
+}
 
 /* =========================================================
    Capítulos desplegables
@@ -121,6 +229,7 @@ const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
   servicios: () => `${SERVICIOS.length} formas de ayudarte`,
   estilo: () => `${POSTS.filter(p => p.imagen).length} outfits`,
+  moda: () => `${COLS.length} colecciones`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -367,12 +476,12 @@ if (LOOKS.length) renderLib(); else $("#looks").remove();
 const coleccionesEl = $(".colecciones"), taller = $("#mi-ropa");
 let ultimaY = -1; // último scroll pintado: si no cambia, no se repinta
 const vidIO = new IntersectionObserver(en => en.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: 0.5 });
-$(".col-index").innerHTML = COLS.map((c, i) => `<a href="#col-${esc(c.id)}" class="chip" data-hover><i style="background:${esc(c.color || "#d8cfbf")}"></i>${esc(c.nombre)} <small>${c.piezas.length}</small></a>`).join("");
+$(".col-index").innerHTML = COLS.map((c, i) => `<a href="#col-${esc(c.id)}" class="chip" data-hover><i style="background:${esc(c.color || "#d4ff3a")}"></i>${esc(c.nombre)} <small>${c.piezas.length}</small></a>`).join("");
 coleccionesEl.innerHTML = COLS.map((c, ci) => {
   const pasos = [...new Set(c.piezas.map(p => p.paso).filter(Boolean))];
   const huecos = Array.from({ length: c.proximamente || 0 }, () => `<div class="col-card soon"><b>Próximamente</b><span>Más fotos del proceso</span></div>`).join("");
   return `
-  <article class="col" id="col-${esc(c.id)}" style="--c:${esc(c.color || "#d8cfbf")}">
+  <article class="col" id="col-${esc(c.id)}" style="--c:${esc(c.color || "#d4ff3a")}">
     <div class="col-pin">
       <div class="col-bg" aria-hidden="true">${esc(c.nombre)}</div>
       <header class="col-info">
@@ -685,8 +794,17 @@ addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 /* =========================================================
-   Efectos globales: enlaces
+   Efectos globales: cintas de texto, enlaces y botones magnéticos
    ========================================================= */
+// Cintas de texto infinitas que aceleran y se inclinan con la velocidad del scroll
+const marquees = $$(".marquee").map((m, i) => {
+  const t = m.dataset.text;
+  m.innerHTML = `<div class="mq-track">${Array.from({ length: 6 }, () => `<span>${t.split("·").filter(x => x.trim()).map(w => `${esc(w.trim())}<i>✦</i>`).join("")}</span>`).join("")}</div>`;
+  return { track: $(".mq-track", m), x: 0, dir: i % 2 ? 1 : -1, w: 0 };
+});
+const medirMarquees = () => marquees.forEach(m => { m.w = m.track.firstElementChild.offsetWidth; });
+medirMarquees(); addEventListener("load", medirMarquees); addEventListener("resize", medirMarquees);
+
 // Enlaces con texto que "rueda" al pasar el ratón
 $$(".nav-links a, .nav-cta, .footer a, .sub-nav a").forEach(a => {
   const nodo = [...a.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
@@ -698,11 +816,31 @@ $$(".nav-links a, .nav-cta, .footer a, .sub-nav a").forEach(a => {
   nodo.replaceWith(roll);
 });
 
+// Botones magnéticos: se acercan un poco al cursor
+if (finePointer && !reduced) $$(".pill, .nav-cta, .gal-arrow, .lb-arrow, .ch-toggle, .tile-arrow, .chip").forEach(b => {
+  b.classList.add("magnetic");
+  b.addEventListener("mousemove", e => {
+    const r = b.getBoundingClientRect();
+    b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
+  });
+  b.addEventListener("mouseleave", () => { b.style.transform = ""; });
+});
+
+let velY = 0, prevY = scrollY;
 const caseMedia = $$(".case-media");
 (function loop() {
+  // velocidad del scroll suavizada, para acelerar e inclinar las cintas de texto
+  velY += ((scrollY - prevY) - velY) * 0.12; prevY = scrollY;
   if (scrollY !== ultimaY) { ultimaY = scrollY; pintarColecciones(); }
   if (!reduced) {
     const vh = innerHeight;
+    if (hero.getBoundingClientRect().bottom > 0) stepBubbles();
+    marquees.forEach(m => {
+      if (!m.w) return;
+      m.x += m.dir * (0.6 + Math.min(Math.abs(velY), 60) * 0.35);
+      if (m.x <= -m.w) m.x += m.w; if (m.x > 0) m.x -= m.w;
+      m.track.style.transform = `translate3d(${m.x}px,0,0) skewX(${Math.max(-12, Math.min(12, -velY * 0.4))}deg)`;
+    });
     caseMedia.forEach(m => {
       const r = m.getBoundingClientRect();
       if (r.top > vh || r.bottom < 0) return;
@@ -710,7 +848,7 @@ const caseMedia = $$(".case-media");
       m.style.setProperty("--ci", ((1 - p) * 6) + "%");
       m.style.setProperty("--sc", 1.06 - p * 0.06);
     });
-  }
+  } else if (bubbles.length) stepBubbles();
   requestAnimationFrame(loop);
 })();
 
