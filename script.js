@@ -8,7 +8,6 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 const esc = (s = "") => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const ACCENT = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#d4ff3a";
 const clamp01 = v => Math.max(0, Math.min(1, v));
 
 function toast(text) {
@@ -86,7 +85,6 @@ function startHero() {
   setTimeout(() => { flip.style.transition = "transform 1.5s cubic-bezier(.7,0,.2,1)"; flip.style.transform = ""; }, reduced ? 0 : 550);
   setTimeout(() => $(".hero").classList.add("ready"), reduced ? 0 : 1400);
   setTimeout(() => name.classList.add("in"), reduced ? 0 : 1450);
-  setTimeout(spawnBubbles, reduced ? 0 : 1900);
 }
 (function intro() {
   const loader = $(".loader");
@@ -106,122 +104,15 @@ function startHero() {
 })();
 
 /* =========================================================
-   Burbujas: flotan, rebotan, esquivan el ratón y se pueden lanzar
+   Enlaces de la portada
    ========================================================= */
-const BUBBLE_DEF = {
-  instagram: () => redUrl("instagram") && { label: "Instagram", href: redUrl("instagram"), ext: true },
-  tiktok: () => redUrl("tiktok") && { label: "TikTok", href: redUrl("tiktok"), ext: true },
-  linkedin: () => redUrl("linkedin") && { label: "LinkedIn", href: redUrl("linkedin"), ext: true },
-  whatsapp: () => tel && { label: "WhatsApp", href: `https://wa.me/34${tel}`, ext: true },
-  email: () => PERFIL.email && { label: "Email", copy: PERFIL.email },
-  trabajos: () => ({ label: "Trabajos", href: "#trabajos", accent: true }),
-};
 const hero = $(".hero");
-const bubbleLayer = $(".bubbles");
-const bubbles = [];
-
-function spawnBubbles() {
-  const small = innerWidth < 600;
-  const defs = BURBUJAS.map(k => BUBBLE_DEF[k]?.() && { key: k, ...BUBBLE_DEF[k]() }).filter(Boolean);
-  const W = hero.clientWidth, H = hero.clientHeight;
-  defs.forEach((d, i) => {
-    const el = document.createElement(d.href ? "a" : "button");
-    el.className = `bubble b-${d.key}`;
-    el.draggable = false;
-    if (d.href) { el.href = d.href; if (d.ext) { el.target = "_blank"; el.rel = "noopener"; } }
-    el.setAttribute("aria-label", d.label);
-    el.innerHTML = `<span class="bubble-in">${ICON[d.key] || ""}</span><span class="b-label">${esc(d.label)}</span>`;
-    const r = (small ? 23 : 28) + (i % 2) * 3;
-    el.style.setProperty("--r", r + "px");
-    // reparte las burbujas a los lados de la foto
-    const left = i % 2 === 0;
-    const x = left ? W * (0.08 + Math.random() * 0.17) : W * (0.75 + Math.random() * 0.17);
-    const y = H * (0.24 + (i / defs.length) * 0.5);
-    const b = { el, d, r, x, y, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8, drag: false, hover: false, moved: 0 };
-    bubbles.push(b);
-    bubbleLayer.append(el);
-    setTimeout(() => el.classList.add("on"), i * 110);
-    // al pasar el ratón la burbuja se detiene para que sea fácil pulsarla
-    el.addEventListener("pointerenter", () => (b.hover = true));
-    el.addEventListener("pointerleave", () => (b.hover = false));
-    attachDrag(b);
-  });
-}
-
-function attachDrag(b) {
-  let last = null;
-  b.el.addEventListener("pointerdown", e => {
-    b.drag = true; b.moved = 0; b.el.classList.add("drag");
-    b.el.setPointerCapture(e.pointerId);
-    last = { x: e.clientX, y: e.clientY, t: performance.now() };
-  });
-  b.el.addEventListener("pointermove", e => {
-    if (!b.drag) return;
-    const dx = e.clientX - last.x, dy = e.clientY - last.y, dt = Math.max(16, performance.now() - last.t);
-    b.x += dx; b.y += dy; b.moved += Math.abs(dx) + Math.abs(dy);
-    b.vx = dx / dt * 16; b.vy = dy / dt * 16;
-    last = { x: e.clientX, y: e.clientY, t: performance.now() };
-  });
-  const end = () => { b.drag = false; b.el.classList.remove("drag"); };
-  b.el.addEventListener("pointerup", end);
-  b.el.addEventListener("pointercancel", end);
-  b.el.addEventListener("click", async e => {
-    if (b.moved > 8) { e.preventDefault(); return; } // fue un arrastre, no un clic
-    if (b.d.copy) {
-      try { await navigator.clipboard.writeText(b.d.copy); toast("Email copiado"); }
-      catch { toast(b.d.copy); }
-    }
-  });
-}
-
-
-function stepBubbles() {
-  if (!bubbles.length) return;
-  const W = hero.clientWidth, H = hero.clientHeight;
-  // la foto actúa como obstáculo en pantallas grandes
-  const pr = innerWidth > 900 ? (() => { const a = $(".photo").getBoundingClientRect(), h = hero.getBoundingClientRect(); return { l: a.left - h.left, t: a.top - h.top, r: a.right - h.left, b: a.bottom - h.top }; })() : null;
-  // zona libre: debajo de la insignia de la portada y encima del pie
-  const top = $(".eyebrow").getBoundingClientRect().bottom - hero.getBoundingClientRect().top - 8, bottom = H - 70;
-  for (const b of bubbles) {
-    if (b.hover && !b.drag) { b.vx *= 0.5; b.vy *= 0.5; }
-    else if (!b.drag) {
-      // deriva lenta y tranquila; un lanzamiento se frena poco a poco
-      b.vx += (Math.random() - 0.5) * 0.03; b.vy += (Math.random() - 0.5) * 0.03;
-      const sp = Math.hypot(b.vx, b.vy);
-      const damp = sp > 0.9 ? 0.96 : 0.995;
-      b.vx *= damp; b.vy *= damp;
-      if (sp > 12) { b.vx *= 12 / sp; b.vy *= 12 / sp; }
-      b.x += b.vx; b.y += b.vy;
-    }
-    // bordes
-    if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.8; }
-    if (b.x > W - b.r) { b.x = W - b.r; b.vx = -Math.abs(b.vx) * 0.8; }
-    if (b.y < top + b.r) { b.y = top + b.r; b.vy = Math.abs(b.vy) * 0.8; }
-    if (b.y > bottom - b.r) { b.y = bottom - b.r; b.vy = -Math.abs(b.vy) * 0.8; }
-    // obstáculo: la foto
-    if (pr && !b.drag) {
-      const cx = Math.max(pr.l, Math.min(b.x, pr.r)), cy = Math.max(pr.t, Math.min(b.y, pr.b));
-      const ox = b.x - cx, oy = b.y - cy, od = Math.hypot(ox, oy);
-      if (od < b.r) {
-        if (od === 0) { b.x = b.x < (pr.l + pr.r) / 2 ? pr.l - b.r : pr.r + b.r; }
-        else { b.x = cx + ox / od * b.r; b.y = cy + oy / od * b.r; const dot = b.vx * ox / od + b.vy * oy / od; if (dot < 0) { b.vx -= 1.8 * dot * ox / od; b.vy -= 1.8 * dot * oy / od; } }
-      }
-    }
-  }
-  // choques entre burbujas
-  for (let i = 0; i < bubbles.length; i++) for (let j = i + 1; j < bubbles.length; j++) {
-    const a = bubbles[i], c = bubbles[j];
-    const dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy), min = a.r + c.r + 4;
-    if (d < min && d > 0) {
-      const nx = dx / d, ny = dy / d, push = (min - d) / 2;
-      if (!a.drag) { a.x -= nx * push; a.y -= ny * push; }
-      if (!c.drag) { c.x += nx * push; c.y += ny * push; }
-      const rel = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny;
-      if (rel < 0) { a.vx += rel * nx; a.vy += rel * ny; c.vx -= rel * nx; c.vy -= rel * ny; }
-    }
-  }
-  for (const b of bubbles) b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px)`;
-}
+$(".hero-links").innerHTML = [
+  redUrl("instagram") && `<a href="${esc(redUrl("instagram"))}" target="_blank" rel="noopener">Instagram</a>`,
+  redUrl("tiktok") && `<a href="${esc(redUrl("tiktok"))}" target="_blank" rel="noopener">TikTok</a>`,
+  PERFIL.email && `<a href="mailto:${esc(PERFIL.email)}">Email</a>`,
+  `<a href="#trabajos">Trabajos</a>`,
+].filter(Boolean).join("");
 
 /* =========================================================
    Capítulos desplegables
@@ -229,7 +120,7 @@ function stepBubbles() {
 const COUNTS = {
   trabajos: () => `${TRABAJOS.length} proyectos`,
   servicios: () => `${SERVICIOS.length} formas de ayudarte`,
-  estilo: () => `${POSTS.filter(p => p.imagen).length} outfits · ${COLS.length} obras`,
+  estilo: () => `${POSTS.filter(p => p.imagen).length} outfits`,
   redes: () => REDES.filter(r => r.url).map(r => r.nombre).join(" · "),
   habilidades: () => `${HABILIDADES.length} herramientas`,
 };
@@ -360,6 +251,7 @@ function bindViewer(root) {
 }
 
 const slug = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const puntosHTML = t => t.estrategia?.length ? `<dl class="case-points">${t.estrategia.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>` : "";
 const cases = $(".cases");
 cases.innerHTML = TRABAJOS.map((t, i) => `
   <article class="tile case reveal" id="caso-${slug(t.cliente || t.titulo)}">
@@ -371,6 +263,7 @@ cases.innerHTML = TRABAJOS.map((t, i) => `
       <span class="case-kicker">Trabajo realizado · ${esc(t.categoria || "")}</span>
       <h3>${esc(t.titulo)}${t.cliente ? `<small>${esc(t.cliente)}</small>` : ""}</h3>
       <p class="case-desc">${esc(t.descripcion)}</p>
+      ${puntosHTML(t)}
       <div class="case-actions">
         <button class="pill pill-solid" data-open="${i}" data-hover>Ver en grande</button>
         ${t.enlace ? `<a class="pill" href="${esc(t.enlace)}" target="_blank" rel="noopener" data-hover>En vivo ↗</a>` : ""}
@@ -391,6 +284,7 @@ cases.addEventListener("click", e => {
   $(".modal-cat", modal).textContent = ["Trabajo realizado", t.cliente].filter(Boolean).join(" · ");
   $("#modal-title").textContent = t.titulo;
   $(".modal-desc", modal).textContent = t.descripcion;
+  $(".modal-points", modal).innerHTML = puntosHTML(t);
   const link = $(".modal-link", modal);
   link.hidden = !t.enlace;
   if (t.enlace) link.href = t.enlace;
@@ -436,8 +330,6 @@ const LIB_MAX = innerWidth <= 560 ? 6 : 8;
 let libFiltro = "Todos", libTodos = false, libLista = LOOKS;
 const grupos = ["Todos", ...new Set(LOOKS.map(l => l.grupo).filter(Boolean))];
 $(".lib-filters").innerHTML = grupos.map(g => `<button class="chip" aria-pressed="${g === "Todos"}" data-g="${esc(g)}" data-hover>${esc(g)} <small>${g === "Todos" ? LOOKS.length : LOOKS.filter(l => l.grupo === g).length}</small></button>`).join("");
-$(".n-looks").textContent = LOOKS.length;
-$(".n-ropa").textContent = COLS.length;
 
 function renderLib() {
   libLista = libFiltro === "Todos" ? LOOKS : LOOKS.filter(l => l.grupo === libFiltro);
@@ -475,12 +367,12 @@ if (LOOKS.length) renderLib(); else $("#looks").remove();
 const coleccionesEl = $(".colecciones"), taller = $("#mi-ropa");
 let ultimaY = -1; // último scroll pintado: si no cambia, no se repinta
 const vidIO = new IntersectionObserver(en => en.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: 0.5 });
-$(".col-index").innerHTML = COLS.map((c, i) => `<a href="#col-${esc(c.id)}" class="chip" data-hover><i style="background:${esc(c.color || "#d4ff3a")}"></i>${esc(c.nombre)} <small>${c.piezas.length}</small></a>`).join("");
+$(".col-index").innerHTML = COLS.map((c, i) => `<a href="#col-${esc(c.id)}" class="chip" data-hover><i style="background:${esc(c.color || "#d8cfbf")}"></i>${esc(c.nombre)} <small>${c.piezas.length}</small></a>`).join("");
 coleccionesEl.innerHTML = COLS.map((c, ci) => {
   const pasos = [...new Set(c.piezas.map(p => p.paso).filter(Boolean))];
   const huecos = Array.from({ length: c.proximamente || 0 }, () => `<div class="col-card soon"><b>Próximamente</b><span>Más fotos del proceso</span></div>`).join("");
   return `
-  <article class="col" id="col-${esc(c.id)}" style="--c:${esc(c.color || "#d4ff3a")}">
+  <article class="col" id="col-${esc(c.id)}" style="--c:${esc(c.color || "#d8cfbf")}">
     <div class="col-pin">
       <div class="col-bg" aria-hidden="true">${esc(c.nombre)}</div>
       <header class="col-info">
@@ -525,11 +417,9 @@ function medirColecciones() {
 }
 function pintarColecciones() {
   const vw = innerWidth;
-  let fija = false;
   colEls.forEach(c => {
     const r = c.el.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
-    if (r.top < innerHeight * 0.3 && r.bottom > innerHeight * 0.7) fija = true;
     const p = c.dist ? clamp01(-r.top / c.dist) : 0;
     c.track.style.transform = `translate3d(${-p * c.dist}px,0,0)`;
     c.bg.style.transform = `translate3d(${(0.5 - p) * 30}vw,0,0)`;
@@ -554,7 +444,6 @@ function pintarColecciones() {
       c.cards.forEach((card, i) => card.classList.toggle("on", i === best));
     }
   });
-  hud.classList.toggle("off", fija);
 }
 coleccionesEl.addEventListener("click", e => {
   const f = e.target.closest(".col-card:not(.soon)");
@@ -695,10 +584,6 @@ $(".soft").innerHTML = "También: " + SOFT_SKILLS.map(s => `<span>${esc(s)}</spa
 /* =========================================================
    Contacto
    ========================================================= */
-const ctTitle = $("[data-proximity]");
-ctTitle.innerHTML = [...ctTitle.textContent].map(c => `<span>${esc(c)}</span>`).join("");
-const ctLetters = $$("span", ctTitle);
-
 $(".tel-text").textContent = tel.replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4");
 const wa = $(".wa");
 if (tel) wa.href = `https://wa.me/34${tel}`; else { wa.remove(); $('[data-copy="telefono"]').remove(); }
@@ -800,17 +685,8 @@ addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 /* =========================================================
-   Efectos globales: cintas de texto, enlaces, botones magnéticos, textos que se descifran y HUD
+   Efectos globales: enlaces
    ========================================================= */
-// Cintas de texto infinitas que aceleran y se inclinan con la velocidad del scroll
-const marquees = $$(".marquee").map((m, i) => {
-  const t = m.dataset.text;
-  m.innerHTML = `<div class="mq-track">${Array.from({ length: 6 }, () => `<span>${t.split("·").filter(x => x.trim()).map(w => `${esc(w.trim())}<i>✦</i>`).join("")}</span>`).join("")}</div>`;
-  return { track: $(".mq-track", m), x: 0, dir: i % 2 ? 1 : -1, w: 0 };
-});
-const medirMarquees = () => marquees.forEach(m => { m.w = m.track.firstElementChild.offsetWidth; });
-medirMarquees(); addEventListener("load", medirMarquees); addEventListener("resize", medirMarquees);
-
 // Enlaces con texto que "rueda" al pasar el ratón
 $$(".nav-links a, .nav-cta, .footer a, .sub-nav a").forEach(a => {
   const nodo = [...a.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
@@ -822,70 +698,11 @@ $$(".nav-links a, .nav-cta, .footer a, .sub-nav a").forEach(a => {
   nodo.replaceWith(roll);
 });
 
-// Botones magnéticos: se acercan un poco al cursor
-if (finePointer && !reduced) $$(".pill, .nav-cta, .gal-arrow, .lb-arrow, .ch-toggle, .tile-arrow, .chip").forEach(b => {
-  b.classList.add("magnetic");
-  b.addEventListener("mousemove", e => {
-    const r = b.getBoundingClientRect();
-    b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
-  });
-  b.addEventListener("mouseleave", () => { b.style.transform = ""; });
-});
-
-// Títulos pequeños que se "descifran" al aparecer
-const GLIFOS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/";
-function descifrar(el) {
-  const final = el.dataset.final || (el.dataset.final = el.textContent);
-  let f = 0;
-  const tick = () => {
-    const hecho = Math.floor(f / 2);
-    el.textContent = [...final].map((ch, i) => i < hecho || ch === " " ? ch : GLIFOS[(Math.random() * GLIFOS.length) | 0]).join("");
-    if (hecho < final.length) { f++; requestAnimationFrame(tick); } else el.textContent = final;
-  };
-  tick();
-}
-if (!reduced) {
-  const decIO = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) { descifrar(e.target); decIO.unobserve(e.target); } }), { threshold: 1 });
-  $$(".kicker, .ch-kicker, .sub-kicker").forEach(k => { if (!k.children.length) decIO.observe(k); });
-}
-
-// HUD: número y nombre del apartado en el que estás
-const hud = $(".hud"), hudN = $(".hud-n"), hudT = $(".hud-t"), hudBar = $(".hud-line i");
-const hudSecciones = [["inicio", "Inicio"], ["sobre-mi", "Sobre mí"], ["trabajos", "Trabajos"], ["servicios", "Qué hago"], ["estilo", "Estilo"], ["looks", "Mis outfits"], ["mi-ropa", "Mi museo de arte"], ["redes", "Redes"], ["habilidades", "Habilidades"], ["contacto", "Contacto"]]
-  .map(([id, t]) => [document.getElementById(id), t]).filter(([el]) => el);
-let hudActual = -1, hudTops = [];
-const medirHud = () => { hudTops = hudSecciones.map(([el]) => el.offsetHeight ? el.getBoundingClientRect().top + scrollY : Infinity); ultimaY = -1; };
-new ResizeObserver(medirHud).observe(document.body);
-function pintarHud() {
-  let i = 0;
-  hudTops.forEach((t, j) => { if (t < scrollY + innerHeight * 0.5) i = j; });
-  if (i !== hudActual) {
-    hudActual = i;
-    hudN.textContent = String(i).padStart(2, "0");
-    hudT.textContent = hudSecciones[i][1];
-    hud.classList.remove("swap"); void hud.offsetWidth; hud.classList.add("swap");
-  }
-  const max = document.documentElement.scrollHeight - innerHeight;
-  hudBar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
-}
-
-let velY = 0, prevY = scrollY;
-const libGridEl = $(".lib-grid");
 const caseMedia = $$(".case-media");
 (function loop() {
-  // velocidad del scroll suavizada, para inclinar y acelerar elementos
-  velY += ((scrollY - prevY) - velY) * 0.12; prevY = scrollY;
-  if (scrollY !== ultimaY) { ultimaY = scrollY; pintarColecciones(); pintarHud(); }
+  if (scrollY !== ultimaY) { ultimaY = scrollY; pintarColecciones(); }
   if (!reduced) {
-    marquees.forEach(m => {
-      if (!m.w) return;
-      m.x += m.dir * (0.6 + Math.min(Math.abs(velY), 60) * 0.35);
-      if (m.x <= -m.w) m.x += m.w; if (m.x > 0) m.x -= m.w;
-      m.track.style.transform = `translate3d(${m.x}px,0,0) skewX(${Math.max(-12, Math.min(12, -velY * 0.4))}deg)`;
-    });
-    if (libGridEl) libGridEl.style.setProperty("--skew", `${Math.max(-4, Math.min(4, velY * 0.12))}deg`);
     const vh = innerHeight;
-    if (hero.getBoundingClientRect().bottom > 0) stepBubbles();
     caseMedia.forEach(m => {
       const r = m.getBoundingClientRect();
       if (r.top > vh || r.bottom < 0) return;
@@ -893,7 +710,7 @@ const caseMedia = $$(".case-media");
       m.style.setProperty("--ci", ((1 - p) * 6) + "%");
       m.style.setProperty("--sc", 1.06 - p * 0.06);
     });
-  } else if (bubbles.length) stepBubbles();
+  }
   requestAnimationFrame(loop);
 })();
 
@@ -901,38 +718,9 @@ let lastW = innerWidth;
 addEventListener("resize", () => { if (innerWidth !== lastW) { lastW = innerWidth; navInd(); } });
 
 /* =========================================================
-   Ratón: cursor, foto 3D y letras de contacto
+   Ratón: foto 3D de la portada
    ========================================================= */
 if (finePointer) {
-  const cursor = $(".cursor");
-  const label = $(".cursor-label");
-  let mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my;
-  addEventListener("mousemove", e => {
-    mx = e.clientX; my = e.clientY;
-    const tr = ctTitle.getBoundingClientRect();
-    if (tr.top < innerHeight && tr.bottom > 0) {
-      ctLetters.forEach(l => {
-        const r = l.getBoundingClientRect();
-        const k = Math.max(0, 1 - Math.hypot(mx - (r.left + r.width / 2), my - (r.top + r.height / 2)) / 260);
-        l.style.transform = `scaleY(${1 + k * 0.3}) translateY(${-k * 8}px)`;
-        l.style.color = k > 0.55 ? ACCENT : "";
-      });
-    }
-  });
-  (function loop() {
-    cx += (mx - cx) * 0.25; cy += (my - cy) * 0.25;
-    cursor.style.transform = `translate(${cx}px, ${cy}px)`;
-    requestAnimationFrame(loop);
-  })();
-  document.addEventListener("mouseover", e => {
-    // Dentro de los trabajos se usa el cursor normal para no tapar el contenido
-    cursor.classList.toggle("off", !!e.target.closest(".viewer"));
-    const t = e.target.closest("[data-hover], .bubble");
-    const text = t?.dataset.hover;
-    cursor.classList.toggle("label", !!text);
-    cursor.classList.toggle("big", !!t && !text);
-    label.textContent = text || "";
-  });
   const tilt = $("[data-tilt]");
   tilt.addEventListener("mousemove", e => {
     const r = tilt.getBoundingClientRect();
