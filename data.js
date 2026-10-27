@@ -40,7 +40,7 @@ const POSTS = [
   { imagen: "assets/looks/look-01.jpg", mini: "assets/looks/mini/look-01.jpg", texto: "Modo sol", grupo: "Color" },
   { imagen: "assets/looks/look-02.jpg", mini: "assets/looks/mini/look-02.jpg", texto: "Firmado en la pared", grupo: "Denim" },
   { imagen: "assets/looks/look-03.jpg", mini: "assets/looks/mini/look-03.jpg", texto: "Llamada desde Londres", grupo: "Neutros" },
-  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Sesión golfa", grupo: "Color" },
+  { imagen: "assets/looks/look-04.jpg", mini: "assets/looks/mini/look-04.jpg", texto: "Sala 4", grupo: "Color" },
   { imagen: "assets/looks/look-05.jpg", mini: "assets/looks/mini/look-05.jpg", texto: "Recién llegado de París", grupo: "Neutros" },
   { imagen: "assets/looks/look-06.jpg", mini: "assets/looks/mini/look-06.jpg", texto: "Túnel infinito", grupo: "Color" },
   { imagen: "assets/looks/look-07.jpg", mini: "assets/looks/mini/look-07.jpg", texto: "Sobre el Támesis", grupo: "Denim" },
@@ -59,7 +59,7 @@ const POSTS = [
   { imagen: "assets/looks/look-20.jpg", mini: "assets/looks/mini/look-20.jpg", texto: "Andén 7", grupo: "Neutros" },
   { imagen: "assets/looks/look-21.jpg", mini: "assets/looks/mini/look-21.jpg", texto: "El 10", grupo: "Color" },
   { imagen: "assets/looks/look-22.jpg", mini: "assets/looks/mini/look-22.jpg", texto: "Básicos con actitud", grupo: "Denim" },
-  { imagen: "assets/looks/look-23.jpg", mini: "assets/looks/mini/look-23.jpg", texto: "Pasillo de chuches", grupo: "Color" },
+  { imagen: "assets/looks/look-23.jpg", mini: "assets/looks/mini/look-23.jpg", texto: "Edición Halloween", grupo: "Color" },
   { imagen: "assets/looks/look-24.jpg", mini: "assets/looks/mini/look-24.jpg", texto: "Jardín de cemento", grupo: "Denim" },
   { imagen: "assets/looks/look-25.jpg", mini: "assets/looks/mini/look-25.jpg", texto: "Cielo de barrio", grupo: "Color" },
   { imagen: "assets/looks/look-26.jpg", mini: "assets/looks/mini/look-26.jpg", texto: "From hustle to riches", grupo: "Color" },
@@ -139,7 +139,7 @@ const SERVICIOS = [
     entregables: ["Landing page", "Formulario + Google Sheets", "Email automático"], prueba: { texto: "Landing de IKEA Family", href: "#caso-ikea" } },
   { icono: "campana", titulo: "Campañas con idea", gancho: "Primero la idea, después el anuncio.",
     texto: "Del brief a la pieza final: concepto creativo, público, mensajes y calendario, con métricas para saber qué funciona.",
-    entregables: ["Concepto creativo", "Plan de medios", "Piezas y copys"], prueba: { texto: "Prensa para La Cookiteria", href: "#caso-la-cookiteria" } },
+    entregables: ["Concepto creativo", "Plan de medios", "Piezas y copys"], prueba: { texto: "Campaña de El Oro Verde", href: "#caso-el-oro-verde" } },
   { icono: "redes", titulo: "Redes con estética", gancho: "Feeds que se reconocen sin leer el nombre.",
     texto: "Línea visual, calendario y publicaciones con tono propio. Lo que hago cada día en mis perfiles, aplicado a tu marca.",
     entregables: ["Calendario de contenidos", "Línea visual", "Gestión diaria"], prueba: { texto: "Mis redes", href: "#redes" } },
@@ -148,22 +148,17 @@ const SERVICIOS = [
     entregables: ["Estilismo de sesión", "Moodboards", "Contenido de moda"], prueba: { texto: "Mis outfits", href: "#looks" } },
   { icono: "video", grande: true, titulo: "Contenido que frena el scroll", gancho: "Los dos primeros segundos lo deciden todo.",
     texto: "Foto y vídeo vertical con gancho, ritmo y tendencia: idea, grabación y edición listas para Reels y TikTok.",
-    entregables: ["Reels y TikToks", "Sesiones de fotos", "Edición en CapCut"], prueba: { texto: "Mi TikTok", href: "#redes" } },
+    entregables: ["Reels y TikToks", "Sesiones de fotos", "Edición en CapCut"], prueba: { texto: "Campaña de las Nike Shox R4", href: "#caso-nike-shox-r4" } },
   { icono: "email", titulo: "Emails que se abren", gancho: "Un asunto que engancha, un diseño que lleva al clic.",
     texto: "Newsletters y campañas con estructura de venta: oferta estrella, beneficios claros y llamadas a la acción.",
     entregables: ["Asunto y preheader", "Diseño en HTML", "Campañas de temporada"], prueba: { texto: "Black Friday de Cestto", href: "#caso-cestto-supermercados" } },
   { icono: "estrategia", titulo: "Estrategia con datos", gancho: "Cada acción, con un porqué.",
     texto: "Investigación de mercado, competencia y público, DAFO y plan de marketing con objetivos que se pueden medir.",
-    entregables: ["Investigación", "DAFO", "Plan de marketing"], prueba: { texto: "Dossier de Cruzcampo", href: "#caso-cruzcampo" } },
+    entregables: ["Investigación", "DAFO", "Plan de marketing"], prueba: { texto: "Ideas de producto para Chart Noir", href: "#caso-chart-noir" } },
   { icono: "marca", grande: true, titulo: "Identidades con carácter", gancho: "Que tu marca se recuerde a la primera.",
     texto: "Logotipo, colores, tipografías y aplicaciones: un sistema visual completo y coherente en cada punto de contacto con el cliente.",
-    entregables: ["Logotipo", "Paleta y tipografías", "Manual de marca"] },
+    entregables: ["Logotipo", "Paleta y tipografías", "Manual de marca"], prueba: { texto: "Chart Noir, mi marca", href: "#moda" } },
 ];
-
-/* ---------- BURBUJAS DE LA PORTADA ----------
-   Enlaces rápidos que flotan en la portada. tipo: instagram | tiktok | whatsapp | email | trabajos | linkedin
-*/
-const BURBUJAS = ["instagram", "tiktok", "whatsapp", "email", "trabajos"];
 
 const HABILIDADES = [
   { nombre: "Moda y estilismo",      nivel: 92, tipo: "Looks, tendencias y estilismo" },
@@ -189,7 +184,8 @@ const SOFT_SKILLS = [
    - paginas: imágenes que se recorren con scroll dentro de la tarjeta
               (diapositivas de Canva, un email largo, etc.). Súbelas a
               assets/trabajos/ y pon aquí sus rutas en orden.
-   - tipoVisor: "diapositivas" (presentaciones) o "email" (una pieza larga)
+   - tipoVisor: "diapositivas" (presentaciones), "email" o "web" (una página que se puede usar)
+   - estrategia: opcional, lista de [título, texto] que explica para qué sirve el trabajo
    - imagen: portada fija si el trabajo no tiene páginas
    - enlace: opcional (la web, el PDF, etc.)
    El primero de la lista es el más reciente.
@@ -200,13 +196,62 @@ const TRABAJOS = [
   {
     titulo: "Landing con videojuego",
     cliente: "El Oro Verde",
-    categoria: "Web · Gamificación",
+    categoria: "Web · Captación de clientes",
     curso: "2º curso",
     tipoVisor: "web",
     web: "assets/trabajos/oroverde/index.html",
-    descripcion: "Landing promocional para la tienda El Oro Verde con un videojuego de plataformas propio: esquivas al duende Don Chistera, recoges monedas y ganas hasta un 15 % de descuento con tu código. Aviso de edad, envío gratis, cómo funciona, productos y ventajas de la tienda. Pruébala: el juego funciona aquí mismo.",
-    herramientas: ["HTML", "CSS", "JavaScript", "Canvas", "Gamificación"],
+    descripcion: "Campaña «Róbale el descuento al duende» para la tienda online El Oro Verde: una landing con un videojuego de plataformas propio. Para jugar hay que registrarse, y cada moneda recogida suma un 1 % de descuento, hasta un 15 %.",
+    estrategia: [
+      ["Captar", "El registro es obligatorio para jugar: cada partida es un contacto nuevo con nombre, email y consentimiento, guardado en MailerLite."],
+      ["Vender", "El código de hasta un 15 % llega por email al terminar y empuja a hacer la primera compra. Es de un solo uso por cliente."],
+      ["Fidelizar", "Quien acepta recibir ofertas entra en la lista de email de la marca para las siguientes campañas."],
+      ["Medir", "Cada visita lleva su origen (Instagram, email o directo): se sabe qué canal trae más registros, partidas y ventas."],
+    ],
+    herramientas: ["HTML", "CSS", "JavaScript", "MailerLite", "RGPD", "Gamificación"],
     enlace: "assets/trabajos/oroverde/index.html",
+  },
+  {
+    titulo: "Ideas de producto",
+    cliente: "Chart Noir",
+    categoria: "Producto y marca",
+    curso: "2º curso",
+    tipoVisor: "diapositivas",
+    paginas: pags("chartnoir", 13),
+    descripcion: "Propuesta de producto para Chart Noir, una marca de streetwear de alta gama: un conjunto desmontable y reversible, una gorra con viseras intercambiables y una etiqueta de lavado con QR. Incluye identidad visual, análisis del mercado urbano, PESTEL, buyer persona y DAFO.",
+    estrategia: [
+      ["Concepto", "Moda urbana modular, reversible y personalizable: una prenda que se adapta a quien la lleva."],
+      ["Producto", "Conjunto con paneles intercambiables, gorra 59FIFTY con viseras intercambiables y precios definidos por pieza."],
+      ["Mercado", "Análisis del micro y macroentorno, buyer persona y DAFO para justificar cada decisión."],
+    ],
+    herramientas: ["Canva", "Branding", "Investigación de mercado", "DAFO"],
+    enlace: "",
+  },
+  {
+    titulo: "Campaña visual con IA",
+    cliente: "Nike Shox R4",
+    categoria: "Contenido e inteligencia artificial",
+    curso: "2º curso",
+    tipoVisor: "diapositivas",
+    paginas: pags("shox", 14),
+    descripcion: "Fotografía de producto y posts para redes de las Nike Shox R4 usando inteligencia artificial: de la sesión con luces de estudio a escenarios de campaña generados con IA, con portada, posts y hashtags pensados para la venta. Realizado junto a Antonio José Martín Pérez y Pablo Cubelo Quetar.",
+    estrategia: [
+      ["Proceso", "Sesión de fotos con luz de estudio, selección por nitidez y calidad, y edición con IA a partir de instrucciones escritas."],
+      ["Resultado", "Portada y tres posts que presentan la zapatilla como un producto versátil, con hashtags para ampliar el alcance."],
+      ["Reflexión", "Coste frente a un proceso tradicional, herramientas usadas (ChatGPT, Gemini, Python) y el papel del diseñador ante la IA."],
+    ],
+    herramientas: ["ChatGPT", "Gemini", "Fotografía de producto", "Redes sociales"],
+    enlace: "",
+  },
+  {
+    titulo: "Landing page",
+    cliente: "IKEA",
+    categoria: "Web",
+    curso: "2º curso",
+    tipoVisor: "web",
+    web: "assets/trabajos/ikea/index.html",
+    descripcion: "Landing page de captación para IKEA Family: presenta las ventajas del programa y lleva al usuario a un único objetivo, el formulario de alta. Desarrollada con Google Apps Script: cada registro se guarda en Google Sheets y el usuario recibe un correo de bienvenida automático.",
+    herramientas: ["Google Apps Script", "HTML", "Tailwind CSS", "Google Sheets", "Copywriting"],
+    enlace: "assets/trabajos/ikea/index.html",
   },
   {
     titulo: "Email de Black Friday",
@@ -220,17 +265,6 @@ const TRABAJOS = [
     enlace: "",
   },
   {
-    titulo: "Dossier de marca",
-    cliente: "Cruzcampo",
-    categoria: "Investigación publicitaria",
-    curso: "2º curso",
-    tipoVisor: "diapositivas",
-    paginas: pags("cruzcampo", 18),
-    descripcion: "Dossier para el Día de la Empresa Andaluza: dónde se anuncia Cruzcampo, análisis de los anuncios «Lola» (televisión) y «Sociedad Latera» (exterior) y recomendación de medios. Realizado junto a Antonio José Martín Pérez.",
-    herramientas: ["Canva", "Investigación de medios", "Análisis publicitario"],
-    enlace: "",
-  },
-  {
     titulo: "Email de Halloween",
     cliente: "El Corte Inglés",
     categoria: "Email marketing",
@@ -240,27 +274,5 @@ const TRABAJOS = [
     descripcion: "Campaña de email «Noche de terror en tu casa» diseñada en MailerLite para presentar la colección de decoración de Halloween de El Corte Inglés.",
     herramientas: ["MailerLite", "Copywriting", "Diseño de email"],
     enlace: "",
-  },
-  {
-    titulo: "Propuesta de publicidad en prensa",
-    cliente: "La Cookiteria",
-    categoria: "Planificación de medios",
-    curso: "2º curso",
-    tipoVisor: "diapositivas",
-    paginas: pags("cookiteria", 5),
-    descripcion: "Campaña regional en Cádiz en el periódico 20 minutos: soporte y formato elegidos, un anuncio personalizado que se descubre al deslizar la página y la estimación de costes de inserción.",
-    herramientas: ["Canva", "Planificación de medios", "Presupuesto"],
-    enlace: "",
-  },
-  {
-    titulo: "Landing page",
-    cliente: "IKEA",
-    categoria: "Web",
-    curso: "2º curso",
-    tipoVisor: "web",
-    web: "assets/trabajos/ikea/index.html",
-    descripcion: "Landing page de captación para IKEA Family: presenta las ventajas del programa y lleva al usuario a un único objetivo, el formulario de alta. Desarrollada con Google Apps Script: cada registro se guarda en Google Sheets y el usuario recibe un correo de bienvenida automático.",
-    herramientas: ["Google Apps Script", "HTML", "Tailwind CSS", "Google Sheets", "Copywriting"],
-    enlace: "assets/trabajos/ikea/index.html",
   },
 ];

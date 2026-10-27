@@ -2,18 +2,19 @@
 
 Portfolio personal de Marketing y Publicidad (2º Técnico Superior). Web estática oscura con concepto de presentación de producto (estilo Apple), interactiva y sin dependencias: HTML + CSS + JavaScript.
 
-**Interacciones:** burbujas con el logo de cada red en la portada (flotan despacio, se paran al pasar el ratón, se arrastran y abren tus redes), apartados desplegables, tarjetas con brillo que sigue al ratón, TikTok en directo dentro de un móvil, intro con contador, foto de portada que entra a pantalla completa y se encoge hasta su sitio, nombre gigante que invierte los colores sobre la foto, nombre que se separa al bajar, bio que se ilumina al leer, imágenes de trabajos que se abren con el scroll, looks en columnas que se mueven a distinta velocidad, doble toque para dar like, cursor personalizado y letras de contacto que reaccionan al ratón.
+**Estilo:** negro, tipografía grande y un único acento arena; animaciones discretas (intro con contador, foto de portada que se encoge, aparición al hacer scroll, enlaces con texto que rueda).
 
 ## Secciones
-1. **Inicio**: insignia de estudios, foto a pantalla completa que se encoge, nombre gigante y burbujas con enlaces (`BURBUJAS`)
+1. **Inicio**: insignia de estudios, foto, nombre gigante y enlaces rápidos
 2. **Sobre mí**: bio y cifras
-3. **Explora mi trabajo**: capítulos que se despliegan al pulsarlos
-   - Trabajos realizados (abierto por defecto)
-   - Qué hago: 8 servicios con gancho, entregables y enlace a un trabajo que lo demuestra (`SERVICIOS`)
-   - Estilo: "Mis outfits", biblioteca con filtros y vista ampliada con miniaturas (`POSTS`), y "Mi museo de arte": colecciones que se quedan fijas y pasan sus fotos de lado al hacer scroll (`COLECCIONES`)
+3. **Moda · Chart Noir**: mi marca, enlace a https://chartnoir.github.io, la Obra 001, cómo hago la ropa y "Mi museo de arte" (`COLECCIONES`): colecciones que se quedan fijas y pasan sus fotos de lado al hacer scroll
+4. **Capítulos desplegables**
+   - Trabajos realizados (abierto por defecto), con la estrategia de cada uno (`TRABAJOS`)
+   - Qué hago (`SERVICIOS`)
+   - Outfits: biblioteca con filtros y vista ampliada (`POSTS`)
    - Redes sociales: Instagram y TikTok en directo
    - Habilidades
-4. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
+5. **Contacto**: email y teléfono que se copian con un clic, y WhatsApp
 
 ## ✏️ Cómo actualizar tu contenido
 **Todo se edita en `data.js`**, no tienes que tocar nada más.
