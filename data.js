@@ -199,6 +199,23 @@ const pags = (carpeta, n) => Array.from({ length: n }, (_, i) => `assets/trabajo
 
 const TRABAJOS = [
   {
+    titulo: "Promoción Plan Dúo",
+    cliente: "CineDUO El Portil",
+    categoria: "Web · Promoción y reservas",
+    curso: "2º curso",
+    tipoVisor: "web",
+    web: "assets/trabajos/cineduo/index.html",
+    descripcion: "Landing de la promoción «Plan Dúo» para un cine de barrio (ficticio) en El Portil, Huelva: dos entradas y un menú para compartir por 15 €, de lunes a jueves. Incluye cartelera, un recorrido por las salas para elegir butaca, una reserva de práctica con el código DUO15 y billete imprimible, y un asistente que responde dudas.",
+    estrategia: [
+      ["Objetivo", "Llenar las salas de lunes a jueves, los días con menos público, con un plan pensado para ir en pareja o con amigos."],
+      ["Oferta", "Precio cerrado y ahorro a la vista (15 € frente a 24 € por separado), con un código propio para medir cuántos lo usan."],
+      ["Reserva", "Película, día, sesión y butaca en menos de un minuto, viendo la sala por dentro, y billete listo para imprimir."],
+      ["Atención", "Un chatbot hecho con Google Apps Script responde las 24 horas qué ver, a qué hora es cada sesión y cómo llegar."],
+    ],
+    herramientas: ["HTML", "CSS", "JavaScript", "Apps Script", "Chatbot", "Promoción"],
+    enlace: "assets/trabajos/cineduo/index.html",
+  },
+  {
     titulo: "Landing con videojuego",
     cliente: "El Oro Verde",
     categoria: "Web · Captación de clientes",
