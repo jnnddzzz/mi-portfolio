@@ -332,9 +332,25 @@ function bindViewer(root) {
       const doc = frame.contentDocument.documentElement;
       doc.style.overflow = "hidden";
       // Lo que en la página va fijo a pantalla completa (avisos, modales) se queda arriba, a la vista del recuadro
-      const fijos = [...frame.contentDocument.querySelectorAll("body *")].filter(el => getComputedStyle(el).position === "fixed");
-      const ajustarFijos = () => fijos.forEach(el => Object.assign(el.style, { position: "absolute", top: v.scrollTop + "px", bottom: "auto", height: v.clientHeight + "px" }));
-      if (fijos.length) { ajustarFijos(); v.addEventListener("scroll", ajustarFijos, { passive: true }); }
+      // (los que ocupan toda la pantalla, como un aviso, la cubren; los pequeños, como un botón de chat, conservan su esquina)
+      const H = frame.contentWindow.innerHeight;
+      const fijos = [...frame.contentDocument.querySelectorAll("body *")].filter(el => getComputedStyle(el).position === "fixed").map(el => {
+        const r = el.getBoundingClientRect(), visible = r.height > 0;
+        if (visible && r.height >= H * 0.9) return { el, modo: "lleno" };
+        if (el.style.bottom || (visible && r.top > H / 2)) return { el, modo: "abajo", off: el.style.bottom ? parseFloat(el.style.bottom) : H - r.bottom };
+        return { el, modo: "arriba", off: el.style.top ? parseFloat(el.style.top) : visible ? r.top : 0 };
+      });
+      const ajustarFijos = () => fijos.forEach(({ el, modo, off }) => {
+        const arriba = v.scrollTop, alto = v.clientHeight;
+        Object.assign(el.style, { position: "absolute", bottom: "auto" });
+        if (modo === "lleno") Object.assign(el.style, { top: arriba + "px", height: alto + "px" });
+        else el.style.top = (modo === "arriba" ? arriba + off : arriba + alto - off - el.offsetHeight) + "px";
+      });
+      if (fijos.length) {
+        ajustarFijos();
+        v.addEventListener("scroll", ajustarFijos, { passive: true });
+        frame.contentDocument.addEventListener("click", () => setTimeout(ajustarFijos)); // p. ej. al abrir un chat
+      }
       // Si la web no se ve, sus animaciones se pausan (así no ralentiza el resto del portfolio)
       const w = frame.contentWindow, raf = w.requestAnimationFrame.bind(w);
       let oculta = false, cola = [];
